@@ -1,0 +1,6 @@
+<ivy-module version="2.0">
+    <info organisation="com.petrsmid" module="bitexchange"/>
+    <dependencies>
+        <dependency org="commons-logging" name="commons-logging" rev="1.0"/>
+    </dependencies>
+</ivy-module>
