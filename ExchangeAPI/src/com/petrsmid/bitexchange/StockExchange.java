@@ -6,8 +6,9 @@ public interface StockExchange {
 	/**
 	 * @param amountOfBtc - the price of 1 BTC can differ according to the amount what one want to buy
 	 * @return price of 1 BTC in USD when buying BTC
+	 * @throws StockServiceException 
 	 */
-	BigDecimal getBuyBtcPrice_USD(BigDecimal amountOfBtc);
+	BigDecimal getBuyBtcPrice_USD(BigDecimal amountOfBtc) throws StockServiceException;
 	
 	/**
 	 * @param amountOfBtc - the price of 1 BTC can differ according to the amount what one want to sell

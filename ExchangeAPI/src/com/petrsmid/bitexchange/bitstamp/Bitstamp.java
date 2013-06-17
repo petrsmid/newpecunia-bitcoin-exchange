@@ -2,16 +2,22 @@ package com.petrsmid.bitexchange.bitstamp;
 
 import java.math.BigDecimal;
 
+import com.google.inject.Inject;
 import com.petrsmid.bitexchange.StockExchange;
+import com.petrsmid.bitexchange.StockServiceException;
 
 public class Bitstamp implements StockExchange {
 
-	private static final String BITSTAMP_URL = "https://www.bitstamp.net";
+	private TickerService tickerService;
+
+	@Inject
+	public Bitstamp(TickerService tickerService) {
+		this.tickerService = tickerService;
+	}
 	
 	@Override
-	public BigDecimal getBuyBtcPrice_USD(BigDecimal amountOfBtc) {
-		// TODO Auto-generated method stub
-		return null;
+	public BigDecimal getBuyBtcPrice_USD(BigDecimal amountOfBtc) throws StockServiceException {
+		return tickerService.getTicker().getAsk();
 	}
 
 	@Override
@@ -49,5 +55,4 @@ public class Bitstamp implements StockExchange {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 }
