@@ -32,8 +32,17 @@ public class BitstampServiceImpl implements BitstampService {
 	}
 
 	@Override
-	public OrderBook getOrderBook() {
-		return null;
+	public OrderBook getOrderBook() throws StockServiceException {
+		String url = BitstampConstants.ORDER_BOOK_URL;
+		try {
+			String output = httpReader.readUrl(url);
+			Gson gson = new Gson();
+			OrderBook orderBook = gson.fromJson(output, OrderBook.class);
+			
+			return orderBook;
+		} catch (IOException | JsonSyntaxException e) {
+			throw new StockServiceException(e);
+		}
 	}
 
 }

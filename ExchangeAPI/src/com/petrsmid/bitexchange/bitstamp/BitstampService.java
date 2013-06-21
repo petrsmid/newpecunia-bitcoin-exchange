@@ -6,6 +6,6 @@ public interface BitstampService {
 
 	Ticker getTicker() throws StockServiceException;
 
-	OrderBook getOrderBook();
+	OrderBook getOrderBook() throws StockServiceException;
 
 }
