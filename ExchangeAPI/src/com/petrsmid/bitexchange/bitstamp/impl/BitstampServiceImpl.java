@@ -35,7 +35,6 @@ public class BitstampServiceImpl implements BitstampService {
 		try {
 			String output = httpReader.get(url);
 			Ticker ticker = JsonCodec.INSTANCE.parseJson(output, Ticker.class);
-			//TODO assert that the ticker is OK
 			return ticker;
 		} catch (IOException | JsonParsingException e) {
 			throw new StockServiceException(e);
@@ -48,7 +47,6 @@ public class BitstampServiceImpl implements BitstampService {
 		try {
 			String output = httpReader.get(url);
 			OrderBookDTO orderBookDTO = JsonCodec.INSTANCE.parseJson(output, OrderBookDTO.class);
-			//TODO assert that the order book is OK
 			return mapOrderBookDTO2OrderBook(orderBookDTO);
 		} catch (IOException | JsonParsingException e) {
 			throw new StockServiceException(e);
@@ -91,7 +89,6 @@ public class BitstampServiceImpl implements BitstampService {
 		try {
 			String output = httpReader.post(url, JsonCodec.INSTANCE.toJson(request));
 			OrderDTO order = JsonCodec.INSTANCE.parseJson(output, OrderDTO.class);
-			//TODO assert that the order is OK
 			return order;
 		} catch (IOException | JsonParsingException e) {
 			throw new StockServiceException(e);
