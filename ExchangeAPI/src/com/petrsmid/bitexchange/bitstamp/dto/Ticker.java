@@ -1,4 +1,4 @@
-package com.petrsmid.bitexchange.bitstamp;
+package com.petrsmid.bitexchange.bitstamp.dto;
 
 import java.math.BigDecimal;
 
@@ -10,6 +10,8 @@ public class Ticker {
 	private BigDecimal volume;
 	private BigDecimal low;
 	private BigDecimal ask;
+	
+	
 	public BigDecimal getHigh() {
 		return high;
 	}

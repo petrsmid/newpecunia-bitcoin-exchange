@@ -1,12 +1,13 @@
 package com.petrsmid.bitexchange.bitstamp;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class OrderBook {
+
 	private Long timestamp;
-	private List<List<BigDecimal>> bids;
-	private List<List<BigDecimal>> asks;
+	private List<Order> bids;
+	private List<Order> asks;
+	
 	
 	public Long getTimestamp() {
 		return timestamp;
@@ -14,16 +15,17 @@ public class OrderBook {
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
-	public List<List<BigDecimal>> getBids() {
+	public List<Order> getBids() {
 		return bids;
 	}
-	public void setBids(List<List<BigDecimal>> bids) {
+	public void setBids(List<Order> bids) {
 		this.bids = bids;
 	}
-	public List<List<BigDecimal>> getAsks() {
+	public List<Order> getAsks() {
 		return asks;
 	}
-	public void setAsks(List<List<BigDecimal>> asks) {
+	public void setAsks(List<Order> asks) {
 		this.asks = asks;
 	}
+	
 }
