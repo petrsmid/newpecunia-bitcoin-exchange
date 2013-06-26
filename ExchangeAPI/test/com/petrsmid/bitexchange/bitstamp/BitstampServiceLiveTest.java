@@ -40,7 +40,7 @@ public class BitstampServiceLiveTest {
 	@Test
 	public void testLiveBuyLimitOrder() throws Exception {
 		//CAUTION: the following live test will perform REAL transaction with REAL Bitcoins!
-		
+
 		if (true) { //set to true if you want to run the test
 			bitstampService.buyLimitOrder(new BigDecimal("0.1"), new BigDecimal("1"));
 		}
