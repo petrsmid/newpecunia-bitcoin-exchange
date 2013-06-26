@@ -2,12 +2,13 @@ package com.petrsmid.bitexchange.bitstamp;
 
 import java.io.IOException;
 
+import com.petrsmid.bitexchange.bitstamp.impl.BitstampConstants;
 import com.petrsmid.bitexchange.net.HttpReader;
 
 public class HttpReaderBitstampMock implements HttpReader {
 
 	@Override
-	public String readUrl(String url) throws IOException {
+	public String get(String url) throws IOException {
 		if (url.equals(BitstampConstants.TICKER_URL)) {
 			return "{" +
 					"\"high\": \"101.11\", " +
@@ -27,6 +28,12 @@ public class HttpReaderBitstampMock implements HttpReader {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public String post(String url, String request) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

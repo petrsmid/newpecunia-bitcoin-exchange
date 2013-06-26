@@ -13,7 +13,7 @@ import org.junit.runners.JUnit4;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.petrsmid.bitexchange.GuiceBitexchangeModule;
-import com.petrsmid.bitexchange.bitstamp.BitstampConstants;
+import com.petrsmid.bitexchange.bitstamp.impl.BitstampConstants;
 
 @RunWith(JUnit4.class)
 public class HttpReaderLiveTest {
@@ -28,7 +28,7 @@ public class HttpReaderLiveTest {
 	
 	@Test
 	public void test() throws IOException {
-		String output = httpReader.readUrl(BitstampConstants.TICKER_URL);
+		String output = httpReader.get(BitstampConstants.TICKER_URL);
 		assertTrue(output.startsWith("{"));
 		assertTrue(output.endsWith("}"));
 	}

@@ -4,6 +4,8 @@ import java.io.IOException;
 
 public interface HttpReader {
 
-	public String readUrl(String url) throws IOException;
+	String get(String url) throws IOException;
+
+	String post(String url, String request) throws IOException;
 
 }

@@ -1,4 +1,4 @@
-package com.petrsmid.bitexchange.bitstamp.dto;
+package com.petrsmid.bitexchange.bitstamp.impl.dto;
 
 import java.math.BigDecimal;
 import java.util.List;

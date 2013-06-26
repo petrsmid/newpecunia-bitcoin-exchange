@@ -5,8 +5,8 @@ import java.util.List;
 public class OrderBook {
 
 	private Long timestamp;
-	private List<Order> bids;
-	private List<Order> asks;
+	private List<PriceAndAmount> bids;
+	private List<PriceAndAmount> asks;
 	
 	
 	public Long getTimestamp() {
@@ -15,16 +15,16 @@ public class OrderBook {
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
-	public List<Order> getBids() {
+	public List<PriceAndAmount> getBids() {
 		return bids;
 	}
-	public void setBids(List<Order> bids) {
+	public void setBids(List<PriceAndAmount> bids) {
 		this.bids = bids;
 	}
-	public List<Order> getAsks() {
+	public List<PriceAndAmount> getAsks() {
 		return asks;
 	}
-	public void setAsks(List<Order> asks) {
+	public void setAsks(List<PriceAndAmount> asks) {
 		this.asks = asks;
 	}
 	

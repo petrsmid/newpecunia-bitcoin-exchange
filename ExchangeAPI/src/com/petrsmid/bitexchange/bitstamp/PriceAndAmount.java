@@ -2,7 +2,7 @@ package com.petrsmid.bitexchange.bitstamp;
 
 import java.math.BigDecimal;
 
-public class Order {
+public class PriceAndAmount {
 	private BigDecimal amount;
 	private BigDecimal price;
 	

@@ -10,16 +10,35 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 public class HttpReaderImpl implements HttpReader {
 	
 	@Override
-	public String readUrl(String url) throws IOException {
-		HttpClient httpclient = new DefaultHttpClient();
-		HttpGet httpget = new HttpGet(url);
+	public String get(String url) throws IOException {
+		return doRequest(url, null);
+	}
+	
+	@Override
+	public String post(String url, String request) throws IOException {
+		return doRequest(url, request);
+	}
+	
+	
+	private String doRequest(String url, String postRequest) throws IOException {
+		HttpClient httpClient = new DefaultHttpClient();
+
 		HttpResponse response;
-		response = httpclient.execute(httpget); //can throw IOException
+		
+		if (postRequest == null) { //HTTP GET
+			response = httpClient.execute(new HttpGet(url)); //can throw IOException
+		} else { //HTTP POST
+			HttpPost httpPost = new HttpPost(url);
+			httpPost.setEntity(new StringEntity(postRequest));
+			response = httpClient.execute(httpPost); //can throw IOException
+		}
 		
 		HttpEntity entity = response.getEntity();
 		if (entity != null) {
@@ -43,6 +62,6 @@ public class HttpReaderImpl implements HttpReader {
 			}
 		} else {
 			return null;
-		}
+		}			
 	}
 }
