@@ -65,6 +65,8 @@ public class BitstampServiceTest {
 		PriceAndAmount ask2 = asks.get(1);
 		assertEquals(new BigDecimal("102.96"), ask2.getPrice());
 		assertEquals(new BigDecimal("1.00000001"), ask2.getAmount());
-		
 	}
+	
+	
+	
 }
