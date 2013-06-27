@@ -24,7 +24,7 @@ public enum JsonCodec {
 		try {
 			return mapper.readValue(s, clazz);
 		} catch (IOException e) {
-			throw new JsonParsingException(e);
+			throw new JsonParsingException("Unable to map JSON "+s+" to class "+ clazz.getName(), e);
 		}
 	}
 

@@ -4,14 +4,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 public class HttpReaderImpl implements HttpReader {
@@ -22,21 +24,21 @@ public class HttpReaderImpl implements HttpReader {
 	}
 	
 	@Override
-	public String post(String url, String request) throws IOException {
-		return doRequest(url, request);
+	public String post(String url, List<NameValuePair> params) throws IOException {
+		return doRequest(url, params);
 	}
 	
 	
-	private String doRequest(String url, String postRequest) throws IOException {
+	private String doRequest(String url, List<NameValuePair> params) throws IOException {
 		HttpClient httpClient = new DefaultHttpClient();
 
 		HttpResponse response;
 		
-		if (postRequest == null) { //HTTP GET
+		if (params == null) { //HTTP GET
 			response = httpClient.execute(new HttpGet(url)); //can throw IOException
 		} else { //HTTP POST
 			HttpPost httpPost = new HttpPost(url);
-			httpPost.setEntity(new StringEntity(postRequest));
+			httpPost.setEntity(new UrlEncodedFormEntity(params));
 			response = httpClient.execute(httpPost); //can throw IOException
 		}
 		

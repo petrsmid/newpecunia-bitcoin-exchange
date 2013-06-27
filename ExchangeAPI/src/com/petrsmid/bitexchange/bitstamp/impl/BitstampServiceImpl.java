@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import com.google.inject.Inject;
 import com.petrsmid.bitexchange.StockServiceException;
 import com.petrsmid.bitexchange.bitstamp.BitstampService;
@@ -12,7 +15,6 @@ import com.petrsmid.bitexchange.bitstamp.OrderBook;
 import com.petrsmid.bitexchange.bitstamp.PriceAndAmount;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderBookDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderDTO;
-import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderRequest;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.Ticker;
 import com.petrsmid.bitexchange.net.HttpReader;
 import com.petrsmid.bitexchange.net.JsonCodec;
@@ -34,6 +36,7 @@ public class BitstampServiceImpl implements BitstampService {
 		String url = BitstampConstants.TICKER_URL;
 		try {
 			String output = httpReader.get(url);
+			checkResponseForError(output);
 			Ticker ticker = JsonCodec.INSTANCE.parseJson(output, Ticker.class);
 			return ticker;
 		} catch (IOException | JsonParsingException e) {
@@ -46,6 +49,7 @@ public class BitstampServiceImpl implements BitstampService {
 		String url = BitstampConstants.ORDER_BOOK_URL;
 		try {
 			String output = httpReader.get(url);
+			checkResponseForError(output);
 			OrderBookDTO orderBookDTO = JsonCodec.INSTANCE.parseJson(output, OrderBookDTO.class);
 			return mapOrderBookDTO2OrderBook(orderBookDTO);
 		} catch (IOException | JsonParsingException e) {
@@ -79,20 +83,28 @@ public class BitstampServiceImpl implements BitstampService {
 
 	@Override
 	public OrderDTO buyLimitOrder(BigDecimal price, BigDecimal amount) throws StockServiceException {
-		OrderRequest request = new OrderRequest();
-		request.setUser(credentials.getUsername());
-		request.setPassword(credentials.getPassword());
-		request.setPrice(price);
-		request.setAmount(amount);
+		List<NameValuePair> requestParams = new ArrayList<>();
+		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("amount", amount.toPlainString()));		
+		requestParams.add(new BasicNameValuePair("price", price.toPlainString()));		
 		
 		String url = BitstampConstants.BUY_LIMIT_ORDER;
 		try {
-			String output = httpReader.post(url, JsonCodec.INSTANCE.toJson(request));
+			String output = httpReader.post(url, requestParams);
+			checkResponseForError(output);
 			OrderDTO order = JsonCodec.INSTANCE.parseJson(output, OrderDTO.class);
 			return order;
 		} catch (IOException | JsonParsingException e) {
 			throw new StockServiceException(e);
 		}		
+	}
+
+	private void checkResponseForError(String output) throws StockServiceException {
+		if (output.contains("error")) {
+			throw new StockServiceException("Error returned from the Bitstamp service: " + output);
+		}
+		
 	}
 
 }

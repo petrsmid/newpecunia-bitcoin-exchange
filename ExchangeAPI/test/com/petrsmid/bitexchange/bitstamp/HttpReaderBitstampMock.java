@@ -1,6 +1,9 @@
 package com.petrsmid.bitexchange.bitstamp;
 
 import java.io.IOException;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
 
 import com.petrsmid.bitexchange.bitstamp.impl.BitstampConstants;
 import com.petrsmid.bitexchange.net.HttpReader;
@@ -31,7 +34,7 @@ public class HttpReaderBitstampMock implements HttpReader {
 	}
 
 	@Override
-	public String post(String url, String request) throws IOException {
+	public String post(String url, List<NameValuePair> params) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
