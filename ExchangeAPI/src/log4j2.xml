@@ -6,9 +6,11 @@
 		</Console>
 	</appenders>
 	<loggers>
+	    <!-- Uncomment to see what happens on the wire 
 		<logger name="org.apache.http.wire" level="DEBUG">
 			<appender-ref ref="Console" />
 		</logger>
+		 -->
 		<root level="INFO">
 			<appender-ref ref="Console" />
 		</root>
