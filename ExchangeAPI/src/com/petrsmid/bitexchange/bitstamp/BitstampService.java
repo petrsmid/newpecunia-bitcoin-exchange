@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.petrsmid.bitexchange.StockServiceException;
-import com.petrsmid.bitexchange.bitstamp.impl.dto.Ticker;
 
 public interface BitstampService {
 

@@ -13,7 +13,6 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.petrsmid.bitexchange.GuiceBitexchangeModule;
-import com.petrsmid.bitexchange.bitstamp.impl.dto.Ticker;
 
 public class BitstampServiceLiveTest {
 

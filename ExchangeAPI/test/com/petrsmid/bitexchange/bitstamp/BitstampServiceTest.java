@@ -12,7 +12,6 @@ import org.junit.runners.JUnit4;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.petrsmid.bitexchange.GuiceBitexchangeModule;
-import com.petrsmid.bitexchange.bitstamp.impl.dto.Ticker;
 import com.petrsmid.bitexchange.net.HttpReader;
 
 @RunWith(JUnit4.class)
