@@ -1,13 +1,17 @@
-package com.petrsmid.bitexchange.bitstamp.impl.dto;
+package com.petrsmid.bitexchange.bitstamp;
 
 import java.math.BigDecimal;
 
-public class OrderDTO {
+import org.joda.time.DateTime;
+
+public class Order {
+	public enum OrderType {BUY, SELL}
+	
 	private BigDecimal amount;
 	private BigDecimal price;
 	private String id;
-	private String datetime;
-	private Integer type;
+	private DateTime datetime;
+	private OrderType orderType;
 
 	
 	public BigDecimal getAmount() {
@@ -28,18 +32,18 @@ public class OrderDTO {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getDatetime() {
+	public DateTime getDatetime() {
 		return datetime;
 	}
-	public void setDatetime(String datetime) {
+	public void setDatetime(DateTime datetime) {
 		this.datetime = datetime;
 	}
-	public Integer getType() {
-		return type;
+	public OrderType getOrderType() {
+		return orderType;
 	}
-	public void setType(Integer type) {
-		this.type = type;
+	public void setOrderType(OrderType orderType) {
+		this.orderType = orderType;
 	}
 	
-
+	
 }

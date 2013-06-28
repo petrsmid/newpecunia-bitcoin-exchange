@@ -13,7 +13,6 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.petrsmid.bitexchange.GuiceBitexchangeModule;
-import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.Ticker;
 
 public class BitstampServiceLiveTest {
@@ -67,7 +66,7 @@ public class BitstampServiceLiveTest {
 
 	@Test
 	public void testLiveGetOpenOrders() throws Exception {
-		List<OrderDTO> orders = bitstampService.getOpenOrders();
+		List<Order> orders = bitstampService.getOpenOrders();
 	}
 	
 	@Test
@@ -75,8 +74,8 @@ public class BitstampServiceLiveTest {
 		//CAUTION: the following live test will perform REAL transactions. However probably without loosing money.
 
 		if (true) { //set to true if you want to run the test
-			OrderDTO order = bitstampService.sellLimitOrder(new BigDecimal("10000"), new BigDecimal("0.01"));
-			List<OrderDTO> orders = bitstampService.getOpenOrders();
+			Order order = bitstampService.sellLimitOrder(new BigDecimal("10000"), new BigDecimal("0.01"));
+			List<Order> orders = bitstampService.getOpenOrders();
 			assertEquals(1, orders.size());
 			assertEquals(order.getId(), orders.get(0).getId());
 			boolean result = bitstampService.cancelOrder(order.getId());
@@ -91,8 +90,8 @@ public class BitstampServiceLiveTest {
 		//CAUTION: NEVER run this test with PRODUCTION account! You would DELETE ALL opened transactions! 
 		//  run it ONLY if you want to clean up all orders of your TEST account
 		if (false) {
-			List<OrderDTO> orders = bitstampService.getOpenOrders();
-			for (OrderDTO order : orders) {
+			List<Order> orders = bitstampService.getOpenOrders();
+			for (Order order : orders) {
 				bitstampService.cancelOrder(order.getId());			
 			}
 			orders = bitstampService.getOpenOrders();
