@@ -20,7 +20,7 @@ public class SecureBitstampCredentialsImpl implements BitstampCredentials {
 		try {
 			props.load(new FileInputStream("/home/petr/bitstampcredentials.txt"));
 		} catch (IOException e) {
-			throw new RuntimeException("Could not load properti file with credentials.", e);
+			throw new RuntimeException("Could not load properties file with credentials.", e);
 		}
 		instance.username = props.getProperty("username");
 		instance.password = props.getProperty("password");
