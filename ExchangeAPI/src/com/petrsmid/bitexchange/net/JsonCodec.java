@@ -7,7 +7,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 public enum JsonCodec {
 	INSTANCE;
 
-	private ObjectMapper mapper = new ObjectMapper();
+	private ObjectMapper mapper = new ObjectMapper(); //!!! Thread-safe only when no configuration is used!
 
 	private JsonCodec() {}
 
