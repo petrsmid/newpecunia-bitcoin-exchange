@@ -3,15 +3,14 @@ package com.petrsmid.bitexchange.bitstamp.impl;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.google.inject.Inject;
-import com.petrsmid.bitexchange.StockServiceException;
 import com.petrsmid.bitexchange.bitstamp.BitstampService;
+import com.petrsmid.bitexchange.bitstamp.BitstampServiceException;
 import com.petrsmid.bitexchange.bitstamp.Order;
 import com.petrsmid.bitexchange.bitstamp.OrderBook;
 import com.petrsmid.bitexchange.bitstamp.Ticker;
@@ -35,7 +34,7 @@ public class BitstampServiceImpl implements BitstampService {
 	}
 	
 	@Override
-	public Ticker getTicker() throws StockServiceException {
+	public Ticker getTicker() throws BitstampServiceException {
 		String url = BitstampConstants.TICKER_URL;
 		try {
 			String output = httpReader.get(url);
@@ -43,12 +42,12 @@ public class BitstampServiceImpl implements BitstampService {
 			Ticker ticker = JsonCodec.INSTANCE.parseJson(output, Ticker.class);
 			return ticker;
 		} catch (IOException | JsonParsingException e) {
-			throw new StockServiceException(e);
+			throw new BitstampServiceException(e);
 		}
 	}
 
 	@Override
-	public OrderBook getOrderBook() throws StockServiceException {
+	public OrderBook getOrderBook() throws BitstampServiceException {
 		String url = BitstampConstants.ORDER_BOOK_URL;
 		try {
 			String output = httpReader.get(url);
@@ -56,12 +55,12 @@ public class BitstampServiceImpl implements BitstampService {
 			OrderBookDTO orderBookDTO = JsonCodec.INSTANCE.parseJson(output, OrderBookDTO.class);
 			return OrderBookMapper.mapOrderBookDTO2OrderBook(orderBookDTO);
 		} catch (IOException | JsonParsingException e) {
-			throw new StockServiceException(e);
+			throw new BitstampServiceException(e);
 		}
 	}
 
 	@Override
-	public Order buyLimitOrder(BigDecimal price, BigDecimal amount) throws StockServiceException {
+	public Order buyLimitOrder(BigDecimal price, BigDecimal amount) throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
@@ -75,13 +74,13 @@ public class BitstampServiceImpl implements BitstampService {
 			OrderDTO orderDTO = JsonCodec.INSTANCE.parseJson(output, OrderDTO.class);
 			return OrderMapper.mapOrderDTO2Order(orderDTO);
 		} catch (IOException | JsonParsingException e) {
-			throw new StockServiceException(e);
+			throw new BitstampServiceException(e);
 		}		
 	}
 
 	
 	@Override
-	public Order sellLimitOrder(BigDecimal price, BigDecimal amount) throws StockServiceException {
+	public Order sellLimitOrder(BigDecimal price, BigDecimal amount) throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
@@ -95,12 +94,12 @@ public class BitstampServiceImpl implements BitstampService {
 			OrderDTO orderDTO = JsonCodec.INSTANCE.parseJson(output, OrderDTO.class);
 			return OrderMapper.mapOrderDTO2Order(orderDTO);
 		} catch (IOException | JsonParsingException e) {
-			throw new StockServiceException(e);
+			throw new BitstampServiceException(e);
 		}		
 	}
 	
 	@Override
-	public boolean cancelOrder(String orderId) throws StockServiceException {
+	public boolean cancelOrder(String orderId) throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
@@ -113,12 +112,12 @@ public class BitstampServiceImpl implements BitstampService {
 			Boolean success = JsonCodec.INSTANCE.parseJson(output, Boolean.class);
 			return success;
 		} catch (IOException | JsonParsingException e) {
-			throw new StockServiceException(e);
+			throw new BitstampServiceException(e);
 		}		
 	}
 	
 	@Override
-	public List<Order> getOpenOrders() throws StockServiceException {
+	public List<Order> getOpenOrders() throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
@@ -134,14 +133,14 @@ public class BitstampServiceImpl implements BitstampService {
 			}
 			return orders;
 		} catch (IOException | JsonParsingException e) {
-			throw new StockServiceException(e);
+			throw new BitstampServiceException(e);
 		}
 	}
 	
 	
-	private void checkResponseForError(String output) throws StockServiceException {
+	private void checkResponseForError(String output) throws BitstampServiceException {
 		if (output.contains("error")) {
-			throw new StockServiceException("Error returned from the Bitstamp service: " + output);
+			throw new BitstampServiceException("Error returned from the Bitstamp service: " + output);
 		}
 	}
 
