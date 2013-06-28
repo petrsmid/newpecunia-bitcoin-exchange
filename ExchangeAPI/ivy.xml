@@ -20,6 +20,7 @@
         <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.11"/>
         <dependency org="com.google.code.guice" name="guice" rev="1.0"/>
         <dependency org="org.apache.commons" name="commons-lang3" rev="3.1"/>
+        <dependency org="joda-time" name="joda-time" rev="2.2"/>
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
     </dependencies>
