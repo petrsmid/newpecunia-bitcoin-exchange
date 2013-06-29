@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.petrsmid.bitexchange.bitstamp.impl.dto.AccountBalanceDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.EurUsdRateDTO;
+import com.petrsmid.bitexchange.bitstamp.impl.dto.TransactionDTO;
+import com.petrsmid.bitexchange.bitstamp.impl.dto.UserTransactionDTO;
 
 
 public interface BitstampService {
@@ -28,5 +30,11 @@ public interface BitstampService {
 	Boolean bitcoinWithdrawal(BigDecimal amount, String address) throws BitstampServiceException;
 
 	String getBitcoinDepositAddress() throws BitstampServiceException;
+
+	List<UserTransactionDTO> getUserTransactions(long secondsInHistory) throws BitstampServiceException;
+
+	List<TransactionDTO> getTransactions(long secondsInHistory) throws BitstampServiceException;
+
+	List<UnconfirmedBitcoinDeposit> getUnconfirmedBitcoinDeposits() throws BitstampServiceException;
 
 }

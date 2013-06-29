@@ -3,6 +3,7 @@ package com.petrsmid.bitexchange.bitstamp.impl;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -14,6 +15,7 @@ import com.petrsmid.bitexchange.bitstamp.BitstampServiceException;
 import com.petrsmid.bitexchange.bitstamp.Order;
 import com.petrsmid.bitexchange.bitstamp.OrderBook;
 import com.petrsmid.bitexchange.bitstamp.Ticker;
+import com.petrsmid.bitexchange.bitstamp.UnconfirmedBitcoinDeposit;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.AccountBalanceDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.ErrorDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.EurUsdRateDTO;
@@ -21,6 +23,8 @@ import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderBookDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderBookMapper;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderMapper;
+import com.petrsmid.bitexchange.bitstamp.impl.dto.TransactionDTO;
+import com.petrsmid.bitexchange.bitstamp.impl.dto.UserTransactionDTO;
 import com.petrsmid.bitexchange.net.HttpReader;
 import com.petrsmid.bitexchange.net.JsonCodec;
 import com.petrsmid.bitexchange.net.JsonParsingException;
@@ -206,6 +210,55 @@ public class BitstampServiceImpl implements BitstampService {
 			throw new BitstampServiceException(e);
 		}		
 	}
+	
+	@Override
+	public List<UserTransactionDTO> getUserTransactions(long secondsInHistory) throws BitstampServiceException {
+		List<NameValuePair> requestParams = new ArrayList<>();
+		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("timedelta", Long.toString(secondsInHistory)));
+		
+		String url = BitstampConstants.USER_TRANSACTIONS;
+		try {
+			String output = httpReader.post(url, requestParams);
+			checkResponseForError(output);
+			UserTransactionDTO[] transactions = JsonCodec.INSTANCE.parseJson(output, UserTransactionDTO[].class);
+			return Arrays.asList(transactions);
+		} catch (IOException | JsonParsingException e) {
+			throw new BitstampServiceException(e);
+		}		
+	}
+	
+	@Override
+	public List<TransactionDTO> getTransactions(long secondsInHistory) throws BitstampServiceException {
+		String url = BitstampConstants.TRANSACTIONS;
+		try {
+			String output = httpReader.get(url+"?timedelta="+secondsInHistory);
+			checkResponseForError(output);
+			TransactionDTO[] transactions = JsonCodec.INSTANCE.parseJson(output, TransactionDTO[].class);
+			return Arrays.asList(transactions);
+		} catch (IOException | JsonParsingException e) {
+			throw new BitstampServiceException(e);
+		}		
+	}	
+	
+	@Override
+	public List<UnconfirmedBitcoinDeposit> getUnconfirmedBitcoinDeposits() throws BitstampServiceException {
+		List<NameValuePair> requestParams = new ArrayList<>();
+		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		
+		String url = BitstampConstants.UNCONFIRMED_BTC;
+		try {
+			String output = httpReader.post(url, requestParams);
+			checkResponseForError(output);
+			UnconfirmedBitcoinDeposit[] unconfirmedBtcDeposits = JsonCodec.INSTANCE.parseJson(output, UnconfirmedBitcoinDeposit[].class);
+			return Arrays.asList(unconfirmedBtcDeposits);
+		} catch (IOException | JsonParsingException e) {
+			throw new BitstampServiceException(e);
+		}		
+	}
+	
 	
 	private void checkResponseForError(String output) throws BitstampServiceException {
 		if (output.contains("error")) {
