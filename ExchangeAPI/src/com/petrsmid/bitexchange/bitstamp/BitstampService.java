@@ -17,12 +17,14 @@ public interface BitstampService {
 
 	Order sellLimitOrder(BigDecimal price, BigDecimal amount) throws BitstampServiceException;
 
-	boolean cancelOrder(String orderId) throws BitstampServiceException;
+	Boolean cancelOrder(String orderId) throws BitstampServiceException;
 
 	List<Order> getOpenOrders() throws BitstampServiceException;
 
 	EurUsdRateDTO getEurUsdConversionRate() throws BitstampServiceException;
 
 	AccountBalanceDTO getAccountBalance() throws BitstampServiceException;
+
+	Boolean bitcoinWithdrawal(BigDecimal amount, String address) throws BitstampServiceException;
 
 }

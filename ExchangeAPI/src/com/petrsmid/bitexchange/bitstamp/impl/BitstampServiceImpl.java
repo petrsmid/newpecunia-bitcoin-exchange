@@ -101,7 +101,7 @@ public class BitstampServiceImpl implements BitstampService {
 	}
 	
 	@Override
-	public boolean cancelOrder(String orderId) throws BitstampServiceException {
+	public Boolean cancelOrder(String orderId) throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
@@ -162,7 +162,27 @@ public class BitstampServiceImpl implements BitstampService {
 		try {
 			String output = httpReader.post(url, requestParams);
 			checkResponseForError(output);
-			AccountBalanceDTO success = JsonCodec.INSTANCE.parseJson(output, AccountBalanceDTO.class);
+			AccountBalanceDTO accountBalance = JsonCodec.INSTANCE.parseJson(output, AccountBalanceDTO.class);
+			return accountBalance;
+		} catch (IOException | JsonParsingException e) {
+			throw new BitstampServiceException(e);
+		}		
+	}
+	
+	
+	@Override
+	public Boolean bitcoinWithdrawal(BigDecimal amount, String address) throws BitstampServiceException {
+		List<NameValuePair> requestParams = new ArrayList<>();
+		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("amount", amount.toPlainString()));		
+		requestParams.add(new BasicNameValuePair("address", address));		
+		
+		String url = BitstampConstants.BITCOIN_WITHDRAWAL;
+		try {
+			String output = httpReader.post(url, requestParams);
+			checkResponseForError(output);
+			Boolean success = JsonCodec.INSTANCE.parseJson(output, Boolean.class);
 			return success;
 		} catch (IOException | JsonParsingException e) {
 			throw new BitstampServiceException(e);

@@ -10,4 +10,6 @@ public class BitstampConstants {
 	public static final String OPEN_ORDERS = API_URL + "open_orders/";
 	public static final String EUR_USD_RATE = API_URL + "eur_usd/";
 	public static final String ACCOUNT_BALANCE = API_URL + "balance/";
+	public static final String BITCOIN_WITHDRAWAL = API_URL + "bitcoin_withdrawal/";
+	
 }
