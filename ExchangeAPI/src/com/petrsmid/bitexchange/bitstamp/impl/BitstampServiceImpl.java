@@ -15,6 +15,7 @@ import com.petrsmid.bitexchange.bitstamp.Order;
 import com.petrsmid.bitexchange.bitstamp.OrderBook;
 import com.petrsmid.bitexchange.bitstamp.Ticker;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.AccountBalanceDTO;
+import com.petrsmid.bitexchange.bitstamp.impl.dto.ErrorDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.EurUsdRateDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderBookDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderBookMapper;
@@ -189,10 +190,31 @@ public class BitstampServiceImpl implements BitstampService {
 		}		
 	}
 	
+	@Override
+	public String getBitcoinDepositAddress() throws BitstampServiceException {
+		List<NameValuePair> requestParams = new ArrayList<>();
+		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		
+		String url = BitstampConstants.BITCOIN_DEPOSIT_ADDRESS;
+		try {
+			String output = httpReader.post(url, requestParams);
+			checkResponseForError(output);
+			String address = JsonCodec.INSTANCE.parseJson(output, String.class);
+			return address;
+		} catch (IOException | JsonParsingException e) {
+			throw new BitstampServiceException(e);
+		}		
+	}
 	
 	private void checkResponseForError(String output) throws BitstampServiceException {
 		if (output.contains("error")) {
-			throw new BitstampServiceException("Error returned from the Bitstamp service: " + output);
+			try { //try to parse the json error object and report the reason
+				ErrorDTO error = JsonCodec.INSTANCE.parseJson(output, ErrorDTO.class);
+				throw new BitstampServiceException("Error returned from the Bitstamp service. Reason: " + error.getError());
+			} catch (JsonParsingException e) { //parsing unsuccessful -> report the whole response
+				throw new BitstampServiceException("Error returned from the Bitstamp service: " + output);
+			}			
 		}
 	}
 

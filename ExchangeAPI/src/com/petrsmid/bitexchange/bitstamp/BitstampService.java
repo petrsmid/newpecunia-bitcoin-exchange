@@ -27,4 +27,6 @@ public interface BitstampService {
 
 	Boolean bitcoinWithdrawal(BigDecimal amount, String address) throws BitstampServiceException;
 
+	String getBitcoinDepositAddress() throws BitstampServiceException;
+
 }
