@@ -3,6 +3,9 @@ package com.petrsmid.bitexchange.bitstamp;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.petrsmid.bitexchange.bitstamp.impl.dto.AccountBalanceDTO;
+import com.petrsmid.bitexchange.bitstamp.impl.dto.EurUsdRateDTO;
+
 
 public interface BitstampService {
 
@@ -17,5 +20,9 @@ public interface BitstampService {
 	boolean cancelOrder(String orderId) throws BitstampServiceException;
 
 	List<Order> getOpenOrders() throws BitstampServiceException;
+
+	EurUsdRateDTO getEurUsdConversionRate() throws BitstampServiceException;
+
+	AccountBalanceDTO getAccountBalance() throws BitstampServiceException;
 
 }

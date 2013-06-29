@@ -8,4 +8,6 @@ public class BitstampConstants {
 	public static final String SELL_LIMIT_ORDER = API_URL + "sell/";
 	public static final String CANCEL_ORDER = API_URL + "cancel_order/";
 	public static final String OPEN_ORDERS = API_URL + "open_orders/";
+	public static final String EUR_USD_RATE = API_URL + "eur_usd/";
+	public static final String ACCOUNT_BALANCE = API_URL + "balance/";
 }

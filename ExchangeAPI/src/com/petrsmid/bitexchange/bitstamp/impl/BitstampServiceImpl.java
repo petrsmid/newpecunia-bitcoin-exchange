@@ -14,6 +14,8 @@ import com.petrsmid.bitexchange.bitstamp.BitstampServiceException;
 import com.petrsmid.bitexchange.bitstamp.Order;
 import com.petrsmid.bitexchange.bitstamp.OrderBook;
 import com.petrsmid.bitexchange.bitstamp.Ticker;
+import com.petrsmid.bitexchange.bitstamp.impl.dto.AccountBalanceDTO;
+import com.petrsmid.bitexchange.bitstamp.impl.dto.EurUsdRateDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderBookDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderBookMapper;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderDTO;
@@ -135,6 +137,36 @@ public class BitstampServiceImpl implements BitstampService {
 		} catch (IOException | JsonParsingException e) {
 			throw new BitstampServiceException(e);
 		}
+	}
+	
+	@Override
+	public EurUsdRateDTO getEurUsdConversionRate() throws BitstampServiceException {
+		String url = BitstampConstants.EUR_USD_RATE;
+		try {
+			String output = httpReader.get(url);
+			checkResponseForError(output);
+			EurUsdRateDTO eurUsdRate = JsonCodec.INSTANCE.parseJson(output, EurUsdRateDTO.class);
+			return eurUsdRate;
+		} catch (IOException | JsonParsingException e) {
+			throw new BitstampServiceException(e);
+		}			
+	}
+	
+	@Override
+	public AccountBalanceDTO getAccountBalance() throws BitstampServiceException {
+		List<NameValuePair> requestParams = new ArrayList<>();
+		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		
+		String url = BitstampConstants.ACCOUNT_BALANCE;
+		try {
+			String output = httpReader.post(url, requestParams);
+			checkResponseForError(output);
+			AccountBalanceDTO success = JsonCodec.INSTANCE.parseJson(output, AccountBalanceDTO.class);
+			return success;
+		} catch (IOException | JsonParsingException e) {
+			throw new BitstampServiceException(e);
+		}		
 	}
 	
 	
