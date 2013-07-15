@@ -23,7 +23,7 @@ public interface BitstampService {
 
 	List<Order> getOpenOrders() throws BitstampServiceException;
 
-	EurUsdRateDTO getEurUsdConversionRate() throws BitstampServiceException;
+	EurUsdRate getEurUsdConversionRate() throws BitstampServiceException;
 
 	AccountBalanceDTO getAccountBalance() throws BitstampServiceException;
 

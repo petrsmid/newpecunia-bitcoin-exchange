@@ -12,6 +12,7 @@ import org.apache.http.message.BasicNameValuePair;
 import com.google.inject.Inject;
 import com.petrsmid.bitexchange.bitstamp.BitstampService;
 import com.petrsmid.bitexchange.bitstamp.BitstampServiceException;
+import com.petrsmid.bitexchange.bitstamp.EurUsdRate;
 import com.petrsmid.bitexchange.bitstamp.Order;
 import com.petrsmid.bitexchange.bitstamp.OrderBook;
 import com.petrsmid.bitexchange.bitstamp.Ticker;
@@ -145,13 +146,13 @@ public class BitstampServiceImpl implements BitstampService {
 	}
 	
 	@Override
-	public EurUsdRateDTO getEurUsdConversionRate() throws BitstampServiceException {
+	public EurUsdRate getEurUsdConversionRate() throws BitstampServiceException {
 		String url = BitstampConstants.EUR_USD_RATE;
 		try {
 			String output = httpReader.get(url);
 			checkResponseForError(output);
-			EurUsdRateDTO eurUsdRate = JsonCodec.INSTANCE.parseJson(output, EurUsdRateDTO.class);
-			return eurUsdRate;
+			EurUsdRateDTO eurUsdRateDTO = JsonCodec.INSTANCE.parseJson(output, EurUsdRateDTO.class);
+			return new EurUsdRate(eurUsdRateDTO.getBuy(), eurUsdRateDTO.getSell());
 		} catch (IOException | JsonParsingException e) {
 			throw new BitstampServiceException(e);
 		}			

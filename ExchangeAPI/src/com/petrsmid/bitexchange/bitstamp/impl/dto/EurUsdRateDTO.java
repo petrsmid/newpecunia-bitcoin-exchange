@@ -6,6 +6,7 @@ public class EurUsdRateDTO {
 	private BigDecimal buy;
 	private BigDecimal sell;
 	
+	//{"sell": "1.3020", "buy": "1.3126"}
 	
 	public BigDecimal getBuy() {
 		return buy;
