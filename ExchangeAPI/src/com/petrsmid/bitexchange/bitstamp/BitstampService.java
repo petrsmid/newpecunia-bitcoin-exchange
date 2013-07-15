@@ -31,7 +31,7 @@ public interface BitstampService {
 
 	String getBitcoinDepositAddress() throws BitstampServiceException;
 
-	List<UserTransactionDTO> getUserTransactions(long secondsInHistory) throws BitstampServiceException;
+	List<UserTransaction> getUserTransactions(long secondsInHistory) throws BitstampServiceException;
 
 	List<TransactionDTO> getTransactions(long secondsInHistory) throws BitstampServiceException;
 

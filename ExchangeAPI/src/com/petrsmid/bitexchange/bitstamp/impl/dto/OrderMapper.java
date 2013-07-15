@@ -19,8 +19,7 @@ public class OrderMapper {
 		order.setPrice(orderDTO.getPrice());
 		if (Integer.valueOf(0).equals(orderDTO.getType())) {
 			order.setOrderType(OrderType.BUY);
-		}
-		if (Integer.valueOf(1).equals(orderDTO.getType())) {
+		} else 	if (Integer.valueOf(1).equals(orderDTO.getType())) {
 			order.setOrderType(OrderType.SELL);
 		}
 		return order;

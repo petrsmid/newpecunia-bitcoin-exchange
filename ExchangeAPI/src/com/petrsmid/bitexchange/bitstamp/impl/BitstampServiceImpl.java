@@ -17,6 +17,7 @@ import com.petrsmid.bitexchange.bitstamp.Order;
 import com.petrsmid.bitexchange.bitstamp.OrderBook;
 import com.petrsmid.bitexchange.bitstamp.Ticker;
 import com.petrsmid.bitexchange.bitstamp.UnconfirmedBitcoinDeposit;
+import com.petrsmid.bitexchange.bitstamp.UserTransaction;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.AccountBalanceDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.ErrorDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.EurUsdRateDTO;
@@ -26,6 +27,7 @@ import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderMapper;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.TransactionDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.UserTransactionDTO;
+import com.petrsmid.bitexchange.bitstamp.impl.dto.UserTransactionMapper;
 import com.petrsmid.bitexchange.net.HttpReader;
 import com.petrsmid.bitexchange.net.JsonCodec;
 import com.petrsmid.bitexchange.net.JsonParsingException;
@@ -213,7 +215,7 @@ public class BitstampServiceImpl implements BitstampService {
 	}
 	
 	@Override
-	public List<UserTransactionDTO> getUserTransactions(long secondsInHistory) throws BitstampServiceException {
+	public List<UserTransaction> getUserTransactions(long secondsInHistory) throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
@@ -223,8 +225,12 @@ public class BitstampServiceImpl implements BitstampService {
 		try {
 			String output = httpReader.post(url, requestParams);
 			checkResponseForError(output);
-			UserTransactionDTO[] transactions = JsonCodec.INSTANCE.parseJson(output, UserTransactionDTO[].class);
-			return Arrays.asList(transactions);
+			UserTransactionDTO[] transactionDTOs = JsonCodec.INSTANCE.parseJson(output, UserTransactionDTO[].class);
+			List<UserTransaction> userTransactions = new ArrayList<>();
+			for (UserTransactionDTO dto : transactionDTOs) {
+				userTransactions.add(UserTransactionMapper.mapUserTransactionDTO2UserTransaction(dto));
+			}
+			return userTransactions;
 		} catch (IOException | JsonParsingException e) {
 			throw new BitstampServiceException(e);
 		}		
