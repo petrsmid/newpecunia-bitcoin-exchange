@@ -4,16 +4,16 @@ import java.math.BigDecimal;
 
 public class TransactionDTO {
 
-	private String date; // unix timestamp date and time
+	private Long date; // unix timestamp date and time
 	private String tid; // transaction id
 	private BigDecimal price; // BTC price
 	private BigDecimal amount; // BTC amount	
 	
 	
-	public String getDate() {
+	public Long getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(Long date) {
 		this.date = date;
 	}
 	public String getTid() {

@@ -16,6 +16,7 @@ import com.petrsmid.bitexchange.bitstamp.EurUsdRate;
 import com.petrsmid.bitexchange.bitstamp.Order;
 import com.petrsmid.bitexchange.bitstamp.OrderBook;
 import com.petrsmid.bitexchange.bitstamp.Ticker;
+import com.petrsmid.bitexchange.bitstamp.Transaction;
 import com.petrsmid.bitexchange.bitstamp.UnconfirmedBitcoinDeposit;
 import com.petrsmid.bitexchange.bitstamp.UserTransaction;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.AccountBalanceDTO;
@@ -26,6 +27,7 @@ import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderBookMapper;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderMapper;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.TransactionDTO;
+import com.petrsmid.bitexchange.bitstamp.impl.dto.TransactionMapper;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.UserTransactionDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.UserTransactionMapper;
 import com.petrsmid.bitexchange.net.HttpReader;
@@ -237,13 +239,17 @@ public class BitstampServiceImpl implements BitstampService {
 	}
 	
 	@Override
-	public List<TransactionDTO> getTransactions(long secondsInHistory) throws BitstampServiceException {
+	public List<Transaction> getTransactions(long secondsInHistory) throws BitstampServiceException {
 		String url = BitstampConstants.TRANSACTIONS;
 		try {
 			String output = httpReader.get(url+"?timedelta="+secondsInHistory);
 			checkResponseForError(output);
-			TransactionDTO[] transactions = JsonCodec.INSTANCE.parseJson(output, TransactionDTO[].class);
-			return Arrays.asList(transactions);
+			TransactionDTO[] transactionDTOs = JsonCodec.INSTANCE.parseJson(output, TransactionDTO[].class);
+			List<Transaction> transactions = new ArrayList<>();
+			for (TransactionDTO transactionDTO : transactionDTOs) {
+				transactions.add(TransactionMapper.mapTransactionDTO2Transaction(transactionDTO));
+			}
+			return transactions;
 		} catch (IOException | JsonParsingException e) {
 			throw new BitstampServiceException(e);
 		}		
