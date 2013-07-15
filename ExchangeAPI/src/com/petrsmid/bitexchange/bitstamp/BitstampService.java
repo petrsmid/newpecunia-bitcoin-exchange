@@ -3,8 +3,6 @@ package com.petrsmid.bitexchange.bitstamp;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.petrsmid.bitexchange.bitstamp.impl.dto.AccountBalanceDTO;
-
 
 public interface BitstampService {
 
@@ -22,7 +20,7 @@ public interface BitstampService {
 
 	EurUsdRate getEurUsdConversionRate() throws BitstampServiceException;
 
-	AccountBalanceDTO getAccountBalance() throws BitstampServiceException;
+	AccountBalance getAccountBalance() throws BitstampServiceException;
 
 	Boolean bitcoinWithdrawal(BigDecimal amount, String address) throws BitstampServiceException;
 

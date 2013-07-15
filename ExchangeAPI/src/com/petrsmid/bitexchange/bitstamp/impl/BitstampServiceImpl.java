@@ -10,6 +10,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.google.inject.Inject;
+import com.petrsmid.bitexchange.bitstamp.AccountBalance;
 import com.petrsmid.bitexchange.bitstamp.BitstampService;
 import com.petrsmid.bitexchange.bitstamp.BitstampServiceException;
 import com.petrsmid.bitexchange.bitstamp.EurUsdRate;
@@ -20,6 +21,7 @@ import com.petrsmid.bitexchange.bitstamp.Transaction;
 import com.petrsmid.bitexchange.bitstamp.UnconfirmedBitcoinDeposit;
 import com.petrsmid.bitexchange.bitstamp.UserTransaction;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.AccountBalanceDTO;
+import com.petrsmid.bitexchange.bitstamp.impl.dto.AccountBalanceMapper;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.ErrorDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.EurUsdRateDTO;
 import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderBookDTO;
@@ -163,7 +165,7 @@ public class BitstampServiceImpl implements BitstampService {
 	}
 	
 	@Override
-	public AccountBalanceDTO getAccountBalance() throws BitstampServiceException {
+	public AccountBalance getAccountBalance() throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
@@ -172,8 +174,8 @@ public class BitstampServiceImpl implements BitstampService {
 		try {
 			String output = httpReader.post(url, requestParams);
 			checkResponseForError(output);
-			AccountBalanceDTO accountBalance = JsonCodec.INSTANCE.parseJson(output, AccountBalanceDTO.class);
-			return accountBalance;
+			AccountBalanceDTO accountBalanceDTO = JsonCodec.INSTANCE.parseJson(output, AccountBalanceDTO.class);
+			return AccountBalanceMapper.mapAccountBalanceDTO2AccountBalance(accountBalanceDTO);
 		} catch (IOException | JsonParsingException e) {
 			throw new BitstampServiceException(e);
 		}		
