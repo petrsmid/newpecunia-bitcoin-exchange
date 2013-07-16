@@ -15,7 +15,7 @@ public class UserTransactionMapper {
 			String isoDate = dto.getDatetime().replace(' ', 'T');
 			ut.setDatetime(DateTime.parse(isoDate));
 		}
-		ut.setOrderId(dto.getOder_id());
+		ut.setOrderId(dto.getOrder_id());
 		ut.setTransactionFee(dto.getFee());
 		ut.setTransactionId(dto.getId());
 		if (Integer.valueOf(0).equals(dto.getType())) {

@@ -6,11 +6,11 @@ public class UserTransactionDTO {
 
 	private String datetime; // date and time
 	private String id; // transaction id
-	private String type; // transaction type (0 - deposit; 1 - withdrawal; 2 - market trade)
+	private Integer type; // transaction type (0 - deposit; 1 - withdrawal; 2 - market trade)
 	private BigDecimal usd; // USD amount
 	private BigDecimal btc; // BTC amount
 	private BigDecimal fee; // transaction fee
-	private BigDecimal oder_id; // executed order id
+	private BigDecimal order_id; // executed order id
 
 	
 	public String getDatetime() {
@@ -25,10 +25,10 @@ public class UserTransactionDTO {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getType() {
+	public Integer getType() {
 		return type;
 	}
-	public void setType(String type) {
+	public void setType(Integer type) {
 		this.type = type;
 	}
 	public BigDecimal getUsd() {
@@ -49,11 +49,11 @@ public class UserTransactionDTO {
 	public void setFee(BigDecimal fee) {
 		this.fee = fee;
 	}
-	public BigDecimal getOder_id() {
-		return oder_id;
+	public BigDecimal getOrder_id() {
+		return order_id;
 	}
-	public void setOder_id(BigDecimal oder_id) {
-		this.oder_id = oder_id;
+	public void setOrder_id(BigDecimal order_id) {
+		this.order_id = order_id;
 	}
 	
 	

@@ -49,7 +49,7 @@ public class AccountBalance {
 	public void setBtcAvailable(BigDecimal btcAvailable) {
 		this.btcAvailable = btcAvailable;
 	}
-	public BigDecimal getCustomerTradingFee() {
+	public BigDecimal getCustomerTradingPercentFee() {
 		return customerTradingFee;
 	}
 	public void setCustomerTradingFee(BigDecimal customerTradingFee) {

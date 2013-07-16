@@ -219,11 +219,17 @@ public class BitstampServiceImpl implements BitstampService {
 	}
 	
 	@Override
-	public List<UserTransaction> getUserTransactions(long secondsInHistory) throws BitstampServiceException {
+	public List<UserTransaction> getUserTransactions(long limit) throws BitstampServiceException {
+		return getUserTransactions(0, limit);
+	}
+
+	@Override
+	public List<UserTransaction> getUserTransactions(long offset, long limit) throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
-		requestParams.add(new BasicNameValuePair("timedelta", Long.toString(secondsInHistory)));
+		requestParams.add(new BasicNameValuePair("offset", Long.toString(offset)));
+		requestParams.add(new BasicNameValuePair("limit", Long.toString(limit)));
 		
 		String url = BitstampConstants.USER_TRANSACTIONS;
 		try {
@@ -241,10 +247,15 @@ public class BitstampServiceImpl implements BitstampService {
 	}
 	
 	@Override
-	public List<Transaction> getTransactions(long secondsInHistory) throws BitstampServiceException {
+	public List<Transaction> getTransactions(long limit) throws BitstampServiceException {
+		return getTransactions(0, limit);
+	}
+	
+	@Override
+	public List<Transaction> getTransactions(long offset, long limit) throws BitstampServiceException {
 		String url = BitstampConstants.TRANSACTIONS;
 		try {
-			String output = httpReader.get(url+"?timedelta="+secondsInHistory);
+			String output = httpReader.get(url+"?offset="+offset+"&limit="+limit);
 			checkResponseForError(output);
 			TransactionDTO[] transactionDTOs = JsonCodec.INSTANCE.parseJson(output, TransactionDTO[].class);
 			List<Transaction> transactions = new ArrayList<>();

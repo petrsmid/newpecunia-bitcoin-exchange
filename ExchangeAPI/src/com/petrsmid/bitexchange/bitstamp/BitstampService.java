@@ -26,9 +26,13 @@ public interface BitstampService {
 
 	String getBitcoinDepositAddress() throws BitstampServiceException;
 
-	List<UserTransaction> getUserTransactions(long secondsInHistory) throws BitstampServiceException;
+	List<UserTransaction> getUserTransactions(long limit) throws BitstampServiceException;
+	
+	List<UserTransaction> getUserTransactions(long offset, long limit) throws BitstampServiceException;
 
-	List<Transaction> getTransactions(long secondsInHistory) throws BitstampServiceException;
+	List<Transaction> getTransactions(long limit) throws BitstampServiceException;
+
+	List<Transaction> getTransactions(long offset, long limit) throws BitstampServiceException;
 
 	List<UnconfirmedBitcoinDeposit> getUnconfirmedBitcoinDeposits() throws BitstampServiceException;
 
