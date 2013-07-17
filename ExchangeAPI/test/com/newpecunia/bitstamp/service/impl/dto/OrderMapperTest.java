@@ -1,4 +1,4 @@
-package com.petrsmid.bitexchange.bitstamp.impl.dto;
+package com.newpecunia.bitstamp.service.impl.dto;
 
 import static org.junit.Assert.*;
 

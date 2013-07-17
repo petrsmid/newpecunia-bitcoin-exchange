@@ -1,4 +1,4 @@
-package com.petrsmid.bitexchange.bitstamp;
+package com.newpecunia.bitstamp.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

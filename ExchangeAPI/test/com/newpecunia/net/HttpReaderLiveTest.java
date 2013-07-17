@@ -1,4 +1,4 @@
-package com.petrsmid.bitexchange.net;
+package com.newpecunia.net;
 
 
 import static org.junit.Assert.*;
