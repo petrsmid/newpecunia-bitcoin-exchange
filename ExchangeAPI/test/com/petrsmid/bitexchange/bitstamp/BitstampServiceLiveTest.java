@@ -12,7 +12,15 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.petrsmid.bitexchange.GuiceBitexchangeModule;
+import com.newpecunia.GuiceBitexchangeModule;
+import com.newpecunia.bitstamp.service.AccountBalance;
+import com.newpecunia.bitstamp.service.BitstampService;
+import com.newpecunia.bitstamp.service.EurUsdRate;
+import com.newpecunia.bitstamp.service.Order;
+import com.newpecunia.bitstamp.service.Ticker;
+import com.newpecunia.bitstamp.service.Transaction;
+import com.newpecunia.bitstamp.service.UnconfirmedBitcoinDeposit;
+import com.newpecunia.bitstamp.service.UserTransaction;
 
 public class BitstampServiceLiveTest {
 

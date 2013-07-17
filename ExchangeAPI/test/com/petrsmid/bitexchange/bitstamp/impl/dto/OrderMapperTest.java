@@ -5,7 +5,9 @@ import static org.junit.Assert.*;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import com.petrsmid.bitexchange.bitstamp.Order;
+import com.newpecunia.bitstamp.service.Order;
+import com.newpecunia.bitstamp.service.impl.dto.OrderDTO;
+import com.newpecunia.bitstamp.service.impl.dto.OrderMapper;
 
 public class OrderMapperTest {
 	

@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 
 import org.junit.Test;
 
-import com.petrsmid.bitexchange.bitstamp.impl.dto.OrderDTO;
+import com.newpecunia.bitstamp.service.impl.dto.OrderDTO;
+import com.newpecunia.net.JsonCodec;
+import com.newpecunia.net.JsonParsingException;
 
 public class JsonCodecTest {
 

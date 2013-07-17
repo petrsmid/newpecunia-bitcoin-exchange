@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 
-import com.petrsmid.bitexchange.bitstamp.impl.BitstampConstants;
-import com.petrsmid.bitexchange.net.HttpReader;
+import com.newpecunia.bitstamp.service.impl.BitstampConstants;
+import com.newpecunia.net.HttpReader;
 
 public class HttpReaderBitstampMock implements HttpReader {
 
