@@ -8,36 +8,63 @@ import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpMessage;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 
 public class HttpReaderImpl implements HttpReader {
 	
+	private HttpClient httpClient = new DefaultHttpClient();
+
+	//package private constructor -> instantiate it always with Factory
+	HttpReaderImpl() {
+		httpClient = new DefaultHttpClient();
+		CookieStore cookieStore = new BasicCookieStore();
+		HttpContext httpContext = new BasicHttpContext();
+		httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);		
+	}
+	
 	@Override
 	public String get(String url) throws IOException {
-		return doRequest(url, null);
+		return doRequest(url, null, null);
 	}
 	
 	@Override
+	public String get(String url, List<Header> headers) throws IOException {
+		return doRequest(url, headers, null);
+	}
+
+	@Override
 	public String post(String url, List<NameValuePair> params) throws IOException {
-		return doRequest(url, params);
+		return doRequest(url, null, params);
+	}
+	
+	@Override
+	public String post(String url, List<Header> headers, List<NameValuePair> params) throws IOException {
+		return doRequest(url, headers, params);
 	}
 	
 	
-	private String doRequest(String url, List<NameValuePair> params) throws IOException {
-		HttpClient httpClient = new DefaultHttpClient();
-
+	private String doRequest(String url, List<Header> headers, List<NameValuePair> params) throws IOException {
 		HttpResponse response;
 		
 		if (params == null) { //HTTP GET
-			response = httpClient.execute(new HttpGet(url)); //can throw IOException
+			HttpGet httpGet = new HttpGet(url);
+			addHeadersToRequest(headers, httpGet);
+			response = httpClient.execute(httpGet); //can throw IOException
 		} else { //HTTP POST
 			HttpPost httpPost = new HttpPost(url);
+			addHeadersToRequest(headers, httpPost);
 			httpPost.setEntity(new UrlEncodedFormEntity(params));
 			response = httpClient.execute(httpPost); //can throw IOException
 		}
@@ -65,5 +92,13 @@ public class HttpReaderImpl implements HttpReader {
 		} else {
 			return null;
 		}			
+	}
+
+	private void addHeadersToRequest(List<Header> headers, HttpMessage httpMessage) {
+		if (headers != null) {
+			for (Header header : headers) {
+				httpMessage.addHeader(header);
+			}
+		}
 	}
 }

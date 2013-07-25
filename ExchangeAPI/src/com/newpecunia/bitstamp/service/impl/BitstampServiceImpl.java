@@ -32,26 +32,26 @@ import com.newpecunia.bitstamp.service.impl.dto.TransactionDTO;
 import com.newpecunia.bitstamp.service.impl.dto.TransactionMapper;
 import com.newpecunia.bitstamp.service.impl.dto.UserTransactionDTO;
 import com.newpecunia.bitstamp.service.impl.dto.UserTransactionMapper;
-import com.newpecunia.net.HttpReader;
+import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.JsonCodec;
 import com.newpecunia.net.JsonParsingException;
 
 public class BitstampServiceImpl implements BitstampService {
 
-	private HttpReader httpReader;
+	private HttpReaderFactory httpReaderFactory;
 	private BitstampCredentials credentials;
 	
 	@Inject
-	public BitstampServiceImpl(HttpReader httpReader, BitstampCredentials credentials) {
-		this.httpReader = httpReader;
+	public BitstampServiceImpl(HttpReaderFactory httpReaderFactory, BitstampCredentials credentials) {
+		this.httpReaderFactory = httpReaderFactory;
 		this.credentials = credentials;
 	}
 	
 	@Override
 	public Ticker getTicker() throws BitstampServiceException {
-		String url = BitstampConstants.TICKER_URL;
+		String url = BitstampServiceConstants.TICKER_URL;
 		try {
-			String output = httpReader.get(url);
+			String output = httpReaderFactory.createNewHttpReaderSession().get(url);
 			checkResponseForError(output);
 			Ticker ticker = JsonCodec.INSTANCE.parseJson(output, Ticker.class);
 			return ticker;
@@ -62,9 +62,9 @@ public class BitstampServiceImpl implements BitstampService {
 
 	@Override
 	public OrderBook getOrderBook() throws BitstampServiceException {
-		String url = BitstampConstants.ORDER_BOOK_URL;
+		String url = BitstampServiceConstants.ORDER_BOOK_URL;
 		try {
-			String output = httpReader.get(url);
+			String output = httpReaderFactory.createNewHttpReaderSession().get(url);
 			checkResponseForError(output);
 			OrderBookDTO orderBookDTO = JsonCodec.INSTANCE.parseJson(output, OrderBookDTO.class);
 			return OrderBookMapper.mapOrderBookDTO2OrderBook(orderBookDTO);
@@ -81,9 +81,9 @@ public class BitstampServiceImpl implements BitstampService {
 		requestParams.add(new BasicNameValuePair("amount", amount.toPlainString()));		
 		requestParams.add(new BasicNameValuePair("price", price.toPlainString()));		
 		
-		String url = BitstampConstants.BUY_LIMIT_ORDER;
+		String url = BitstampServiceConstants.BUY_LIMIT_ORDER;
 		try {
-			String output = httpReader.post(url, requestParams);
+			String output = httpReaderFactory.createNewHttpReaderSession().post(url, requestParams);
 			checkResponseForError(output);
 			OrderDTO orderDTO = JsonCodec.INSTANCE.parseJson(output, OrderDTO.class);
 			return OrderMapper.mapOrderDTO2Order(orderDTO);
@@ -101,9 +101,9 @@ public class BitstampServiceImpl implements BitstampService {
 		requestParams.add(new BasicNameValuePair("amount", amount.toPlainString()));		
 		requestParams.add(new BasicNameValuePair("price", price.toPlainString()));		
 
-		String url = BitstampConstants.SELL_LIMIT_ORDER;
+		String url = BitstampServiceConstants.SELL_LIMIT_ORDER;
 		try {
-			String output = httpReader.post(url, requestParams);
+			String output = httpReaderFactory.createNewHttpReaderSession().post(url, requestParams);
 			checkResponseForError(output);
 			OrderDTO orderDTO = JsonCodec.INSTANCE.parseJson(output, OrderDTO.class);
 			return OrderMapper.mapOrderDTO2Order(orderDTO);
@@ -119,9 +119,9 @@ public class BitstampServiceImpl implements BitstampService {
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
 		requestParams.add(new BasicNameValuePair("id", orderId));
 		
-		String url = BitstampConstants.CANCEL_ORDER;
+		String url = BitstampServiceConstants.CANCEL_ORDER;
 		try {
-			String output = httpReader.post(url, requestParams);
+			String output = httpReaderFactory.createNewHttpReaderSession().post(url, requestParams);
 			checkResponseForError(output);
 			Boolean success = JsonCodec.INSTANCE.parseJson(output, Boolean.class);
 			return success;
@@ -136,9 +136,9 @@ public class BitstampServiceImpl implements BitstampService {
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
 		
-		String url = BitstampConstants.OPEN_ORDERS;
+		String url = BitstampServiceConstants.OPEN_ORDERS;
 		try {
-			String output = httpReader.post(url, requestParams);
+			String output = httpReaderFactory.createNewHttpReaderSession().post(url, requestParams);
 			checkResponseForError(output);
 			OrderDTO[] orderDTOs = JsonCodec.INSTANCE.parseJson(output, OrderDTO[].class);
 			List<Order> orders = new ArrayList<>();
@@ -153,9 +153,9 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public EurUsdRate getEurUsdConversionRate() throws BitstampServiceException {
-		String url = BitstampConstants.EUR_USD_RATE;
+		String url = BitstampServiceConstants.EUR_USD_RATE;
 		try {
-			String output = httpReader.get(url);
+			String output = httpReaderFactory.createNewHttpReaderSession().get(url);
 			checkResponseForError(output);
 			EurUsdRateDTO eurUsdRateDTO = JsonCodec.INSTANCE.parseJson(output, EurUsdRateDTO.class);
 			return new EurUsdRate(eurUsdRateDTO.getBuy(), eurUsdRateDTO.getSell());
@@ -170,9 +170,9 @@ public class BitstampServiceImpl implements BitstampService {
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
 		
-		String url = BitstampConstants.ACCOUNT_BALANCE;
+		String url = BitstampServiceConstants.ACCOUNT_BALANCE;
 		try {
-			String output = httpReader.post(url, requestParams);
+			String output = httpReaderFactory.createNewHttpReaderSession().post(url, requestParams);
 			checkResponseForError(output);
 			AccountBalanceDTO accountBalanceDTO = JsonCodec.INSTANCE.parseJson(output, AccountBalanceDTO.class);
 			return AccountBalanceMapper.mapAccountBalanceDTO2AccountBalance(accountBalanceDTO);
@@ -190,9 +190,9 @@ public class BitstampServiceImpl implements BitstampService {
 		requestParams.add(new BasicNameValuePair("amount", amount.toPlainString()));		
 		requestParams.add(new BasicNameValuePair("address", address));		
 		
-		String url = BitstampConstants.BITCOIN_WITHDRAWAL;
+		String url = BitstampServiceConstants.BITCOIN_WITHDRAWAL;
 		try {
-			String output = httpReader.post(url, requestParams);
+			String output = httpReaderFactory.createNewHttpReaderSession().post(url, requestParams);
 			checkResponseForError(output);
 			Boolean success = JsonCodec.INSTANCE.parseJson(output, Boolean.class);
 			return success;
@@ -207,9 +207,9 @@ public class BitstampServiceImpl implements BitstampService {
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
 		
-		String url = BitstampConstants.BITCOIN_DEPOSIT_ADDRESS;
+		String url = BitstampServiceConstants.BITCOIN_DEPOSIT_ADDRESS;
 		try {
-			String output = httpReader.post(url, requestParams);
+			String output = httpReaderFactory.createNewHttpReaderSession().post(url, requestParams);
 			checkResponseForError(output);
 			String address = JsonCodec.INSTANCE.parseJson(output, String.class);
 			return address;
@@ -231,9 +231,9 @@ public class BitstampServiceImpl implements BitstampService {
 		requestParams.add(new BasicNameValuePair("offset", Long.toString(offset)));
 		requestParams.add(new BasicNameValuePair("limit", Long.toString(limit)));
 		
-		String url = BitstampConstants.USER_TRANSACTIONS;
+		String url = BitstampServiceConstants.USER_TRANSACTIONS;
 		try {
-			String output = httpReader.post(url, requestParams);
+			String output = httpReaderFactory.createNewHttpReaderSession().post(url, requestParams);
 			checkResponseForError(output);
 			UserTransactionDTO[] transactionDTOs = JsonCodec.INSTANCE.parseJson(output, UserTransactionDTO[].class);
 			List<UserTransaction> userTransactions = new ArrayList<>();
@@ -253,9 +253,9 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public List<Transaction> getTransactions(long offset, long limit) throws BitstampServiceException {
-		String url = BitstampConstants.TRANSACTIONS;
+		String url = BitstampServiceConstants.TRANSACTIONS;
 		try {
-			String output = httpReader.get(url+"?offset="+offset+"&limit="+limit);
+			String output = httpReaderFactory.createNewHttpReaderSession().get(url+"?offset="+offset+"&limit="+limit);
 			checkResponseForError(output);
 			TransactionDTO[] transactionDTOs = JsonCodec.INSTANCE.parseJson(output, TransactionDTO[].class);
 			List<Transaction> transactions = new ArrayList<>();
@@ -274,9 +274,9 @@ public class BitstampServiceImpl implements BitstampService {
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
 		
-		String url = BitstampConstants.UNCONFIRMED_BTC;
+		String url = BitstampServiceConstants.UNCONFIRMED_BTC;
 		try {
-			String output = httpReader.post(url, requestParams);
+			String output = httpReaderFactory.createNewHttpReaderSession().post(url, requestParams);
 			checkResponseForError(output);
 			UnconfirmedBitcoinDeposit[] unconfirmedBtcDeposits = JsonCodec.INSTANCE.parseJson(output, UnconfirmedBitcoinDeposit[].class);
 			return Arrays.asList(unconfirmedBtcDeposits);

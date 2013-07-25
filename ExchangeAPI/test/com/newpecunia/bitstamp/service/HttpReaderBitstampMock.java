@@ -3,16 +3,17 @@ package com.newpecunia.bitstamp.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 
-import com.newpecunia.bitstamp.service.impl.BitstampConstants;
+import com.newpecunia.bitstamp.service.impl.BitstampServiceConstants;
 import com.newpecunia.net.HttpReader;
 
 public class HttpReaderBitstampMock implements HttpReader {
 
 	@Override
 	public String get(String url) throws IOException {
-		if (url.equals(BitstampConstants.TICKER_URL)) {
+		if (url.equals(BitstampServiceConstants.TICKER_URL)) {
 			return "{" +
 					"\"high\": \"101.11\", " +
 					"\"last\": \"99.99\", " +
@@ -22,7 +23,7 @@ public class HttpReaderBitstampMock implements HttpReader {
 					"\"low\": \"98.00\", " +
 					"\"ask\": \"99.99\"" +
 					"}";						
-		} else if (url.equals(BitstampConstants.ORDER_BOOK_URL)) {
+		} else if (url.equals(BitstampServiceConstants.ORDER_BOOK_URL)) {
 			return "{" +
 					"\"timestamp\": \"1371853191\", " +
 					"\"bids\": [[\"102.93\", \"56.32392810\"], [\"102.91\", \"4.07422019\"]], " +
@@ -35,6 +36,19 @@ public class HttpReaderBitstampMock implements HttpReader {
 
 	@Override
 	public String post(String url, List<NameValuePair> params) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String get(String url, List<Header> headers) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String post(String url, List<Header> headers,
+			List<NameValuePair> params) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

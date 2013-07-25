@@ -21,6 +21,7 @@
         <dependency org="com.google.code.guice" name="guice" rev="1.0"/>
         <dependency org="org.apache.commons" name="commons-lang3" rev="3.1"/>
         <dependency org="joda-time" name="joda-time" rev="2.2"/>
+        <dependency org="org.jsoup" name="jsoup" rev="1.7.2"/>
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
     </dependencies>

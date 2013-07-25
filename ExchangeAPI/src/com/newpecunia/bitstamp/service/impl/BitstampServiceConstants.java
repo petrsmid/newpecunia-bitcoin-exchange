@@ -1,6 +1,6 @@
 package com.newpecunia.bitstamp.service.impl;
 
-public class BitstampConstants {
+public class BitstampServiceConstants {
 	
 	public static final String API_URL = "https://www.bitstamp.net/api/";
 	

@@ -7,8 +7,8 @@ import com.newpecunia.bitstamp.service.impl.BitstampServiceImpl;
 import com.newpecunia.bitstamp.service.impl.SecureBitstampCredentialsImpl;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriver;
 import com.newpecunia.bitstamp.webdriver.impl.BitstampWebdriverImpl;
-import com.newpecunia.net.HttpReader;
-import com.newpecunia.net.HttpReaderImpl;
+import com.newpecunia.net.HttpReaderFactory;
+import com.newpecunia.net.HttpReaderFactoryImpl;
 
 public class GuiceBitexchangeModule extends AbstractModule {
 
@@ -20,7 +20,7 @@ public class GuiceBitexchangeModule extends AbstractModule {
 	}
 
 	protected void configureCommons() {
-		bind(HttpReader.class).to(HttpReaderImpl.class);
+		bind(HttpReaderFactory.class).to(HttpReaderFactoryImpl.class);
 	}
 
 	private void configureBitstamp() {

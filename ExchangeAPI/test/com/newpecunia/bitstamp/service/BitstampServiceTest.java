@@ -12,11 +12,7 @@ import org.junit.runners.JUnit4;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.newpecunia.GuiceBitexchangeModule;
-import com.newpecunia.bitstamp.service.BitstampService;
-import com.newpecunia.bitstamp.service.OrderBook;
-import com.newpecunia.bitstamp.service.PriceAndAmount;
-import com.newpecunia.bitstamp.service.Ticker;
-import com.newpecunia.net.HttpReader;
+import com.newpecunia.net.HttpReaderFactory;
 
 @RunWith(JUnit4.class)
 public class BitstampServiceTest {
@@ -26,7 +22,7 @@ public class BitstampServiceTest {
 			@Override
 			protected void configureCommons() {
 				//mock the HttpReader
-				bind(HttpReader.class).to(HttpReaderBitstampMock.class);
+				bind(HttpReaderFactory.class).to(HttpReaderBitstampMockFactory.class);
 			}
 		});
 		
