@@ -26,40 +26,52 @@ public class HttpSimpleReaderImpl implements HttpReader {
 	
 	@Override
 	public String get(String url) throws IOException {
-		return doRequest(url, null, null);
+		return doRequest(url, null, null).getOutput();
 	}
 	
 	@Override
 	public String get(String url, List<Header> headers) throws IOException {
+		return doRequest(url, headers, null).getOutput();
+	}
+	
+	@Override
+	public HttpReaderOutput getWithMetadata(String url, List<Header> headers) throws IOException {
 		return doRequest(url, headers, null);
 	}
 
 	@Override
 	public String post(String url, List<NameValuePair> params) throws IOException {
-		return doRequest(url, null, params);
+		return doRequest(url, null, params).getOutput();
 	}
 	
 	@Override
 	public String post(String url, List<Header> headers, List<NameValuePair> params) throws IOException {
-		return doRequest(url, headers, params);
+		return doRequest(url, headers, params).getOutput();
 	}
+
+	@Override
+	public HttpReaderOutput postWithMetadata(String url, List<Header> headers, List<NameValuePair> params) throws IOException {
+		return doRequest(url, headers, params);
+	}	
 	
-	
-	private String doRequest(String url, List<Header> headers, List<NameValuePair> params) throws IOException {
-		HttpResponse response;
+	private HttpReaderOutput doRequest(String url, List<Header> headers, List<NameValuePair> params) throws IOException {
+		HttpReaderOutput result = new HttpReaderOutput();
+		HttpResponse httpResponse;
 		
 		if (params == null) { //HTTP GET
 			HttpGet httpGet = new HttpGet(url);
 			addHeadersToRequest(headers, httpGet);
-			response = httpClient.execute(httpGet); //can throw IOException
+			httpResponse = httpClient.execute(httpGet); //can throw IOException
 		} else { //HTTP POST
 			HttpPost httpPost = new HttpPost(url);
 			addHeadersToRequest(headers, httpPost);
 			httpPost.setEntity(new UrlEncodedFormEntity(params));
-			response = httpClient.execute(httpPost); //can throw IOException
+			httpResponse = httpClient.execute(httpPost); //can throw IOException
 		}
 		
-		HttpEntity entity = response.getEntity();
+		HttpEntity entity = httpResponse.getEntity();
+		result.setResultCode(httpResponse.getStatusLine().getStatusCode());
+		
 		if (entity != null) {
 			Header encodingHeader = entity.getContentEncoding();
 			try (InputStream in = entity.getContent()){ //automatically closes the stream 
@@ -77,10 +89,11 @@ public class HttpSimpleReaderImpl implements HttpReader {
 					}
 					output.append(line);
 				}
-				return output.toString();
+				result.setOutput(output.toString());
+				return result;
 			}
 		} else {
-			return null;
+			return result;
 		}			
 	}
 
@@ -90,6 +103,6 @@ public class HttpSimpleReaderImpl implements HttpReader {
 				httpMessage.addHeader(header);
 			}
 		}
-	}	
+	}
 	
 }

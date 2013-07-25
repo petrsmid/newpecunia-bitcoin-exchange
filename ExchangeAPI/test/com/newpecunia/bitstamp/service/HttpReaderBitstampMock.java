@@ -8,6 +8,7 @@ import org.apache.http.NameValuePair;
 
 import com.newpecunia.bitstamp.service.impl.BitstampServiceConstants;
 import com.newpecunia.net.HttpReader;
+import com.newpecunia.net.HttpReaderOutput;
 
 public class HttpReaderBitstampMock implements HttpReader {
 
@@ -48,6 +49,20 @@ public class HttpReaderBitstampMock implements HttpReader {
 
 	@Override
 	public String post(String url, List<Header> headers,
+			List<NameValuePair> params) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HttpReaderOutput getWithMetadata(String url, List<Header> headers)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HttpReaderOutput postWithMetadata(String url, List<Header> headers,
 			List<NameValuePair> params) throws IOException {
 		// TODO Auto-generated method stub
 		return null;

@@ -11,9 +11,12 @@ public interface HttpReader {
 	String get(String url) throws IOException;
 
 	String get(String url, List<Header> headers) throws IOException;
+	
+	HttpReaderOutput getWithMetadata(String url, List<Header> headers) throws IOException;
 
 	String post(String url, List<NameValuePair> params) throws IOException;
 
 	String post(String url, List<Header> headers, List<NameValuePair> params) throws IOException;
 
+	HttpReaderOutput postWithMetadata(String url, List<Header> headers, List<NameValuePair> params) throws IOException;
 }
