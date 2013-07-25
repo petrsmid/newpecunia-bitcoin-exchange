@@ -5,9 +5,16 @@ import com.newpecunia.net.HttpReaderFactory;
 
 public class HttpReaderBitstampMockFactory implements HttpReaderFactory {
 
+	private HttpReader httpReaderMock = new HttpReaderBitstampMock();
+	
 	@Override
-	public HttpReader createNewHttpReaderSession() {
-		return new HttpReaderBitstampMock();
+	public HttpReader createNewHttpSessionReader() {
+		return httpReaderMock;
+	}
+
+	@Override
+	public HttpReader createNewHttpSimpleReader() {
+		return httpReaderMock;
 	}
 
 }

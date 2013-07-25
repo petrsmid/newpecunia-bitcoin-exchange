@@ -31,7 +31,7 @@ public class BitstampSessionImpl implements BitstampSession {
 	static BitstampSessionImpl createSession(HttpReaderFactory httpReaderFactory, BitstampCredentials credentials) throws IOException, BitstampWebdriverException {
 		BitstampSessionImpl session = new BitstampSessionImpl();
 		
-		session.httpReader = httpReaderFactory.createNewHttpReaderSession();
+		session.httpReader = httpReaderFactory.createNewHttpSessionReader();
 		
 		session.login(credentials.getUsername(), credentials.getPassword());
 		return session;

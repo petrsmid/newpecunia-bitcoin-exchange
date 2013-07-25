@@ -2,6 +2,8 @@ package com.newpecunia.net;
 
 public interface HttpReaderFactory {
 
-	HttpReader createNewHttpReaderSession();
+	HttpReader createNewHttpSessionReader();
+
+	HttpReader createNewHttpSimpleReader();
 
 }
