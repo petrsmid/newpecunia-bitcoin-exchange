@@ -74,32 +74,57 @@ public class BitstampSessionImpl implements BitstampSession {
 		String url = BitstampWebdriverConstants.LOGIN_URL;
 		HttpReaderOutput loginPageOutput = httpReader.getWithMetadata(url);
 		verifyResultCode(loginPageOutput.getResultCode(), url);
+		lastOpenedUrl = url;
 		verifyPageContainsText(loginPageOutput.getOutput(), url,
 				"<h1>Member Login</h1>", "id_username", "id_password", "login_form");
-		lastOpenedUrl = url;
 		return loginPageOutput.getOutput();
 	}
 
-	public boolean isWaitingForInternationalDeposit() throws IOException, BitstampWebdriverException {
+	@Override
+	public boolean isWaitingForDeposit() throws IOException, BitstampWebdriverException {
 		String url = BitstampWebdriverConstants.DEPOSIT_URL;
-		HttpReaderOutput depositPageOutput = httpReader.getWithMetadata(url);
-		verifyResultCode(depositPageOutput.getResultCode(), url);
-		verifyPageContainsText(depositPageOutput.getOutput(), url, "Deposit");
-		String page = depositPageOutput.getOutput();
-		if (page.contains("WAITING FOR YOU TO SEND THE FUNDS...")) {
+		String page = get(url);
+		verifyPageContainsText(page, url, "Deposit");
+		if (page.toUpperCase().contains("WAITING FOR YOU TO SEND THE FUNDS...")) {
 			return true;
-		} else if (page.contains("YOUR DEPOSIT REQUESTS")){
+		} else if (page.toUpperCase().contains("YOUR DEPOSIT REQUESTS")){
 			return false;
 		} else {
 			throw new BitstampWebdriverException("Cannot determine state of deposit waiting.");
 		}
 	}
 	
+	@Override
+	public void createInternationalUSDDeposit(BigDecimal amount, String name, String surname, String comment) throws IOException, BitstampWebdriverException {
+		//navigate to the international deposit page
+		String url = BitstampWebdriverConstants.INTERNATIONAL_DEPOSIT_URL;
+		String page = get(url);
+		//verify whether deposit is possible - the Bitstamp is not waiting for another deposit.
+		if (page.toUpperCase().contains("WAITING FOR YOU TO SEND THE FUNDS...")) {
+			throw new BitstampWebdriverException("In status of waiting for a deposit. Either wait until the deposit is finished or cancel the request.");
+		}
+		verifyPageContainsText(page, url, "INTERNATIONAL WIRE TRANSFER");
+		
+		//TODO implement me
+		
+	}
+
+	private String get(String url) throws IOException, BitstampWebdriverException {
+		List<Header> headers = new ArrayList<>();
+		headers.add(new BasicHeader("Referer", lastOpenedUrl));		
+		HttpReaderOutput output = httpReader.getWithMetadata(url, headers);
+		verifyResultCode(output.getResultCode(), url);
+		lastOpenedUrl = url;
+		return output.getOutput();
+	}
+	
+	
 	
 	private void verifyPageContainsText(String page, String pageUrl, String ... texts) throws BitstampWebdriverException {
 		if (page == null) {throw new BitstampWebdriverException("Content of page "+pageUrl+" is null."); }
+		String pageUpperCase = page.toUpperCase();
 		for (String text : texts) {
-			if (!page.contains(text)) {
+			if (!pageUpperCase.contains(text.toUpperCase())) {
 				throw new BitstampWebdriverException("Unable to open "+pageUrl+".");
 			}
 		}

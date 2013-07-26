@@ -12,6 +12,7 @@ public class BitstampWebdriverLiveTest {
 
 	private BitstampWebdriver bitstampWebdriver = null;
 
+	
 	@Before
 	public void setup() {
 		Injector injector = Guice.createInjector(new GuiceBitexchangeModule());
@@ -22,5 +23,12 @@ public class BitstampWebdriverLiveTest {
 	public void testLiveLogin() throws Exception {
 		BitstampSession session = bitstampWebdriver.createSession();
 		Assert.assertNotNull(session);
+	}
+	
+	@Test
+	public void testLiveIsWaitingForDeposit() throws Exception {
+		BitstampSession session = bitstampWebdriver.createSession();
+		session.isWaitingForDeposit();
+		//no exception should be thrown
 	}
 }
