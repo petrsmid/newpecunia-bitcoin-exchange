@@ -19,4 +19,6 @@ public interface HttpReader {
 	String post(String url, List<Header> headers, List<NameValuePair> params) throws IOException;
 
 	HttpReaderOutput postWithMetadata(String url, List<Header> headers, List<NameValuePair> params) throws IOException;
+
+	HttpReaderOutput getWithMetadata(String url) throws IOException;
 }

@@ -30,6 +30,11 @@ public class HttpSimpleReaderImpl implements HttpReader {
 	}
 	
 	@Override
+	public HttpReaderOutput getWithMetadata(String url) throws IOException {
+		return doRequest(url, null, null);
+	}
+	
+	@Override
 	public String get(String url, List<Header> headers) throws IOException {
 		return doRequest(url, headers, null).getOutput();
 	}

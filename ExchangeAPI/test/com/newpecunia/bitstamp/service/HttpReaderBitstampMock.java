@@ -68,4 +68,10 @@ public class HttpReaderBitstampMock implements HttpReader {
 		return null;
 	}
 
+	@Override
+	public HttpReaderOutput getWithMetadata(String url) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

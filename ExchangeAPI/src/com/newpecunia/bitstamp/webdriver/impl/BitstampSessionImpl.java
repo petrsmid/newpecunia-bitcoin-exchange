@@ -20,6 +20,7 @@ import com.newpecunia.bitstamp.webdriver.BitstampSession;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
 import com.newpecunia.net.HttpReader;
 import com.newpecunia.net.HttpReaderFactory;
+import com.newpecunia.net.HttpReaderOutput;
 
 public class BitstampSessionImpl implements BitstampSession {
 
@@ -61,23 +62,30 @@ public class BitstampSessionImpl implements BitstampSession {
 		
 		List<Header> headers = new ArrayList<>();
 		headers.add(new BasicHeader("Referer", BitstampWebdriverConstants.LOGIN_URL));
-		String resultPage = httpReader.post(BitstampWebdriverConstants.LOGIN_URL, headers, params);
-		
-		//TODO verify result
-	}
+		HttpReaderOutput result = httpReader.postWithMetadata(BitstampWebdriverConstants.LOGIN_URL, headers, params);
+		verifyResultCode(result.getResultCode(), BitstampWebdriverConstants.LOGIN_URL);
+}
 
 	private String navigateToLoginPage() throws IOException, BitstampWebdriverException {
-		String loginPage = httpReader.get(BitstampWebdriverConstants.LOGIN_URL);
-		verifyPageContainsText(loginPage, "login page", "<h1>Member Login</h1>", "id_username", "id_password", "login_form");
-		return loginPage;
+		HttpReaderOutput loginPageOutput = httpReader.getWithMetadata(BitstampWebdriverConstants.LOGIN_URL);
+		verifyResultCode(loginPageOutput.getResultCode(), BitstampWebdriverConstants.LOGIN_URL);
+		verifyPageContainsText(loginPageOutput.getOutput(), BitstampWebdriverConstants.LOGIN_URL,
+				"<h1>Member Login</h1>", "id_username", "id_password", "login_form");
+		return loginPageOutput.getOutput();
 	}
 
-	private void verifyPageContainsText(String page, String pageName, String ... texts) throws BitstampWebdriverException {
-		if (page == null) {throw new BitstampWebdriverException("Content of page "+pageName+" is null."); }
+	private void verifyPageContainsText(String page, String pageUrl, String ... texts) throws BitstampWebdriverException {
+		if (page == null) {throw new BitstampWebdriverException("Content of page "+pageUrl+" is null."); }
 		for (String text : texts) {
 			if (!page.contains(text)) {
-				throw new BitstampWebdriverException("Unable to open "+pageName+".");
+				throw new BitstampWebdriverException("Unable to open "+pageUrl+".");
 			}
+		}
+	}
+	
+	private void verifyResultCode(int code, String pageUrl) throws BitstampWebdriverException {
+		if (code >= 400) {
+			throw new BitstampWebdriverException("Error "+code+" returned when opening page "+pageUrl+".");
 		}
 	}
 	
