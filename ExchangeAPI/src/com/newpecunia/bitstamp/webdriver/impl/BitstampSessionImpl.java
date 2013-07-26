@@ -95,7 +95,7 @@ public class BitstampSessionImpl implements BitstampSession {
 	}
 	
 	@Override
-	public void createInternationalUSDDeposit(BigDecimal amount, String name, String surname, String comment) throws IOException, BitstampWebdriverException {
+	public void createInternationalUSDDeposit(BigDecimal amount, String firstname, String surname, String comment) throws IOException, BitstampWebdriverException {
 		//navigate to the international deposit page
 		String url = BitstampWebdriverConstants.INTERNATIONAL_DEPOSIT_URL;
 		String page = get(url);
@@ -105,8 +105,44 @@ public class BitstampSessionImpl implements BitstampSession {
 		}
 		verifyPageContainsText(page, url, "INTERNATIONAL WIRE TRANSFER");
 		
-		//TODO implement me
+		//parse international deposit form
+		Document pageDom = Jsoup.parse(page);
+		Element form = pageDom.getElementsByTag("form").get(0);
+		Map<String, String> hiddenAttributes = new HashMap<>();
+		for (Element input : form.getElementsByTag("input")) {
+			if (input.attr("type").equalsIgnoreCase("hidden")) {
+				String name = input.attr("name");
+				String value = input.attr("value");
+				hiddenAttributes.put(name,  value);				
+			}
+		}
+		//perform login
+		List<NameValuePair> params = new ArrayList<>();
+		params.add(new BasicNameValuePair("first_name", firstname));
+		params.add(new BasicNameValuePair("last_name", surname));
+		params.add(new BasicNameValuePair("amount", amount.toPlainString()));
+		params.add(new BasicNameValuePair("currency", "USD"));
+		params.add(new BasicNameValuePair("comment", comment));
+		//add hidden attributes
+		for (Entry<String, String> entry : hiddenAttributes.entrySet()) {
+			params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+		}		
+		List<Header> headers = new ArrayList<>();
+		headers.add(new BasicHeader("Referer", lastOpenedUrl));
+		HttpReaderOutput result = httpReader.postWithMetadata(url, headers, params);
+		verifyResultCode(result.getResultCode(), url);
 		
+		//verify that Bitstamp is now waiting for deposit
+		if (!isWaitingForDeposit()) {
+			throw new BitstampWebdriverException("");
+		}
+	}
+	
+	@Override
+	public void cancelLastDeposit() throws IOException, BitstampWebdriverException {
+		String url = BitstampWebdriverConstants.CANCEL_URL;
+		String page = get(url);
+		verifyPageContainsText(page, url, "YOUR DEPOSIT REQUESTS");
 	}
 
 	private String get(String url) throws IOException, BitstampWebdriverException {

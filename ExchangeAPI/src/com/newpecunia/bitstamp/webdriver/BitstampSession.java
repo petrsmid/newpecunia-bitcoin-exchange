@@ -9,4 +9,6 @@ public interface BitstampSession {
 
 	void createInternationalUSDDeposit(BigDecimal amount, String name, String surname, String comment) throws IOException, BitstampWebdriverException;
 
+	void cancelLastDeposit() throws IOException, BitstampWebdriverException;
+
 }

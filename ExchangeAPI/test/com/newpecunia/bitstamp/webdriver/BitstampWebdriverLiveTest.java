@@ -1,5 +1,7 @@
 package com.newpecunia.bitstamp.webdriver;
 
+import java.math.BigDecimal;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +31,19 @@ public class BitstampWebdriverLiveTest {
 	public void testLiveIsWaitingForDeposit() throws Exception {
 		BitstampSession session = bitstampWebdriver.createSession();
 		session.isWaitingForDeposit();
-		//no exception should be thrown
+		//no until now -> OK
+	}
+	
+	@Test
+	public void testLiveCreateDeposit() throws Exception {
+		BitstampSession session = bitstampWebdriver.createSession();
+		session.createInternationalUSDDeposit(new BigDecimal("51"), "Petr", "Smid", "this is a test");
+	}
+	
+	@Test
+	public void testCancelLastDeposit() throws Exception {
+		BitstampSession session = bitstampWebdriver.createSession();
+		session.cancelLastDeposit();
+		//no until now -> OK
 	}
 }
