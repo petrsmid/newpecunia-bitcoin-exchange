@@ -58,11 +58,11 @@ public class BitstampSessionImpl implements BitstampSession {
 		params.add(new BasicNameValuePair("password", password));
 		for (Entry<String, String> entry : hiddenAttributes.entrySet()) {
 			params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-		}
-		
+		}		
 		List<Header> headers = new ArrayList<>();
 		headers.add(new BasicHeader("Referer", BitstampWebdriverConstants.LOGIN_URL));
 		HttpReaderOutput result = httpReader.postWithMetadata(BitstampWebdriverConstants.LOGIN_URL, headers, params);
+		
 		verifyResultCode(result.getResultCode(), BitstampWebdriverConstants.LOGIN_URL);
 }
 
