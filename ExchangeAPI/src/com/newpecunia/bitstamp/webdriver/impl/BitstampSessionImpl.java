@@ -64,7 +64,7 @@ public class BitstampSessionImpl implements BitstampSession {
 		HttpReaderOutput result = httpReader.postWithMetadata(BitstampWebdriverConstants.LOGIN_URL, headers, params);
 		
 		verifyResultCode(result.getResultCode(), BitstampWebdriverConstants.LOGIN_URL);
-}
+	}
 
 	private String navigateToLoginPage() throws IOException, BitstampWebdriverException {
 		HttpReaderOutput loginPageOutput = httpReader.getWithMetadata(BitstampWebdriverConstants.LOGIN_URL);
