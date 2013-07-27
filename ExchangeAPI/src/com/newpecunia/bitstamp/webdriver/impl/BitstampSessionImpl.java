@@ -1,7 +1,6 @@
 package com.newpecunia.bitstamp.webdriver.impl;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +23,9 @@ import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.HttpReaderOutput;
 
 public class BitstampSessionImpl implements BitstampSession {
+	
+	private static final int MINIMUM_DEPOSIT_LIMIT = 50; //minimum deposit in USD
+	private static final int MAXIMUM_DEPOSIT_LIMIT = 1000000; //maximum deposit in USD
 
 	private HttpReader httpReader;
 	
@@ -95,7 +97,14 @@ public class BitstampSessionImpl implements BitstampSession {
 	}
 	
 	@Override
-	public void createInternationalUSDDeposit(BigDecimal amount, String firstname, String surname, String comment) throws IOException, BitstampWebdriverException {
+	public void createInternationalUSDDeposit(int amount, String firstname, String surname, String comment) throws IOException, BitstampWebdriverException {
+		if (amount < MINIMUM_DEPOSIT_LIMIT) {
+			throw new BitstampWebdriverException("Deposit amount must be at lease "+MINIMUM_DEPOSIT_LIMIT+" USD.");
+		}
+		if (amount > MAXIMUM_DEPOSIT_LIMIT) {
+			throw new BitstampWebdriverException("Deposit amount must be maximally "+MAXIMUM_DEPOSIT_LIMIT+" USD.");
+		}
+		
 		//navigate to the international deposit page
 		String url = BitstampWebdriverConstants.INTERNATIONAL_DEPOSIT_URL;
 		String page = get(url);
@@ -120,7 +129,7 @@ public class BitstampSessionImpl implements BitstampSession {
 		List<NameValuePair> params = new ArrayList<>();
 		params.add(new BasicNameValuePair("first_name", firstname));
 		params.add(new BasicNameValuePair("last_name", surname));
-		params.add(new BasicNameValuePair("amount", amount.toPlainString()));
+		params.add(new BasicNameValuePair("amount", ""+amount));
 		params.add(new BasicNameValuePair("currency", "USD"));
 		params.add(new BasicNameValuePair("comment", comment));
 		//add hidden attributes
