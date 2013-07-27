@@ -140,6 +140,7 @@ public class BitstampSessionImpl implements BitstampSession {
 		headers.add(new BasicHeader("Referer", lastOpenedUrl));
 		HttpReaderOutput result = httpReader.postWithMetadata(url, headers, params);
 		verifyResultCode(result.getResultCode(), url);
+		lastOpenedUrl = url;
 		
 		//verify that Bitstamp is now waiting for deposit
 		if (!isWaitingForDeposit()) {
