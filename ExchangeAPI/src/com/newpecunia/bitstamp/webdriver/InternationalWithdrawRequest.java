@@ -1,7 +1,9 @@
 package com.newpecunia.bitstamp.webdriver;
 
+import java.math.BigDecimal;
+
 public class InternationalWithdrawRequest {
-	private int amount; 
+	private BigDecimal amount; 
 	private String name; 
 	private String address; 
 	private String city; 
@@ -15,12 +17,12 @@ public class InternationalWithdrawRequest {
 	private String bankCity; 
 	private String bankPostalCode;
 
+	private String comment;
 	
-	
-	public int getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
-	public void setAmount(int amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 	public String getName() {
@@ -82,6 +84,12 @@ public class InternationalWithdrawRequest {
 	}
 	public void setBankPostalCode(String bankPostalCode) {
 		this.bankPostalCode = bankPostalCode;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 }

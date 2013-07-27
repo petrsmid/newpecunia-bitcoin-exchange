@@ -1,11 +1,13 @@
 package com.newpecunia.bitstamp.webdriver.impl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicHeader;
@@ -26,6 +28,8 @@ public class BitstampSessionImpl implements BitstampSession {
 	
 	private static final int MINIMUM_DEPOSIT_LIMIT = 50; //minimum deposit in USD
 	private static final int MAXIMUM_DEPOSIT_LIMIT = 1000000; //maximum deposit in USD
+	private static final int MINIMUM_WITHDRAW_LIMIT = 50;
+	private static final BigDecimal MAXIMAL_WITHDRAW_LIMIT = new BigDecimal("99999.99");
 
 	private HttpReader httpReader;
 	
@@ -139,6 +143,7 @@ public class BitstampSessionImpl implements BitstampSession {
 
 	@Override
 	public void createInternationalWithdraw(InternationalWithdrawRequest request) throws IOException, BitstampWebdriverException {
+		verifyWithdrawRequest(request);
 		//navigate to the international withdraw page
 		String url = BitstampWebdriverConstants.INTERNATIONAL_WITHDRAW_URL;
 		String page = get(url);
@@ -150,7 +155,7 @@ public class BitstampSessionImpl implements BitstampSession {
 		LinkedHashMap<String, String> params = getHiddenParamsFromForm(form);
 		//add parameters of the withdraw form
 		params.put("name", request.getName());
-		params.put("amount", ""+request.getAmount());
+		params.put("amount", request.getAmount().toPlainString());
 		params.put("address", request.getAddress());
 		params.put("postal_code", request.getPostalCode());
 		params.put("city", request.getCity());
@@ -160,11 +165,34 @@ public class BitstampSessionImpl implements BitstampSession {
 		params.put("bank_address", request.getBankAddress());
 		params.put("bank_postal_code", request.getBankPostalCode());
 		params.put("bank_city", request.getBankCity());
+		if (!StringUtils.isEmpty(request.getComment())) {
+			params.put("comment", request.getComment());
+		}
 		
 		//perform withdraw
 		post(url, params);		
 	}
 	
+	private void verifyWithdrawRequest(InternationalWithdrawRequest request) throws BitstampWebdriverException {
+		if (request.getAmount() == null) {throw new BitstampWebdriverException("Amount is mandatory.");}
+		if (request.getAmount().compareTo(new BigDecimal(50)) < 0) {throw new BitstampWebdriverException("Amount must be at least 50.");}
+		if (request.getAmount().compareTo(new BigDecimal("99999.99")) > 0) {throw new BitstampWebdriverException("Amount must be maximally 99999.99.");}
+		
+		if (StringUtils.isEmpty(request.getBic())) {throw new BitstampWebdriverException("BIC is mandatory.");}
+		if (StringUtils.isEmpty(request.getIban())) {throw new BitstampWebdriverException("IBAN is mandatory.");}
+		
+		if (StringUtils.isEmpty(request.getBankName())) {throw new BitstampWebdriverException("Bank name is mandatory.");}
+		if (StringUtils.isEmpty(request.getBankAddress())) {throw new BitstampWebdriverException("Bank address is mandatory.");}
+		if (StringUtils.isEmpty(request.getBankCity())) {throw new BitstampWebdriverException("Bank city is mandatory.");}
+		if (StringUtils.isEmpty(request.getBankPostalCode())) {throw new BitstampWebdriverException("Bank postal code is mandatory.");}
+
+		if (StringUtils.isEmpty(request.getName())) {throw new BitstampWebdriverException("Name is mandatory.");}
+		if (StringUtils.isEmpty(request.getAddress())) {throw new BitstampWebdriverException("Address is mandatory.");}
+		if (StringUtils.isEmpty(request.getCity())) {throw new BitstampWebdriverException("City is mandatory.");}
+		if (StringUtils.isEmpty(request.getPostalCode())) {throw new BitstampWebdriverException("Postal code is mandatory.");}
+		
+	}
+
 	private String get(String url) throws IOException, BitstampWebdriverException {
 		List<Header> headers = new ArrayList<>();
 		headers.add(new BasicHeader("Referer", lastOpenedUrl));		
