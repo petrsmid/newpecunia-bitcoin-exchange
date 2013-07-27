@@ -144,7 +144,7 @@ public class BitstampSessionImpl implements BitstampSession {
 		
 		//verify that Bitstamp is now waiting for deposit
 		if (!isWaitingForDeposit()) {
-			throw new BitstampWebdriverException("");
+			throw new BitstampWebdriverException("Some error ocurred while creating deposit - Bitstamp is NOT in status \"waiting for deposit\".");
 		}
 	}
 	
