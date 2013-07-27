@@ -2,9 +2,8 @@ package com.newpecunia.bitstamp.webdriver.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.http.Header;
@@ -18,6 +17,7 @@ import org.jsoup.nodes.Element;
 import com.newpecunia.bitstamp.service.impl.BitstampCredentials;
 import com.newpecunia.bitstamp.webdriver.BitstampSession;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
+import com.newpecunia.bitstamp.webdriver.InternationalWithdrawRequest;
 import com.newpecunia.net.HttpReader;
 import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.HttpReaderOutput;
@@ -49,7 +49,16 @@ public class BitstampSessionImpl implements BitstampSession {
 		//parse login form
 		Document pageDom = Jsoup.parse(loginPage);
 		Element form = pageDom.getElementsByTag("form").get(0);
-		Map<String, String> hiddenAttributes = new HashMap<>();
+		LinkedHashMap<String, String> params = getHiddenParamsFromForm(form);
+		//add parameters for username and password
+		params.put("username", username);
+		params.put("password", password);
+		//perform login
+		post(BitstampWebdriverConstants.LOGIN_URL, params);
+	}
+
+	private LinkedHashMap<String, String> getHiddenParamsFromForm(Element form) {
+		LinkedHashMap<String, String> hiddenAttributes = new LinkedHashMap<>();
 		for (Element input : form.getElementsByTag("input")) {
 			if (input.attr("type").equalsIgnoreCase("hidden")) {
 				String name = input.attr("name");
@@ -57,19 +66,7 @@ public class BitstampSessionImpl implements BitstampSession {
 				hiddenAttributes.put(name,  value);				
 			}
 		}
-		//perform login
-		List<NameValuePair> params = new ArrayList<>();
-		params.add(new BasicNameValuePair("username", username));
-		params.add(new BasicNameValuePair("password", password));
-		for (Entry<String, String> entry : hiddenAttributes.entrySet()) {
-			params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-		}		
-		List<Header> headers = new ArrayList<>();
-		headers.add(new BasicHeader("Referer", lastOpenedUrl));
-		HttpReaderOutput result = httpReader.postWithMetadata(BitstampWebdriverConstants.LOGIN_URL, headers, params);
-		
-		verifyResultCode(result.getResultCode(), BitstampWebdriverConstants.LOGIN_URL);
-		lastOpenedUrl = BitstampWebdriverConstants.LOGIN_URL;
+		return hiddenAttributes;
 	}
 
 	private String navigateToLoginPage() throws IOException, BitstampWebdriverException {
@@ -117,37 +114,22 @@ public class BitstampSessionImpl implements BitstampSession {
 		//parse international deposit form
 		Document pageDom = Jsoup.parse(page);
 		Element form = pageDom.getElementsByTag("form").get(0);
-		Map<String, String> hiddenAttributes = new HashMap<>();
-		for (Element input : form.getElementsByTag("input")) {
-			if (input.attr("type").equalsIgnoreCase("hidden")) {
-				String name = input.attr("name");
-				String value = input.attr("value");
-				hiddenAttributes.put(name,  value);				
-			}
-		}
-		//perform login
-		List<NameValuePair> params = new ArrayList<>();
-		params.add(new BasicNameValuePair("first_name", firstname));
-		params.add(new BasicNameValuePair("last_name", surname));
-		params.add(new BasicNameValuePair("amount", ""+amount));
-		params.add(new BasicNameValuePair("currency", "USD"));
-		params.add(new BasicNameValuePair("comment", comment));
-		//add hidden attributes
-		for (Entry<String, String> entry : hiddenAttributes.entrySet()) {
-			params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-		}		
-		List<Header> headers = new ArrayList<>();
-		headers.add(new BasicHeader("Referer", lastOpenedUrl));
-		HttpReaderOutput result = httpReader.postWithMetadata(url, headers, params);
-		verifyResultCode(result.getResultCode(), url);
-		lastOpenedUrl = url;
+		LinkedHashMap<String, String> params = getHiddenParamsFromForm(form);
+		//add parameters of the deposit form
+		params.put("first_name", firstname);
+		params.put("last_name", surname);
+		params.put("amount", ""+amount);
+		params.put("currency", "USD");
+		params.put("comment", comment);
+		//perform deposit
+		post(url, params);
 		
 		//verify that Bitstamp is now waiting for deposit
 		if (!isWaitingForDeposit()) {
 			throw new BitstampWebdriverException("Some error ocurred while creating deposit - Bitstamp is NOT in status \"waiting for deposit\".");
 		}
 	}
-	
+
 	@Override
 	public void cancelLastDeposit() throws IOException, BitstampWebdriverException {
 		String url = BitstampWebdriverConstants.CANCEL_URL;
@@ -155,6 +137,34 @@ public class BitstampSessionImpl implements BitstampSession {
 		verifyPageContainsText(page, url, "YOUR DEPOSIT REQUESTS");
 	}
 
+	@Override
+	public void createInternationalWithdraw(InternationalWithdrawRequest request) throws IOException, BitstampWebdriverException {
+		//navigate to the international withdraw page
+		String url = BitstampWebdriverConstants.INTERNATIONAL_WITHDRAW_URL;
+		String page = get(url);
+		verifyPageContainsText(page, url, "INTERNATIONAL WIRE TRANSFER", "Withdraw");
+		
+		//parse international withdraw form
+		Document pageDom = Jsoup.parse(page);
+		Element form = pageDom.getElementsByTag("form").get(0);
+		LinkedHashMap<String, String> params = getHiddenParamsFromForm(form);
+		//add parameters of the withdraw form
+		params.put("name", request.getName());
+		params.put("amount", ""+request.getAmount());
+		params.put("address", request.getAddress());
+		params.put("postal_code", request.getPostalCode());
+		params.put("city", request.getCity());
+		params.put("iban", request.getIban());
+		params.put("bic", request.getBic());
+		params.put("bank_name", request.getBankName());
+		params.put("bank_address", request.getBankAddress());
+		params.put("bank_postal_code", request.getBankPostalCode());
+		params.put("bank_city", request.getBankCity());
+		
+		//perform withdraw
+		post(url, params);		
+	}
+	
 	private String get(String url) throws IOException, BitstampWebdriverException {
 		List<Header> headers = new ArrayList<>();
 		headers.add(new BasicHeader("Referer", lastOpenedUrl));		
@@ -164,7 +174,20 @@ public class BitstampSessionImpl implements BitstampSession {
 		return output.getOutput();
 	}
 	
-	
+	private String post(String url, LinkedHashMap<String, String> params) throws IOException, BitstampWebdriverException {
+		List<Header> headers = new ArrayList<>();
+		if (lastOpenedUrl != null) {
+			headers.add(new BasicHeader("Referer", lastOpenedUrl));
+		}
+		List<NameValuePair> paramList = new ArrayList<>(); 
+		for (Entry<String, String> entry : params.entrySet()) {
+			paramList.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+		}		
+		HttpReaderOutput result = httpReader.postWithMetadata(url, headers, paramList);
+		verifyResultCode(result.getResultCode(), url);
+		lastOpenedUrl = url;
+		return result.getOutput();
+	}
 	
 	private void verifyPageContainsText(String page, String pageUrl, String ... texts) throws BitstampWebdriverException {
 		if (page == null) {throw new BitstampWebdriverException("Content of page "+pageUrl+" is null."); }
