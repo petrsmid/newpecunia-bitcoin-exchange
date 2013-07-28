@@ -15,11 +15,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.newpecunia.bitstamp.service.impl.BitstampCredentials;
 import com.newpecunia.bitstamp.webdriver.BitstampSession;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
 import com.newpecunia.bitstamp.webdriver.InternationalWithdrawRequest;
+import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine;
 import com.newpecunia.net.HttpReader;
 import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.HttpReaderOutput;
@@ -142,6 +144,29 @@ public class BitstampSessionImpl implements BitstampSession {
 	}
 
 	@Override
+	public List<WithdrawOverviewLine> getWithdrawOverview() throws IOException, BitstampWebdriverException {
+		String withrawOverviewUrl = BitstampWebdriverConstants.WITHDRAW_URL;
+		String withdrawOverviewPage = get(withrawOverviewUrl);
+		verifyPageContainsText(withdrawOverviewPage, withrawOverviewUrl, "YOUR WITHDRAWAL REQUESTS");
+		
+		//parse international deposit form
+		Document pageDom = Jsoup.parse(withdrawOverviewPage);
+		Element table = pageDom.getElementsByTag("table").get(0);
+		Elements rows = table.getElementsByTag("tr");
+		List<WithdrawOverviewLine> lines = new ArrayList<>();
+		for (Element row : rows) {
+			Elements cells = row.getElementsByTag("td");
+			if (cells.size() < 5) {
+				throw new BitstampWebdriverException("Unexpected number of cells in a row of withdraw overview.");				
+			}
+			WithdrawOverviewLine line = WithdrawOverviewLineParser.parseLine(
+					cells.get(0).text(), cells.get(1).text(), cells.get(2).text(), cells.get(3).text(), cells.get(4).text());
+		}
+		
+		return lines;
+	}
+	
+	@Override
 	public void createInternationalWithdraw(InternationalWithdrawRequest request) throws IOException, BitstampWebdriverException {
 		verifyWithdrawRequest(request);
 		//navigate to the international withdraw page
@@ -171,12 +196,20 @@ public class BitstampSessionImpl implements BitstampSession {
 		
 		//perform withdraw
 		post(url, params);		
+		
+		//verify that the withdrawal was successful
+		String withrawOverviewUrl = BitstampWebdriverConstants.WITHDRAW_URL;
+		String withdrawOverviewPage = get(withrawOverviewUrl);
+		verifyPageContainsText(withdrawOverviewPage, withrawOverviewUrl, 
+				"YOUR WITHDRAWAL REQUESTS", "E-mail confirmation needed", request.getAmount().toPlainString());
+		
 	}
 	
 	private void verifyWithdrawRequest(InternationalWithdrawRequest request) throws BitstampWebdriverException {
 		if (request.getAmount() == null) {throw new BitstampWebdriverException("Amount is mandatory.");}
 		if (request.getAmount().compareTo(new BigDecimal(50)) < 0) {throw new BitstampWebdriverException("Amount must be at least 50.");}
 		if (request.getAmount().compareTo(new BigDecimal("99999.99")) > 0) {throw new BitstampWebdriverException("Amount must be maximally 99999.99.");}
+		if (request.getAmount().scale() > 2) {throw new BitstampWebdriverException("Amount can have maximally two digits after the decimal point.");}
 		
 		if (StringUtils.isEmpty(request.getBic())) {throw new BitstampWebdriverException("BIC is mandatory.");}
 		if (StringUtils.isEmpty(request.getIban())) {throw new BitstampWebdriverException("IBAN is mandatory.");}
