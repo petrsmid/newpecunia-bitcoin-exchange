@@ -161,6 +161,7 @@ public class BitstampSessionImpl implements BitstampSession {
 			}
 			WithdrawOverviewLine line = WithdrawOverviewLineParser.parseLine(
 					cells.get(0).text(), cells.get(1).text(), cells.get(2).text(), cells.get(3).text(), cells.get(4).text());
+			lines.add(line);
 		}
 		
 		return lines;
