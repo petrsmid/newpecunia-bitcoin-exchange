@@ -2,6 +2,6 @@ package com.newpecunia.synchronization;
 
 import java.util.concurrent.locks.Lock;
 
-public interface LockProvider {
+public interface ClusterLockProvider {
 	Lock getLock();
 }

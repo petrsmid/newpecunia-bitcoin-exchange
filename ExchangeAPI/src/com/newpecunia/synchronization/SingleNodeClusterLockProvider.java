@@ -4,9 +4,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Provides locking across one JVM.
+ * Provides locking across only one JVM.
  */
-public class SingleNodeLockProvider implements LockProvider {
+public class SingleNodeClusterLockProvider implements ClusterLockProvider {
 
 	@Override
 	public Lock getLock() {
