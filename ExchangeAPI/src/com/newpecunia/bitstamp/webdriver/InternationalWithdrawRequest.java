@@ -3,11 +3,14 @@ package com.newpecunia.bitstamp.webdriver;
 import java.math.BigDecimal;
 
 public class InternationalWithdrawRequest {
-	private BigDecimal amount; 
+	private BigDecimal amount;
+	private String currency;
+	
 	private String name; 
 	private String address; 
 	private String city; 
 	private String postalCode; 
+	private String country;
 	
 	private String iban; 
 	private String bic; 
@@ -16,6 +19,7 @@ public class InternationalWithdrawRequest {
 	private String bankAddress; 
 	private String bankCity; 
 	private String bankPostalCode;
+	private String bankCountry;
 
 	private String comment;
 	
@@ -24,6 +28,12 @@ public class InternationalWithdrawRequest {
 	}
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
+	}
+	public String getCurrency() {
+		return currency;
+	}
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 	public String getName() {
 		return name;
@@ -48,6 +58,12 @@ public class InternationalWithdrawRequest {
 	}
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
 	}
 	public String getIban() {
 		return iban;
@@ -84,6 +100,12 @@ public class InternationalWithdrawRequest {
 	}
 	public void setBankPostalCode(String bankPostalCode) {
 		this.bankPostalCode = bankPostalCode;
+	}
+	public String getBankCountry() {
+		return bankCountry;
+	}
+	public void setBankCountry(String bankCountry) {
+		this.bankCountry = bankCountry;
 	}
 	public String getComment() {
 		return comment;

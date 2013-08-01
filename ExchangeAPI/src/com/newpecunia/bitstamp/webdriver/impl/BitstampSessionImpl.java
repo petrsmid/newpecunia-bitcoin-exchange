@@ -154,7 +154,13 @@ public class BitstampSessionImpl implements BitstampSession {
 		Element table = pageDom.getElementsByTag("table").get(0);
 		Elements rows = table.getElementsByTag("tr");
 		List<WithdrawOverviewLine> lines = new ArrayList<>();
+		boolean header = true;
 		for (Element row : rows) {
+			if (header) { //skip over header
+				header = false;
+				continue;
+			}
+			
 			Elements cells = row.getElementsByTag("td");
 			if (cells.size() < 5) {
 				throw new BitstampWebdriverException("Unexpected number of cells in a row of withdraw overview.");				
@@ -182,18 +188,19 @@ public class BitstampSessionImpl implements BitstampSession {
 		//add parameters of the withdraw form
 		params.put("name", request.getName());
 		params.put("amount", request.getAmount().toPlainString());
+		params.put("currency", request.getCurrency());
 		params.put("address", request.getAddress());
 		params.put("postal_code", request.getPostalCode());
 		params.put("city", request.getCity());
+		params.put("country", request.getCountry());
 		params.put("iban", request.getIban());
 		params.put("bic", request.getBic());
 		params.put("bank_name", request.getBankName());
 		params.put("bank_address", request.getBankAddress());
 		params.put("bank_postal_code", request.getBankPostalCode());
 		params.put("bank_city", request.getBankCity());
-		if (!StringUtils.isEmpty(request.getComment())) {
-			params.put("comment", request.getComment());
-		}
+		params.put("bank_country", request.getBankCountry());
+		params.put("comment", request.getComment() == null ? "" : request.getComment());
 		
 		//perform withdraw
 		post(url, params);		
@@ -211,7 +218,8 @@ public class BitstampSessionImpl implements BitstampSession {
 		if (request.getAmount().compareTo(new BigDecimal(50)) < 0) {throw new BitstampWebdriverException("Amount must be at least 50.");}
 		if (request.getAmount().compareTo(new BigDecimal("99999.99")) > 0) {throw new BitstampWebdriverException("Amount must be maximally 99999.99.");}
 		if (request.getAmount().scale() > 2) {throw new BitstampWebdriverException("Amount can have maximally two digits after the decimal point.");}
-		
+		if (StringUtils.isEmpty(request.getCurrency())) {throw new BitstampWebdriverException("Currency is mandatory.");};
+			
 		if (StringUtils.isEmpty(request.getBic())) {throw new BitstampWebdriverException("BIC is mandatory.");}
 		if (StringUtils.isEmpty(request.getIban())) {throw new BitstampWebdriverException("IBAN is mandatory.");}
 		
@@ -219,11 +227,14 @@ public class BitstampSessionImpl implements BitstampSession {
 		if (StringUtils.isEmpty(request.getBankAddress())) {throw new BitstampWebdriverException("Bank address is mandatory.");}
 		if (StringUtils.isEmpty(request.getBankCity())) {throw new BitstampWebdriverException("Bank city is mandatory.");}
 		if (StringUtils.isEmpty(request.getBankPostalCode())) {throw new BitstampWebdriverException("Bank postal code is mandatory.");}
+		if (StringUtils.isEmpty(request.getBankCountry())) {throw new BitstampWebdriverException("Bank country is mandatory.");}
 
 		if (StringUtils.isEmpty(request.getName())) {throw new BitstampWebdriverException("Name is mandatory.");}
 		if (StringUtils.isEmpty(request.getAddress())) {throw new BitstampWebdriverException("Address is mandatory.");}
 		if (StringUtils.isEmpty(request.getCity())) {throw new BitstampWebdriverException("City is mandatory.");}
 		if (StringUtils.isEmpty(request.getPostalCode())) {throw new BitstampWebdriverException("Postal code is mandatory.");}
+		if (StringUtils.isEmpty(request.getCountry())) {throw new BitstampWebdriverException("Country is mandatory.");}
+		
 		
 	}
 

@@ -6,11 +6,15 @@ import org.joda.time.DateTime;
 
 public class WithdrawOverviewLine {
 
+	public static enum WithdrawType { INTERNATIONAL_BANK_TRANSFER, BITCOIN }
+	public static enum WithdrawStatus { FINISHED, CANCELED, WAITING_FOR_CONFIRMATION }
+	
 	private long id;
-	private DateTime date;
+	private String date;
 	private String description;
 	private BigDecimal amount;
-	private String status;
+	private WithdrawStatus status;
+	private WithdrawType withdrawType;
 
 	
 	public long getId() {
@@ -19,10 +23,10 @@ public class WithdrawOverviewLine {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public DateTime getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(DateTime date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	public String getDescription() {
@@ -37,11 +41,17 @@ public class WithdrawOverviewLine {
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
-	public String getStatus() {
+	public WithdrawStatus getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(WithdrawStatus status) {
 		this.status = status;
+	}
+	public WithdrawType getWithdrawType() {
+		return withdrawType;
+	}
+	public void setWithdrawType(WithdrawType withdrawType) {
+		this.withdrawType = withdrawType;
 	}
 	
 }
