@@ -30,7 +30,7 @@ public class BitstampSessionImpl implements BitstampSession {
 	
 	private static final int MINIMUM_DEPOSIT_LIMIT = 50; //minimum deposit in USD
 	private static final int MAXIMUM_DEPOSIT_LIMIT = 1000000; //maximum deposit in USD
-	private static final int MINIMUM_WITHDRAW_LIMIT = 50;
+	private static final BigDecimal MINIMUM_WITHDRAW_LIMIT = new BigDecimal(50);
 	private static final BigDecimal MAXIMAL_WITHDRAW_LIMIT = new BigDecimal("99999.99");
 
 	private HttpReader httpReader;
@@ -215,8 +215,8 @@ public class BitstampSessionImpl implements BitstampSession {
 	
 	private void verifyWithdrawRequest(InternationalWithdrawRequest request) throws BitstampWebdriverException {
 		if (request.getAmount() == null) {throw new BitstampWebdriverException("Amount is mandatory.");}
-		if (request.getAmount().compareTo(new BigDecimal(50)) < 0) {throw new BitstampWebdriverException("Amount must be at least 50.");}
-		if (request.getAmount().compareTo(new BigDecimal("99999.99")) > 0) {throw new BitstampWebdriverException("Amount must be maximally 99999.99.");}
+		if (request.getAmount().compareTo(MINIMUM_WITHDRAW_LIMIT) < 0) {throw new BitstampWebdriverException("Amount must be at least 50.");}
+		if (request.getAmount().compareTo(MAXIMAL_WITHDRAW_LIMIT) > 0) {throw new BitstampWebdriverException("Amount must be maximally 99999.99.");}
 		if (request.getAmount().scale() > 2) {throw new BitstampWebdriverException("Amount can have maximally two digits after the decimal point.");}
 		if (StringUtils.isEmpty(request.getCurrency())) {throw new BitstampWebdriverException("Currency is mandatory.");};
 			
