@@ -9,21 +9,16 @@ import com.newpecunia.bitstamp.webdriver.BitstampWebdriver;
 import com.newpecunia.bitstamp.webdriver.impl.BitstampWebdriverImpl;
 import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.HttpReaderFactoryImpl;
+import com.newpecunia.synchronization.LockProvider;
+import com.newpecunia.synchronization.SingleNodeLockProvider;
 
 public class GuiceBitexchangeModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		configureCommons();
-		
-		configureBitstamp();
-	}
-
-	protected void configureCommons() {
 		bind(HttpReaderFactory.class).to(HttpReaderFactoryImpl.class);
-	}
-
-	private void configureBitstamp() {
+		bind(LockProvider.class).to(SingleNodeLockProvider.class);
+		
 		bind(BitstampService.class).to(BitstampServiceImpl.class);
 		bind(BitstampCredentials.class).toInstance(SecureBitstampCredentialsImpl.newInstance());
 		bind(BitstampWebdriver.class).to(BitstampWebdriverImpl.class);
