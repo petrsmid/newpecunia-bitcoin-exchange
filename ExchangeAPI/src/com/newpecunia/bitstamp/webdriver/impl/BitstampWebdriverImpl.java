@@ -14,7 +14,7 @@ import com.newpecunia.synchronization.ClusterLockProvider;
 
 public class BitstampWebdriverImpl implements BitstampWebdriver {
 
-	private static final long MAX_SESSION_AGE_MS = 60*60*1000; //one hour (in milliseconds)
+	private static final long MAX_SESSION_AGE_MS = 10*60*1000; //ten minutes (in milliseconds)
 	
 	private BitstampCredentials credentials;
 	private HttpReaderFactory httpReaderFactory;
