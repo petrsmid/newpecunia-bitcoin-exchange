@@ -59,10 +59,7 @@ public class BitstampServiceLiveTest {
 //	@Test
 	public void testLiveCancelOrder() throws Exception {
 		//CAUTION: the following live test will perform REAL transaction with REAL money!
-
-		if (false) { //set to true if you want to run the test
-			bitstampService.cancelOrder("123"); //TODO set here your order ID
-		}
+		bitstampService.cancelOrder("1234567890"); //TODO set here your order ID
 	}
 
 	@Test
@@ -151,7 +148,7 @@ public class BitstampServiceLiveTest {
 	}
 	
 	
-//	@Test
+	@Test
 	public void testBuySellGetCancel() throws Exception {
 		//CAUTION: the following live test will perform REAL transactions. However without loosing money if it does not fail.
 		Order order = bitstampService.sellLimitOrder(new BigDecimal("10000"), new BigDecimal("0.01"));
@@ -168,7 +165,7 @@ public class BitstampServiceLiveTest {
 	 * This test sends money to my Bitcoin address in Electum wallet
 	 * @throws Exception
 	 */
-	@Test
+//	@Test
 	public void testBitcoinWithdrawal() throws Exception {
 		//CAUTION: the following live test will perform REAL operation with REAL money (BTC).
 		Boolean status = bitstampService.bitcoinWithdrawal(new BigDecimal("0.01"), "1wGjmUwFLqfL2C15BVUACCDosVRFNbfcR"); //in my Electum wallet

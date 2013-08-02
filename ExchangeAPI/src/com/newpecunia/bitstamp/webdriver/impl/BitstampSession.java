@@ -19,7 +19,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.newpecunia.bitstamp.service.impl.BitstampCredentials;
-import com.newpecunia.bitstamp.webdriver.BitstampSession;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
 import com.newpecunia.bitstamp.webdriver.InternationalWithdrawRequest;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine;
@@ -30,7 +29,7 @@ import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.HttpReaderOutput;
 import com.newpecunia.synchronization.ClusterLockProvider;
 
-public class BitstampSessionImpl implements BitstampSession {
+public class BitstampSession {
 	
 	private static final int MINIMUM_DEPOSIT_LIMIT = 50; //minimum deposit in USD
 	private static final int MAXIMUM_DEPOSIT_LIMIT = 1000000; //maximum deposit in USD
@@ -39,14 +38,14 @@ public class BitstampSessionImpl implements BitstampSession {
 
 	private HttpReader httpReader;
 	
-	private BitstampSessionImpl() {}
+	private BitstampSession() {}
 	
 	private String lastOpenedUrl = null; //for Referer header
 	private ClusterLockProvider lockProvider;
 	
 	//package private
-	static BitstampSessionImpl createSession(HttpReaderFactory httpReaderFactory, BitstampCredentials credentials, ClusterLockProvider lockProvider) throws IOException, BitstampWebdriverException {
-		BitstampSessionImpl session = new BitstampSessionImpl();
+	static BitstampSession createSession(HttpReaderFactory httpReaderFactory, BitstampCredentials credentials, ClusterLockProvider lockProvider) throws IOException, BitstampWebdriverException {
+		BitstampSession session = new BitstampSession();
 		
 		session.httpReader = httpReaderFactory.createNewHttpSessionReader();
 		session.lockProvider = lockProvider;
@@ -90,7 +89,6 @@ public class BitstampSessionImpl implements BitstampSession {
 		return loginPageOutput.getOutput();
 	}
 
-	@Override
 	public boolean isWaitingForDeposit() throws IOException, BitstampWebdriverException {
 		String url = BitstampWebdriverConstants.DEPOSIT_URL;
 		String page = get(url);
@@ -104,7 +102,6 @@ public class BitstampSessionImpl implements BitstampSession {
 		}
 	}
 	
-	@Override
 	public void createInternationalUSDDeposit(int amount, String firstname, String surname, String comment) throws IOException, BitstampWebdriverException {
 		if (amount < MINIMUM_DEPOSIT_LIMIT) {
 			throw new BitstampWebdriverException("Deposit amount must be at lease "+MINIMUM_DEPOSIT_LIMIT+" USD.");
@@ -141,14 +138,12 @@ public class BitstampSessionImpl implements BitstampSession {
 		}
 	}
 
-	@Override
 	public void cancelLastDeposit() throws IOException, BitstampWebdriverException {
 		String url = BitstampWebdriverConstants.CANCEL_URL;
 		String page = get(url);
 		verifyPageContainsText(page, url, "YOUR DEPOSIT REQUESTS");
 	}
 
-	@Override
 	public List<WithdrawOverviewLine> getWithdrawOverview() throws IOException, BitstampWebdriverException {
 		String withrawOverviewUrl = BitstampWebdriverConstants.WITHDRAW_URL;
 		String withdrawOverviewPage = get(withrawOverviewUrl);
@@ -174,7 +169,6 @@ public class BitstampSessionImpl implements BitstampSession {
 		return lines;
 	}
 	
-	@Override
 	public Long createInternationalWithdraw(InternationalWithdrawRequest request) throws IOException, BitstampWebdriverException {
 		verifyWithdrawRequest(request);
 
@@ -271,7 +265,6 @@ public class BitstampSessionImpl implements BitstampSession {
 	}
 
 	
-	@Override
 	public void cancelWithdraw(long id) throws IOException, BitstampWebdriverException {
 		List<WithdrawOverviewLine> overview = getWithdrawOverview();
 		String cancelUrl = null;

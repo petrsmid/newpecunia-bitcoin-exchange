@@ -21,38 +21,37 @@ public class BitstampWebdriverLiveTest {
 		Injector injector = Guice.createInjector(new GuiceBitexchangeModule());
 		bitstampWebdriver = injector.getInstance(BitstampWebdriver.class);
 	}
-
-	@Test
-	public void testLiveLogin() throws Exception {
-		BitstampSession session = bitstampWebdriver.createSession();
-		Assert.assertNotNull(session);
-	}
 	
 	@Test
 	public void testLiveIsWaitingForDeposit() throws Exception {
-		BitstampSession session = bitstampWebdriver.createSession();
-		session.isWaitingForDeposit();
-		//no Exception until now -> OK
-	}
-	
-	@Test
-	public void testLiveCreateDeposit() throws Exception {
-		BitstampSession session = bitstampWebdriver.createSession();
-		session.createInternationalUSDDeposit(51, "Petr", "Smid", "this is a test");
+		bitstampWebdriver.isWaitingForDeposit();
 		//no Exception until now -> OK
 	}
 	
 	@Test
 	public void testCancelLastDeposit() throws Exception {
-		BitstampSession session = bitstampWebdriver.createSession();
-		session.cancelLastDeposit();
+		bitstampWebdriver.cancelLastDeposit();
+		//no Exception until now -> OK
+	}
+
+	@Test
+	public void testLiveCreateCheckAndCancelDeposit() throws Exception {
+		//CREATE
+		bitstampWebdriver.createInternationalUSDDeposit(51, "Petr", "Smid", "this is a test");
+		
+		//CHECK WHETHER IT EXISTS
+		//no Exception until now -> OK
+		boolean isWaiting = bitstampWebdriver.isWaitingForDeposit();
+		Assert.assertTrue(isWaiting);
+		
+		//CANCEL
+		bitstampWebdriver.cancelLastDeposit();
 		//no Exception until now -> OK
 	}
 	
 	@Test
 	public void testWithdrawOverview() throws Exception {
-		BitstampSession session = bitstampWebdriver.createSession();
-		List<WithdrawOverviewLine> overview = session.getWithdrawOverview();		
+		List<WithdrawOverviewLine> overview = bitstampWebdriver.getWithdrawOverview();
 		Assert.assertNotNull(overview);
 		WithdrawOverviewLine lastLine = null;
 		for (WithdrawOverviewLine overviewLine : overview) {
@@ -72,7 +71,6 @@ public class BitstampWebdriverLiveTest {
 
 	
 	private Long createWithdraw() throws Exception {
-		BitstampSession session = bitstampWebdriver.createSession();
 		InternationalWithdrawRequest request = new InternationalWithdrawRequest();
 		request.setAmount(new BigDecimal("50"));
 		request.setCurrency("USD");
@@ -91,15 +89,14 @@ public class BitstampWebdriverLiveTest {
 		request.setBankPostalCode("7654321");
 		request.setBankCountry("SK");
 
-		Long withdrawId = session.createInternationalWithdraw(request);
+		Long withdrawId = bitstampWebdriver.createInternationalWithdraw(request);
 		Assert.assertNotNull(withdrawId);
 		return withdrawId;
 	}
 	
 	
 	private void cancelWithdraw(Long id) throws Exception {
-		BitstampSession session = bitstampWebdriver.createSession();
-		session.cancelWithdraw(id);		
+		bitstampWebdriver.cancelWithdraw(id);		
 		//no Exception until now -> OK
 	}
 	

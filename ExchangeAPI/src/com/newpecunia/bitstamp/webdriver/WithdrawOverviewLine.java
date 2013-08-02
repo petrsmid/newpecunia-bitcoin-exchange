@@ -2,8 +2,6 @@ package com.newpecunia.bitstamp.webdriver;
 
 import java.math.BigDecimal;
 
-import org.joda.time.DateTime;
-
 public class WithdrawOverviewLine {
 
 	public static enum WithdrawType { INTERNATIONAL_BANK_TRANSFER, BITCOIN }

@@ -9,12 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.newpecunia.GuiceBitexchangeModule;
-import com.newpecunia.bitstamp.service.impl.BitstampCredentials;
 import com.newpecunia.bitstamp.service.impl.BitstampServiceImpl;
-import com.newpecunia.net.HttpReaderFactory;
 
 @RunWith(JUnit4.class)
 public class BitstampServiceTest {
