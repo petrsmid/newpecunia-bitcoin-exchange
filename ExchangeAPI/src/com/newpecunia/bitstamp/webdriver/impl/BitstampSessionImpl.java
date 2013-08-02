@@ -272,8 +272,38 @@ public class BitstampSessionImpl implements BitstampSession {
 
 	
 	@Override
-	public void cancelWithdraw(long id) {
-		// TODO Auto-generated method stub
+	public void cancelWithdraw(long id) throws IOException, BitstampWebdriverException {
+		List<WithdrawOverviewLine> overview = getWithdrawOverview();
+		String cancelUrl = null;
+		for (WithdrawOverviewLine line : overview) {
+			if (id == line.getId()) {
+				cancelUrl = line.getCancelUrl();
+				break;
+			}
+		}
+		
+		if (cancelUrl == null) {
+			throw new BitstampWebdriverException("Cannot find withdraw request with ID '"+id+"'. Cannot cancel.");
+		}
+		
+		//cancel the withdraw
+		get(BitstampWebdriverConstants.WEB_URL+cancelUrl);
+		
+		//verify that the withdraw was really canceled
+		List<WithdrawOverviewLine> overviewAfterCancel = getWithdrawOverview();
+		WithdrawOverviewLine canceledLine = null;
+		for (WithdrawOverviewLine line : overviewAfterCancel) {
+			if (id == line.getId()) {
+				canceledLine = line;
+				break;
+			}
+		}
+		if (canceledLine == null) {
+			throw new BitstampWebdriverException("Canceled withdraw was not found in overview.");
+		}
+		if (!WithdrawStatus.CANCELED.equals(canceledLine.getStatus())) {
+			throw new BitstampWebdriverException("Canceled withdraw is not in status 'Canceled'.");
+		}
 		
 	}
 	

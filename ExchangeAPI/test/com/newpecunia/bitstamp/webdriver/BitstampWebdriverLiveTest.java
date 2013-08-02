@@ -50,7 +50,28 @@ public class BitstampWebdriverLiveTest {
 	}
 	
 	@Test
-	public void testWithdraw() throws Exception {
+	public void testWithdrawOverview() throws Exception {
+		BitstampSession session = bitstampWebdriver.createSession();
+		List<WithdrawOverviewLine> overview = session.getWithdrawOverview();		
+		Assert.assertNotNull(overview);
+		WithdrawOverviewLine lastLine = null;
+		for (WithdrawOverviewLine overviewLine : overview) {
+			Assert.assertNotNull(overviewLine.getDescription());
+			Assert.assertNotNull(overviewLine.getAmount());
+			Assert.assertNotNull(overviewLine.getDate());
+			Assert.assertNotNull(overviewLine.getId());
+			Assert.assertNotNull(overviewLine.getStatus());
+			Assert.assertNotNull(overviewLine.getWithdrawType());
+			if (lastLine != null) {
+				Assert.assertTrue(lastLine.getId() > overviewLine.getId());
+			}
+			lastLine = overviewLine;
+		}
+		
+	}
+
+	
+	private Long createWithdraw() throws Exception {
 		BitstampSession session = bitstampWebdriver.createSession();
 		InternationalWithdrawRequest request = new InternationalWithdrawRequest();
 		request.setAmount(new BigDecimal("50"));
@@ -72,27 +93,20 @@ public class BitstampWebdriverLiveTest {
 
 		Long withdrawId = session.createInternationalWithdraw(request);
 		Assert.assertNotNull(withdrawId);
+		return withdrawId;
+	}
+	
+	
+	private void cancelWithdraw(Long id) throws Exception {
+		BitstampSession session = bitstampWebdriver.createSession();
+		session.cancelWithdraw(id);		
+		//no Exception until now -> OK
 	}
 	
 	@Test
-	public void testWithdrawOverview() throws Exception {
-		BitstampSession session = bitstampWebdriver.createSession();
-		List<WithdrawOverviewLine> overview = session.getWithdrawOverview();		
-		Assert.assertNotNull(overview);
-		WithdrawOverviewLine lastLine = null;
-		for (WithdrawOverviewLine overviewLine : overview) {
-			Assert.assertNotNull(overviewLine.getDescription());
-			Assert.assertNotNull(overviewLine.getAmount());
-			Assert.assertNotNull(overviewLine.getDate());
-			Assert.assertNotNull(overviewLine.getId());
-			Assert.assertNotNull(overviewLine.getStatus());
-			Assert.assertNotNull(overviewLine.getWithdrawType());
-			if (lastLine != null) {
-				Assert.assertTrue(lastLine.getId() > overviewLine.getId());
-			}
-			lastLine = overviewLine;
-		}
-		
+	public void testCreateAndCancelWithdraw() throws Exception {
+		Long id = createWithdraw();
+		cancelWithdraw(id);		
 	}
 	
 }
