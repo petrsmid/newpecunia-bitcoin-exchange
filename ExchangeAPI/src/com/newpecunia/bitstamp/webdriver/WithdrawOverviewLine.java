@@ -15,6 +15,7 @@ public class WithdrawOverviewLine {
 	private BigDecimal amount;
 	private WithdrawStatus status;
 	private WithdrawType withdrawType;
+	private String cancelUrl;
 
 	
 	public long getId() {
@@ -52,6 +53,12 @@ public class WithdrawOverviewLine {
 	}
 	public void setWithdrawType(WithdrawType withdrawType) {
 		this.withdrawType = withdrawType;
+	}
+	public String getCancelUrl() {
+		return cancelUrl;
+	}
+	public void setCancelUrl(String cancelUrl) {
+		this.cancelUrl = cancelUrl;
 	}
 	
 }

@@ -20,4 +20,5 @@ public interface BitstampSession {
 
 	List<WithdrawOverviewLine> getWithdrawOverview() throws IOException, BitstampWebdriverException;
 
+	void cancelWithdraw(long id);
 }

@@ -2,6 +2,8 @@ package com.newpecunia.bitstamp.webdriver.impl;
 
 import java.math.BigDecimal;
 
+import org.jsoup.select.Elements;
+
 import com.google.common.base.CharMatcher;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine;
@@ -9,7 +11,26 @@ import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine.WithdrawStatus;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine.WithdrawType;
 
 public class WithdrawOverviewLineParser {
-	public static WithdrawOverviewLine parseLine(String id, String date, String description, String amount, String status) throws BitstampWebdriverException {
+
+	public static WithdrawOverviewLine parseRowCells(Elements lineCells) throws BitstampWebdriverException {
+		if (lineCells.size() < 6) {
+			throw new BitstampWebdriverException("Unexpected number of cells in a row of withdraw overview.");				
+		}
+		
+		Elements urls = lineCells.get(5).getElementsByTag("a");
+		String cancelUrl = null;
+		if (urls != null && urls.size() > 0) {
+			String urlText = urls.get(0).text();
+			if (urlText.toUpperCase().equals("CANCEL")) {
+				cancelUrl = urls.get(0).attr("href");
+			}
+		}
+		
+		return parseRowCells(lineCells.get(0).text(), lineCells.get(1).text(), lineCells.get(2).text(), lineCells.get(3).text(), lineCells.get(4).text(), cancelUrl);
+	}
+
+	
+	public static WithdrawOverviewLine parseRowCells(String id, String date, String description, String amount, String status, String cancelUrl) throws BitstampWebdriverException {
 		WithdrawOverviewLine line = new WithdrawOverviewLine();
 		line.setId(parseId(id));
 		line.setDate(date);
@@ -17,6 +38,7 @@ public class WithdrawOverviewLineParser {
 		line.setAmount(parseAmount(amount));
 		line.setStatus(parseStatus(status));
 		line.setWithdrawType(parseDescription(description));
+		line.setCancelUrl(cancelUrl);
 		return line;
 	}
 
@@ -56,5 +78,6 @@ public class WithdrawOverviewLineParser {
 		String amountNumber = numberFilter.retainFrom(amount);
 		return new BigDecimal(amountNumber);
 	}
+
 
 }

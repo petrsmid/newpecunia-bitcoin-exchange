@@ -167,11 +167,7 @@ public class BitstampSessionImpl implements BitstampSession {
 			}
 			
 			Elements cells = row.getElementsByTag("td");
-			if (cells.size() < 5) {
-				throw new BitstampWebdriverException("Unexpected number of cells in a row of withdraw overview.");				
-			}
-			WithdrawOverviewLine line = WithdrawOverviewLineParser.parseLine(
-					cells.get(0).text(), cells.get(1).text(), cells.get(2).text(), cells.get(3).text(), cells.get(4).text());
+			WithdrawOverviewLine line = WithdrawOverviewLineParser.parseRowCells(cells);
 			lines.add(line);
 		}
 		
@@ -272,10 +268,15 @@ public class BitstampSessionImpl implements BitstampSession {
 		if (StringUtils.isEmpty(request.getCity())) {throw new BitstampWebdriverException("City is mandatory.");}
 		if (StringUtils.isEmpty(request.getPostalCode())) {throw new BitstampWebdriverException("Postal code is mandatory.");}
 		if (StringUtils.isEmpty(request.getCountry())) {throw new BitstampWebdriverException("Country is mandatory.");}
-		
-		
 	}
 
+	
+	@Override
+	public void cancelWithdraw(long id) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	private String get(String url) throws IOException, BitstampWebdriverException {
 		List<Header> headers = new ArrayList<>();
 		headers.add(new BasicHeader("Referer", lastOpenedUrl));		
@@ -315,5 +316,5 @@ public class BitstampSessionImpl implements BitstampSession {
 			throw new BitstampWebdriverException("Error "+code+" returned when opening page "+pageUrl+".");
 		}
 	}
-	
+
 }
