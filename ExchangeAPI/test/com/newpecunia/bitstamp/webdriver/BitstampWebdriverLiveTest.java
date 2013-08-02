@@ -70,8 +70,8 @@ public class BitstampWebdriverLiveTest {
 		request.setBankPostalCode("7654321");
 		request.setBankCountry("SK");
 
-		session.createInternationalWithdraw(request);
-		//no Exception until now -> OK
+		Long withdrawId = session.createInternationalWithdraw(request);
+		Assert.assertNotNull(withdrawId);
 	}
 	
 	@Test

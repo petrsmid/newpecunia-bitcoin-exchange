@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.locks.Lock;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
@@ -22,9 +23,12 @@ import com.newpecunia.bitstamp.webdriver.BitstampSession;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
 import com.newpecunia.bitstamp.webdriver.InternationalWithdrawRequest;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine;
+import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine.WithdrawStatus;
+import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine.WithdrawType;
 import com.newpecunia.net.HttpReader;
 import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.HttpReaderOutput;
+import com.newpecunia.synchronization.ClusterLockProvider;
 
 public class BitstampSessionImpl implements BitstampSession {
 	
@@ -38,13 +42,14 @@ public class BitstampSessionImpl implements BitstampSession {
 	private BitstampSessionImpl() {}
 	
 	private String lastOpenedUrl = null; //for Referer header
+	private ClusterLockProvider lockProvider;
 	
 	//package private
-	static BitstampSessionImpl createSession(HttpReaderFactory httpReaderFactory, BitstampCredentials credentials) throws IOException, BitstampWebdriverException {
+	static BitstampSessionImpl createSession(HttpReaderFactory httpReaderFactory, BitstampCredentials credentials, ClusterLockProvider lockProvider) throws IOException, BitstampWebdriverException {
 		BitstampSessionImpl session = new BitstampSessionImpl();
 		
 		session.httpReader = httpReaderFactory.createNewHttpSessionReader();
-		
+		session.lockProvider = lockProvider;
 		session.login(credentials.getUsername(), credentials.getPassword());
 		return session;
 	}
@@ -174,43 +179,76 @@ public class BitstampSessionImpl implements BitstampSession {
 	}
 	
 	@Override
-	public void createInternationalWithdraw(InternationalWithdrawRequest request) throws IOException, BitstampWebdriverException {
+	public Long createInternationalWithdraw(InternationalWithdrawRequest request) throws IOException, BitstampWebdriverException {
 		verifyWithdrawRequest(request);
-		//navigate to the international withdraw page
-		String url = BitstampWebdriverConstants.INTERNATIONAL_WITHDRAW_URL;
-		String page = get(url);
-		verifyPageContainsText(page, url, "INTERNATIONAL WIRE TRANSFER", "Withdraw");
-		
-		//parse international withdraw form
-		Document pageDom = Jsoup.parse(page);
-		Element form = pageDom.getElementsByTag("form").get(0);
-		LinkedHashMap<String, String> params = getHiddenParamsFromForm(form);
-		//add parameters of the withdraw form
-		params.put("name", request.getName());
-		params.put("amount", request.getAmount().toPlainString());
-		params.put("currency", request.getCurrency());
-		params.put("address", request.getAddress());
-		params.put("postal_code", request.getPostalCode());
-		params.put("city", request.getCity());
-		params.put("country", request.getCountry());
-		params.put("iban", request.getIban());
-		params.put("bic", request.getBic());
-		params.put("bank_name", request.getBankName());
-		params.put("bank_address", request.getBankAddress());
-		params.put("bank_postal_code", request.getBankPostalCode());
-		params.put("bank_city", request.getBankCity());
-		params.put("bank_country", request.getBankCountry());
-		params.put("comment", request.getComment() == null ? "" : request.getComment());
-		
-		//perform withdraw
-		post(url, params);		
-		
-		//verify that the withdrawal was successful
-		String withrawOverviewUrl = BitstampWebdriverConstants.WITHDRAW_URL;
-		String withdrawOverviewPage = get(withrawOverviewUrl);
-		verifyPageContainsText(withdrawOverviewPage, withrawOverviewUrl, 
-				"YOUR WITHDRAWAL REQUESTS", "E-mail confirmation needed", request.getAmount().toPlainString());
-		
+
+		Lock lock = lockProvider.getLock();		
+		try {
+			lock.lock();
+			
+			List<WithdrawOverviewLine> overviewBefore = getWithdrawOverview();
+			
+			//navigate to the international withdraw page
+			String url = BitstampWebdriverConstants.INTERNATIONAL_WITHDRAW_URL;
+			String page = get(url);
+			verifyPageContainsText(page, url, "INTERNATIONAL WIRE TRANSFER", "Withdraw");
+			
+			//parse international withdraw form
+			Document pageDom = Jsoup.parse(page);
+			Element form = pageDom.getElementsByTag("form").get(0);
+			LinkedHashMap<String, String> params = getHiddenParamsFromForm(form);
+			//add parameters of the withdraw form
+			params.put("name", request.getName());
+			params.put("amount", request.getAmount().toPlainString());
+			params.put("currency", request.getCurrency());
+			params.put("address", request.getAddress());
+			params.put("postal_code", request.getPostalCode());
+			params.put("city", request.getCity());
+			params.put("country", request.getCountry());
+			params.put("iban", request.getIban());
+			params.put("bic", request.getBic());
+			params.put("bank_name", request.getBankName());
+			params.put("bank_address", request.getBankAddress());
+			params.put("bank_postal_code", request.getBankPostalCode());
+			params.put("bank_city", request.getBankCity());
+			params.put("bank_country", request.getBankCountry());
+			params.put("comment", request.getComment() == null ? "" : request.getComment());
+			
+			//perform withdraw
+			post(url, params);		
+			
+			//verify that the withdrawal was successful			
+			List<WithdrawOverviewLine> overviewAfter = getWithdrawOverview();
+			//find last international withdraw
+			Long lastInternationalWithdrawId = null;
+			for (WithdrawOverviewLine lineBefore : overviewBefore) {
+				if (WithdrawType.INTERNATIONAL_BANK_TRANSFER.equals(lineBefore.getWithdrawType())) {
+					lastInternationalWithdrawId = lineBefore.getId();
+					break;
+				}
+			}
+			
+			WithdrawOverviewLine newWithdrawLine = null;
+			for (WithdrawOverviewLine lineAfter : overviewAfter) {
+				if ((new Long(lineAfter.getId())).equals(lastInternationalWithdrawId)) {
+					break;
+				}
+				if (WithdrawType.INTERNATIONAL_BANK_TRANSFER.equals(lineAfter.getWithdrawType())
+						&& WithdrawStatus.WAITING_FOR_CONFIRMATION.equals(lineAfter.getStatus())
+						&& lineAfter.getAmount().compareTo(request.getAmount()) == 0) {
+					newWithdrawLine = lineAfter;
+					break;
+				}
+			}
+			
+			if (newWithdrawLine == null) {
+				throw new BitstampWebdriverException("Creating withdraw request was not successful. (The new withdraw request was not found in the overview).");
+			}
+			
+			return newWithdrawLine.getId();
+		} finally {
+			lock.unlock();
+		}
 	}
 	
 	private void verifyWithdrawRequest(InternationalWithdrawRequest request) throws BitstampWebdriverException {
