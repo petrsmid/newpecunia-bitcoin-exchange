@@ -13,17 +13,10 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.newpecunia.GuiceBitexchangeModule;
-import com.newpecunia.bitstamp.service.AccountBalance;
-import com.newpecunia.bitstamp.service.BitstampService;
-import com.newpecunia.bitstamp.service.EurUsdRate;
-import com.newpecunia.bitstamp.service.Order;
-import com.newpecunia.bitstamp.service.Ticker;
-import com.newpecunia.bitstamp.service.Transaction;
-import com.newpecunia.bitstamp.service.UnconfirmedBitcoinDeposit;
-import com.newpecunia.bitstamp.service.UserTransaction;
 
 public class BitstampServiceLiveTest {
 
+	private static final int WAIT_FOR_ACTUAL_OVERVIEW_MS = 10000;
 	private BitstampService bitstampService = null;
 
 	@Before
@@ -59,7 +52,7 @@ public class BitstampServiceLiveTest {
 //	@Test
 	public void testLiveCancelOrder() throws Exception {
 		//CAUTION: the following live test will perform REAL transaction with REAL money!
-		bitstampService.cancelOrder("1234567890"); //TODO set here your order ID
+		bitstampService.cancelOrder("123"); //TODO set here your order ID
 	}
 
 	@Test
@@ -149,16 +142,70 @@ public class BitstampServiceLiveTest {
 	
 	
 	@Test
-	public void testBuySellGetCancel() throws Exception {
+	public void testSellGetCancel() throws Exception {
 		//CAUTION: the following live test will perform REAL transactions. However without loosing money if it does not fail.
+		List<Order> ordersBeforeBuy = waitAndGetOpenOrders();
+		assertEquals("The test cannot start because some orders are already present.", 0, ordersBeforeBuy.size()); //check before the test starts
+
 		Order order = bitstampService.sellLimitOrder(new BigDecimal("10000"), new BigDecimal("0.01"));
-		List<Order> orders = bitstampService.getOpenOrders();
+		List<Order> orders = waitAndGetOpenOrders();
 		assertEquals(1, orders.size());
 		assertEquals(order.getId(), orders.get(0).getId());
 		boolean result = bitstampService.cancelOrder(order.getId());
 		assertTrue(result);
-		orders = bitstampService.getOpenOrders();
+		orders = waitAndGetOpenOrders();
 		assertEquals(0, orders.size());
+	}
+	
+	@Test
+	public void testBuyGetCancel() throws Exception {
+		//CAUTION: the following live test will perform REAL transactions. However without loosing money if it does not fail.
+		List<Order> ordersBeforeBuy = waitAndGetOpenOrders();
+		assertEquals("The test cannot start because some orders are already present.", 0, ordersBeforeBuy.size()); //check before the test starts
+		
+		Order order = bitstampService.buyLimitOrder(new BigDecimal("10"), new BigDecimal("10"));
+		List<Order> ordersAfterBuy = waitAndGetOpenOrders();
+		assertEquals(1, ordersAfterBuy.size());
+		assertEquals(order.getId(), ordersAfterBuy.get(0).getId());
+		boolean result = bitstampService.cancelOrder(order.getId());
+		assertTrue(result);
+		List<Order> ordersAfterCancel = waitAndGetOpenOrders();
+		assertEquals(0, ordersAfterCancel.size());
+	}
+	
+//	@Test
+	public void testBuyForRealPrice() throws Exception {
+		//CAUTION: the following live test will perform REAL transactions - it will buy BTC for real price		
+		BigDecimal wantToBuy = new BigDecimal("0.1");
+		
+		BigDecimal btcBalanceBefore = bitstampService.getAccountBalance().getBtcBalance();
+		
+		OrderBook orderBook = bitstampService.getOrderBook();
+		List<PriceAndAmount> asks = orderBook.getAsks();
+		BigDecimal amountRest = wantToBuy.multiply(BigDecimal.ONE);
+		for (PriceAndAmount ask : asks) {
+			BigDecimal askPrice = ask.getPrice();
+			BigDecimal askAmount = ask.getAmount();
+			BigDecimal amountToBuy; 
+			if (amountRest.compareTo(askAmount) < 0) {
+				amountToBuy = amountRest;
+			} else {
+				amountToBuy = askAmount;
+			}			
+			if (amountToBuy.compareTo(BigDecimal.ZERO) != 0) {
+				System.out.println("Buying "+amountToBuy.toPlainString()+" BTC for $"+askPrice.toPlainString());
+				bitstampService.buyLimitOrder(askPrice, amountToBuy);
+				amountRest = amountRest.subtract(amountToBuy);
+			} else {
+				break;
+			}
+		}
+		
+		List<Order> orders = waitAndGetOpenOrders();
+		assertEquals("Orders should be performed", 0, orders.size());
+		BigDecimal btcBalanceAfter = bitstampService.getAccountBalance().getBtcBalance();
+		assertTrue("BTC were bought", btcBalanceAfter.compareTo(btcBalanceBefore) > 0);
+		assertTrue("BTC must be bought exactly", btcBalanceAfter.subtract(btcBalanceBefore).compareTo(wantToBuy) == 0);
 	}
 	
 	/**
@@ -172,18 +219,22 @@ public class BitstampServiceLiveTest {
 		assertTrue(status);
 	}
 	
-	//@Test
-	public void cleanAllOpenedOrders() throws Exception {
+	private List<Order> waitAndGetOpenOrders() throws BitstampServiceException, InterruptedException {
+		Thread.sleep(WAIT_FOR_ACTUAL_OVERVIEW_MS);
+		return bitstampService.getOpenOrders();		
+	}
+	
+//	@Test
+	public void cancelAllOpenedOrders() throws Exception {
 		//CAUTION: NEVER run this test with PRODUCTION account! You would DELETE ALL opened transactions! 
 		//  run it ONLY if you want to clean up all orders of your TEST account
-		if (false) {
-			List<Order> orders = bitstampService.getOpenOrders();
-			for (Order order : orders) {
-				bitstampService.cancelOrder(order.getId());			
-			}
-			orders = bitstampService.getOpenOrders();
-			assertEquals(0, orders.size());
+		List<Order> orders = waitAndGetOpenOrders();
+		for (Order order : orders) {
+			boolean cancelResult = bitstampService.cancelOrder(order.getId());
+			assertTrue(cancelResult);
 		}
+		orders = waitAndGetOpenOrders();
+		assertEquals(0, orders.size());
 	}
 	
 	
