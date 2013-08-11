@@ -39,6 +39,12 @@ import com.newpecunia.net.JsonParsingException;
 
 public class BitstampServiceImpl implements BitstampService {
 
+	private static final BigDecimal MIN_AMOUNT_IN_USD = BigDecimal.ONE; //minimum order is 1 USD
+	private static final int MAX_PRICE_PRECISION = 2; //maximal price precision (e.g.: 0.01)
+	private static final BigDecimal MAX_PRICE = new BigDecimal(99999); //maximum order price in USD
+	private static final BigDecimal MIN_BTC_AMOUNT = new BigDecimal("0.00006"); //minimum wihtdraw BTC amount
+	private static final int MAX_BTC_PRECISION = 8; //maximal BTC precision (e.g.: 0.00000001)
+	
 	private BitstampCredentials credentials;
 	private HttpReader httpReader;
 	
@@ -76,6 +82,8 @@ public class BitstampServiceImpl implements BitstampService {
 
 	@Override
 	public Order buyLimitOrder(BigDecimal price, BigDecimal amount) throws BitstampServiceException {
+		validateOrder(price, amount);
+		
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
@@ -96,6 +104,8 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public Order sellLimitOrder(BigDecimal price, BigDecimal amount) throws BitstampServiceException {
+		validateOrder(price, amount);
+		
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
@@ -111,6 +121,18 @@ public class BitstampServiceImpl implements BitstampService {
 		} catch (IOException | JsonParsingException e) {
 			throw new BitstampServiceException(e);
 		}		
+	}
+
+	private void validateOrder(BigDecimal price, BigDecimal amount) throws BitstampServiceException {
+		if (price.multiply(amount).compareTo(MIN_AMOUNT_IN_USD) < 0) { //price x amount must be at least 1 USD
+			throw new BitstampServiceException("Order must be at least for "+MIN_AMOUNT_IN_USD.toPlainString()+" USD.");
+		}		
+		if (price.compareTo(MAX_PRICE) > 0) {
+			throw new BitstampServiceException("Price cannot be bigger as $"+MAX_PRICE.toPlainString());
+		}
+		if (price.precision() > MAX_PRICE_PRECISION) {
+			throw new BitstampServiceException("Price can have maximally "+MAX_PRICE_PRECISION+" decimal numbers.");
+		}
 	}
 	
 	@Override
@@ -185,6 +207,14 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public Boolean bitcoinWithdrawal(BigDecimal amount, String address) throws BitstampServiceException {
+		//validation
+		if (amount.compareTo(MIN_BTC_AMOUNT) < 0) {
+			throw new BitstampServiceException("Minimal BTC withdrawal is "+MIN_BTC_AMOUNT.toPlainString());
+		}
+		if (amount.precision() > MAX_BTC_PRECISION) {
+			throw new BitstampServiceException("Maximal BTC amount precision is "+MAX_BTC_PRECISION);
+		}
+		
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		

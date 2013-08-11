@@ -215,7 +215,7 @@ public class BitstampServiceLiveTest {
 //	@Test
 	public void testBitcoinWithdrawal() throws Exception {
 		//CAUTION: the following live test will perform REAL operation with REAL money (BTC).
-		Boolean status = bitstampService.bitcoinWithdrawal(new BigDecimal("0.01"), "1wGjmUwFLqfL2C15BVUACCDosVRFNbfcR"); //in my Electum wallet
+		Boolean status = bitstampService.bitcoinWithdrawal(new BigDecimal("0.00006"), "1wGjmUwFLqfL2C15BVUACCDosVRFNbfcR"); //in my Electum wallet
 		assertTrue(status);
 	}
 	
@@ -230,6 +230,7 @@ public class BitstampServiceLiveTest {
 		//  run it ONLY if you want to clean up all orders of your TEST account
 		List<Order> orders = waitAndGetOpenOrders();
 		for (Order order : orders) {
+			System.out.println("Canceling order "+order.getId());
 			boolean cancelResult = bitstampService.cancelOrder(order.getId());
 			assertTrue(cancelResult);
 		}
