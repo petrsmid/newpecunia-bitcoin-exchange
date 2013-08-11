@@ -13,7 +13,8 @@ public class HttpSessionReaderImpl extends HttpSimpleReaderImpl implements HttpR
 	HttpClient httpClient = null;
 	
 	//package private constructor -> instantiate it always with Factory
-	HttpSessionReaderImpl() {
+	HttpSessionReaderImpl(RequestCountLimitVerifier requestCountLimitVerifier) {
+		super(requestCountLimitVerifier);
 		httpClient = new DefaultHttpClient();
 		CookieStore cookieStore = new BasicCookieStore();
 		HttpContext httpContext = new BasicHttpContext();

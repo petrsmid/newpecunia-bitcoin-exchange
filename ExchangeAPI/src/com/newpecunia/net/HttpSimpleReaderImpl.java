@@ -20,12 +20,16 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 public class HttpSimpleReaderImpl implements HttpReader {
 
+	private RequestCountLimitVerifier requestCountLimitVerifier;
+
 	protected HttpClient getHttpClient() {
 		return new DefaultHttpClient();
 	}
 	
 	//package private constructor -> instantiate it always with Factory
-	HttpSimpleReaderImpl() {}
+	HttpSimpleReaderImpl(RequestCountLimitVerifier requestCountLimitVerifier) {
+		this.requestCountLimitVerifier = requestCountLimitVerifier;
+	}
 	
 	@Override
 	public String get(String url) throws IOException {
@@ -62,18 +66,14 @@ public class HttpSimpleReaderImpl implements HttpReader {
 		return doRequest(url, headers, params);
 	}	
 	
-	private HttpReaderOutput doRequest(String url, List<Header> headers, List<NameValuePair> params) throws IOException {
-		HttpReaderOutput result = new HttpReaderOutput();
-		HttpResponse httpResponse;
+	private HttpReaderOutput doRequest(String url, List<Header> headers, List<NameValuePair> params) throws IOException, RequestCountLimitExceededException {
+		//check requests count limit
+		requestCountLimitVerifier.countRequest();		
 		
 		//disable caching by adding unused parameter with random value
-		StringBuilder urlWithFixedCaching = new StringBuilder(url);
-		if (url.contains("?")) {
-			urlWithFixedCaching.append('&');
-		}
-		urlWithFixedCaching.append("?antiCaching=");
-		urlWithFixedCaching.append(UUID.randomUUID());
+		String urlWithFixedCaching = addAntiCachingParamToUrl(url);
 		
+		HttpResponse httpResponse;
 		if (params == null) { //HTTP GET
 			HttpGet httpGet = new HttpGet(urlWithFixedCaching.toString());
 			addHeadersToRequest(headers, httpGet);
@@ -87,6 +87,8 @@ public class HttpSimpleReaderImpl implements HttpReader {
 			httpResponse = getHttpClient().execute(httpPost); //can throw IOException
 		}
 		
+		HttpReaderOutput result = new HttpReaderOutput();
+
 		HttpEntity entity = httpResponse.getEntity();
 		result.setResultCode(httpResponse.getStatusLine().getStatusCode());
 		
@@ -113,6 +115,21 @@ public class HttpSimpleReaderImpl implements HttpReader {
 		} else {
 			return result;
 		}			
+	}
+
+	/**
+	 * Disables caching by adding unused parameter with random value.
+	 * This is a dirty solution however works perfectly through all proxies.
+	 * @return url with a parameter which value always changes
+	 */
+	private String addAntiCachingParamToUrl(String url) {
+		StringBuilder urlWithFixedCaching = new StringBuilder(url);
+		if (url.contains("?")) {
+			urlWithFixedCaching.append('&');
+		}
+		urlWithFixedCaching.append("?antiCaching=");
+		urlWithFixedCaching.append(UUID.randomUUID());
+		return urlWithFixedCaching.toString();
 	}
 
 	private void addHeadersToRequest(List<Header> headers, HttpMessage httpMessage) {

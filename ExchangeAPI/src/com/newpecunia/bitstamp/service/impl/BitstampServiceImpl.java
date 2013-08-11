@@ -40,10 +40,10 @@ import com.newpecunia.net.JsonParsingException;
 public class BitstampServiceImpl implements BitstampService {
 
 	private static final BigDecimal MIN_AMOUNT_IN_USD = BigDecimal.ONE; //minimum order is 1 USD
-	private static final int MAX_PRICE_PRECISION = 2; //maximal price precision (e.g.: 0.01)
+	private static final int MAX_PRICE_SCALE = 2; //maximal price scale (e.g.: 0.01)
 	private static final BigDecimal MAX_PRICE = new BigDecimal(99999); //maximum order price in USD
 	private static final BigDecimal MIN_BTC_AMOUNT = new BigDecimal("0.00006"); //minimum wihtdraw BTC amount
-	private static final int MAX_BTC_PRECISION = 8; //maximal BTC precision (e.g.: 0.00000001)
+	private static final int MAX_BTC_SCALE = 8; //maximal BTC scale (e.g.: 0.00000001)
 	
 	private BitstampCredentials credentials;
 	private HttpReader httpReader;
@@ -130,8 +130,8 @@ public class BitstampServiceImpl implements BitstampService {
 		if (price.compareTo(MAX_PRICE) > 0) {
 			throw new BitstampServiceException("Price cannot be bigger as $"+MAX_PRICE.toPlainString());
 		}
-		if (price.precision() > MAX_PRICE_PRECISION) {
-			throw new BitstampServiceException("Price can have maximally "+MAX_PRICE_PRECISION+" decimal numbers.");
+		if (price.scale() > MAX_PRICE_SCALE) {
+			throw new BitstampServiceException("Price can have maximally "+MAX_PRICE_SCALE+" decimal places.");
 		}
 	}
 	
@@ -211,8 +211,8 @@ public class BitstampServiceImpl implements BitstampService {
 		if (amount.compareTo(MIN_BTC_AMOUNT) < 0) {
 			throw new BitstampServiceException("Minimal BTC withdrawal is "+MIN_BTC_AMOUNT.toPlainString());
 		}
-		if (amount.precision() > MAX_BTC_PRECISION) {
-			throw new BitstampServiceException("Maximal BTC amount precision is "+MAX_BTC_PRECISION);
+		if (amount.scale() > MAX_BTC_SCALE) {
+			throw new BitstampServiceException("BTC amount can have maximally "+MAX_BTC_SCALE+" decimal places.");
 		}
 		
 		List<NameValuePair> requestParams = new ArrayList<>();
