@@ -70,17 +70,17 @@ public class HttpSimpleReaderImpl implements HttpReader {
 		//check requests count limit
 		requestCountLimitVerifier.countRequest();		
 		
-		//disable caching by adding unused parameter with random value
-		String urlWithFixedCaching = addAntiCachingParamToUrl(url);
+		//disabling caching by adding unused parameter with random value
+//		url = addAntiCachingParamToUrl(url);  - uncomment to strongly disable caching
 		
 		HttpResponse httpResponse;
 		if (params == null) { //HTTP GET
-			HttpGet httpGet = new HttpGet(urlWithFixedCaching.toString());
+			HttpGet httpGet = new HttpGet(url.toString());
 			addHeadersToRequest(headers, httpGet);
 			httpGet.addHeader("Cache-Control", "no-cache");
 			httpResponse = getHttpClient().execute(httpGet); //can throw IOException
 		} else { //HTTP POST
-			HttpPost httpPost = new HttpPost(urlWithFixedCaching.toString());
+			HttpPost httpPost = new HttpPost(url.toString());
 			addHeadersToRequest(headers, httpPost);
 			httpPost.addHeader("Cache-Control", "no-cache");
 			httpPost.setEntity(new UrlEncodedFormEntity(params));
@@ -128,7 +128,7 @@ public class HttpSimpleReaderImpl implements HttpReader {
 			urlWithFixedCaching.append('&');
 		}
 		urlWithFixedCaching.append("?antiCaching=");
-		urlWithFixedCaching.append(UUID.randomUUID());
+		urlWithFixedCaching.append(UUID.randomUUID().toString().replaceAll("-", ""));
 		return urlWithFixedCaching.toString();
 	}
 
