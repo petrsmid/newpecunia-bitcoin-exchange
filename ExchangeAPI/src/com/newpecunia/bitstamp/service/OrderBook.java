@@ -5,8 +5,8 @@ import java.util.List;
 public class OrderBook {
 
 	private Long timestamp;
-	private List<PriceAndAmount> bids;
-	private List<PriceAndAmount> asks;
+	private List<PriceAndAmount> bids; //wants to buy BTC
+	private List<PriceAndAmount> asks; //wants to sell BTC
 	
 	
 	public Long getTimestamp() {
