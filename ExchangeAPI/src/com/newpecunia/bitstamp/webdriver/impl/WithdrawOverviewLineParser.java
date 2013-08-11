@@ -2,6 +2,8 @@ package com.newpecunia.bitstamp.webdriver.impl;
 
 import java.math.BigDecimal;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.select.Elements;
 
 import com.google.common.base.CharMatcher;
@@ -12,6 +14,8 @@ import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine.WithdrawType;
 
 public class WithdrawOverviewLineParser {
 
+	private static final Logger logger = LogManager.getLogger(WithdrawOverviewLineParser.class);	
+	
 	public static WithdrawOverviewLine parseRowCells(Elements lineCells) throws BitstampWebdriverException {
 		if (lineCells.size() < 6) {
 			throw new BitstampWebdriverException("Unexpected number of cells in a row of withdraw overview.");				
@@ -45,12 +49,15 @@ public class WithdrawOverviewLineParser {
 	private static WithdrawStatus parseStatus(String status) throws BitstampWebdriverException {
 		if (status.toUpperCase().contains("CONFIRMATION NEEDED")) { //E-mail confirmation needed
 			return WithdrawStatus.WAITING_FOR_CONFIRMATION;
+		} else if (status.toUpperCase().contains("WAITING TO BE PROCESSED")) {
+			return WithdrawStatus.WAITING_FOR_BTC_PROCESSING;
 		} else if (status.toUpperCase().contains("CANCELED")) {
 			return WithdrawStatus.CANCELED;
 		} else if (status.toUpperCase().contains("FINISHED")) {
 			return WithdrawStatus.FINISHED;
 		} else {
-			throw new BitstampWebdriverException("Cannot parse status '"+status+"'");
+			logger.warn("Cannot determine withdraw status from string '"+status+"'");
+			return null;
 		}
 	}
 
@@ -69,7 +76,8 @@ public class WithdrawOverviewLineParser {
 		} else if (descUppercase.contains("INTERNATIONAL")) {
 			return WithdrawType.INTERNATIONAL_BANK_TRANSFER;
 		} else {
-			throw new BitstampWebdriverException("Cannot determine withdraw type from string '"+description+"'");
+			logger.warn("Cannot determine withdraw type from string '"+description+"'");
+			return null;
 		}
 	}
 

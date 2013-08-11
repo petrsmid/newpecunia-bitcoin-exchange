@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class WithdrawOverviewLine {
 
 	public static enum WithdrawType { INTERNATIONAL_BANK_TRANSFER, BITCOIN }
-	public static enum WithdrawStatus { FINISHED, CANCELED, WAITING_FOR_CONFIRMATION }
+	public static enum WithdrawStatus { FINISHED, CANCELED, WAITING_FOR_CONFIRMATION, WAITING_FOR_BTC_PROCESSING }
 	
 	private long id;
 	private String date;
