@@ -6,4 +6,4 @@ Steps before deploying the application to production
 	 - add some money to it
 	 - get verified
 	 - disable sending confirming e-mails
-- setup SMS and e-mail for logging	 
+- setup SMS and e-mail for logging
