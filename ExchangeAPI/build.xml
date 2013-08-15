@@ -1,4 +1,4 @@
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="hello-ivy"
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="stock-api"
 	default="run">
 	<description>
 		buildfile for ExchangeAPI
@@ -7,6 +7,7 @@
 	<property name="src" location="src" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
+	<property name="lib" location="lib" />
 
 	<target name="init">
 		<!-- Create the time stamp -->
@@ -16,8 +17,11 @@
 	</target>
 
 	<target name="compile" depends="init,resolve" description="compile the source ">
-		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${build}" />
+		<path id="classpath">
+  			<fileset dir="lib" includes="**/*.jar"/>
+  		</path>		
+	    <!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" classpathref="classpath" includeantruntime="false"/>
 	</target>
 
 	<target name="dist" depends="compile" description="generate the distribution">
@@ -25,17 +29,19 @@
 		<mkdir dir="${dist}/lib" />
 
 		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-		<jar jarfile="${dist}/lib/ExchangeAPI-${DSTAMP}.jar" basedir="${build}" />
+		<jar jarfile="${dist}/lib/stock-api-${DSTAMP}.jar" basedir="${build}"/>
 	</target>
 
 	<target name="clean" description="clean up">
 		<!-- Delete the ${build} and ${dist} directory trees -->
 		<delete dir="${build}" />
 		<delete dir="${dist}" />
+		<delete dir="${lib}" />
 	</target>
 
-	<!-- ================================= target: resolve ================================= -->
-	<target name="resolve" description="--> retrieve dependencies with ivy">
-		<ivy:retrieve />
+	<target name="resolve" description="retrieve dependencies with ivy">
+		<!-- resolve IVY dependencies -->
+	    <ivy:resolve />
+		<ivy:retrieve/> <!-- automatically copies them to ./lib -->
 	</target>
 </project>
