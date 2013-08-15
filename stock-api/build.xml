@@ -1,7 +1,7 @@
 <project xmlns:ivy="antlib:org.apache.ivy.ant" name="stock-api"
 	default="run">
 	<description>
-		buildfile for ExchangeAPI
+		buildfile for stock-api
 	</description>
 	<!-- set global properties for this build -->
 	<property name="src" location="src" />
