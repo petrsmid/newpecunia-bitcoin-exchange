@@ -1,12 +1,12 @@
 <ivy-module version="2.0">
-    <info organisation="com.petrsmid" module="stock-api"/>
+    <info organisation="com.petrsmid" module="bitstamp-connector"/>
     
     <configurations>
 	    <conf name="compile" visibility="public" />
 	    <conf name="test" visibility="private" />
 	</configurations>
 	<publications>
-	    <artifact name="stock-api" type="jar"  conf="compile" ext="jar"/>
+	    <artifact name="bitstamp-connector" type="jar"  conf="compile" ext="jar"/>
 	</publications>    
     
     <dependencies>
