@@ -1,0 +1,37 @@
+<project name="all" xmlns:ivy="antlib:org.apache.ivy.ant">         
+	<property name="ivy.install.version" value="2.3.0" />
+	<property name="ivy.jar.file" value="ivy.jar" />
+	<property name="build.dir" value="build" />
+	<property name="src.dir" value="src" />
+
+
+	<target name="download-ivy" unless="skip.download" description="download ivy">
+		<!-- download Ivy from web site so that it can be used even without any special installation -->
+		<get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
+	</target>
+	
+	<target name="init-ivy" depends="download-ivy" description="install ivy">
+		<path id="ivyclasspath">
+			<pathelement location="${ivy.jar.file}"/>
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivyclasspath"/>
+	</target>
+
+	<target name="buildlist" depends="init-ivy"> 
+		<ivy:buildlist reference="build-path">
+			<fileset dir="." includes="**/build.xml" excludes="build.xml"/>
+		</ivy:buildlist>
+	</target>
+
+	<target name="dist" depends="buildlist" description="compile, jar and publish all projects in the right order">
+		<subant target="dist" buildpathref="build-path" />
+	</target>
+
+	<target name="clean" depends="buildlist" description="clean tutorial: delete repository, ivy cache, and all projects">
+		<subant target="clean" buildpathref="build-path" />
+		<ivy:cleancache />
+		<delete file="${ivy.jar.file}" />
+	</target>
+
+
+</project>
