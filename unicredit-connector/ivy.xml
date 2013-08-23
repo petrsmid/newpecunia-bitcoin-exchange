@@ -1,16 +1,19 @@
 <ivy-module version="2.0">
-    <info organisation="com.newpecunia" module="exchange-web" status="integration"/>
+    <info organisation="com.newpecunia" module="unicredit-connector" status="integration"/>
     
     <configurations>
 	    <conf name="compile" visibility="public" />
 	    <conf name="test" visibility="private" />
 	</configurations>
 	<publications>
-	    <artifact name="exchange-web" type="jar"  conf="compile" ext="jar"/>
+	    <artifact name="unicredit-connector" type="jar" conf="compile" ext="jar"/>
 	</publications>    
     
     <dependencies>
         <!-- To add a library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
+        <dependency name="np-commons" rev="latest.integration" conf="compile"/>
+        <dependency org="com.github.lookfirst" name="sardine" rev="5.0.1" />
+        <dependency org="commons-io" name="commons-io" rev="2.4"/>        
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
     </dependencies>

@@ -1,16 +1,17 @@
 <ivy-module version="2.0">
-    <info organisation="com.newpecunia" module="exchange-web" status="integration"/>
+    <info organisation="com.newpecunia" module="np-commons" status="integration"/>
     
     <configurations>
 	    <conf name="compile" visibility="public" />
 	    <conf name="test" visibility="private" />
 	</configurations>
 	<publications>
-	    <artifact name="exchange-web" type="jar"  conf="compile" ext="jar"/>
+	    <artifact name="np-commons" type="jar"  conf="compile" ext="jar"/>
 	</publications>    
     
     <dependencies>
         <!-- To add a library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
+		<dependency org="commons-configuration" name="commons-configuration" rev="1.9"/>                    
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
     </dependencies>

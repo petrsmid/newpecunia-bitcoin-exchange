@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-    <info organisation="com.petrsmid" module="bitstamp-connector"/>
+    <info organisation="com.newpecunia" module="bitstamp-connector" status="integration"/>
     
     <configurations>
 	    <conf name="compile" visibility="public" />
