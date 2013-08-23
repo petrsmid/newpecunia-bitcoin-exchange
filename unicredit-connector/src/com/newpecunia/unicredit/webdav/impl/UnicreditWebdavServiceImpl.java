@@ -46,7 +46,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	
 	@Override	
 	public List<String> listStatusFolder() throws IOException {
-		return listFolder("TODO");
+		return listFolder(NPConfiguration.INSTANCE.getWebdavBaseFolder()+NPConfiguration.INSTANCE.getWebdavStatusFolder());
 	}
 	
 	/**
