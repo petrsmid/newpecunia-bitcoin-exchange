@@ -24,9 +24,9 @@
 	</target>
 
 	<target name="dist" depends="buildlist" description="compile, jar and publish all projects in the right order">
-		<subant target="dist" buildpathref="build-path" />
+		<subant target="publish" buildpathref="build-path" />
 	</target>
-
+	
 	<target name="clean" depends="buildlist" description="clean tutorial: delete repository, ivy cache, and all projects">
 		<subant target="clean" buildpathref="build-path" />
 		<ivy:cleancache />
