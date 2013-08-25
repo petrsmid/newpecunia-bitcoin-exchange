@@ -7,3 +7,4 @@ Steps before deploying the application to production
 	 - get verified
 	 - disable sending confirming e-mails
 - setup SMS and e-mail for logging
+- configure correctly Unicredit connector

@@ -55,6 +55,9 @@ public class BitstampWebdriverImpl implements BitstampWebdriver {
 		getActiveSession().cancelLastDeposit();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Long createInternationalWithdraw(InternationalWithdrawRequest request) throws IOException, BitstampWebdriverException {
 		return getActiveSession().createInternationalWithdraw(request);

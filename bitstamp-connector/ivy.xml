@@ -10,12 +10,8 @@
 	</publications>    
     
     <dependencies>
-        <!-- To add a library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
-		<dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.0-beta7" />
-		<dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.0-beta7" /> <!-- bridge for old Log4j logging to be routed to Log4j2 -->
-  		<dependency org="org.apache.logging.log4j" name="log4j-jcl" rev="2.0-beta7" /> <!-- bridge for Jakarta Commons Logging to be routed to Log4j2 -->
-		<dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.0-beta7" /> <!-- bridge for SLF4J to be routed to Log4j2 -->
-		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.0-beta7" />        
+        <dependency name="np-commons" rev="latest.integration" conf="compile"/>
+        <!-- To add an external library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
         <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.2.5"/>
         <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.11"/>
         <dependency org="com.google.code.guice" name="guice" rev="1.0"/>
