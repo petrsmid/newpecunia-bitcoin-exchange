@@ -1,4 +1,4 @@
-package com.newpecunia.bitstamp;
+package com.newpecunia.net;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -7,8 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
-import com.newpecunia.net.RequestCountLimitExceededException;
-import com.newpecunia.net.RequestCountLimitVerifier;
 import com.newpecunia.util.TimeProvider;
 
 public class BitstampRequestCountLimitVerifier implements RequestCountLimitVerifier {

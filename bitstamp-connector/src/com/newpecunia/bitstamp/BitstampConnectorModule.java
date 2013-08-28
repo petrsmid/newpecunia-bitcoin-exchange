@@ -1,13 +1,13 @@
-package com.newpecunia;
+package com.newpecunia.bitstamp;
 
 import com.google.inject.AbstractModule;
-import com.newpecunia.bitstamp.BitstampRequestCountLimitVerifier;
 import com.newpecunia.bitstamp.service.BitstampService;
 import com.newpecunia.bitstamp.service.impl.BitstampCredentials;
 import com.newpecunia.bitstamp.service.impl.BitstampServiceImpl;
 import com.newpecunia.bitstamp.service.impl.SecureBitstampCredentialsImpl;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriver;
 import com.newpecunia.bitstamp.webdriver.impl.BitstampWebdriverImpl;
+import com.newpecunia.net.BitstampRequestCountLimitVerifier;
 import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.HttpReaderFactoryImpl;
 import com.newpecunia.net.RequestCountLimitVerifier;
@@ -16,7 +16,7 @@ import com.newpecunia.synchronization.SingleNodeClusterLockProvider;
 import com.newpecunia.util.TimeProvider;
 import com.newpecunia.util.TimeProviderImpl;
 
-public class GuiceBitexchangeModule extends AbstractModule {
+public class BitstampConnectorModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

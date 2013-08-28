@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.newpecunia.GuiceBitexchangeModule;
+import com.newpecunia.bitstamp.BitstampConnectorModule;
 
 public class BitstampServiceLiveTest {
 
@@ -21,7 +21,7 @@ public class BitstampServiceLiveTest {
 
 	@Before
 	public void setup() {
-		Injector injector = Guice.createInjector(new GuiceBitexchangeModule());
+		Injector injector = Guice.createInjector(new BitstampConnectorModule());
 		bitstampService = injector.getInstance(BitstampService.class);
 	}
 

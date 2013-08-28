@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<hibernate-configuration xmlns="http://www.hibernate.org/xsd/hibernate-configuration">
+
+	<session-factory>
+		<!-- Database connection settings -->
+		<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+		<property name="hibernate.connection.url">jdbc:postgresql://localhost/newpecunia</property>
+		<property name="hibernate.connection.username">newpecunia</property>
+		<property name="hibernate.connection.password">newpecunia</property>
+
+		<!-- JDBC connection pool (use the built-in) -->
+		<property name="hibernate.connection.pool_size">10</property>
+
+		<!-- SQL dialect -->
+		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL82Dialect</property>
+
+		<!-- Enable Hibernate's automatic session context management -->
+		<property name="hibernate.current_session_context_class">thread</property>
+
+		<!-- Disable the second-level cache -->
+		<property name="hibernate.cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
+
+		<!-- Echo all executed SQL to stdout -->
+		<property name="hibernate.show_sql">true</property> <!-- !!!! turn off before going into production -->
+
+		<!-- Drop and re-create the database schema on startup -->
+		<property name="hibernate.hbm2ddl.auto">update</property> <!-- !!!! remove before going into production -->
+	</session-factory>
+
+</hibernate-configuration>

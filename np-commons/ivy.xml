@@ -16,7 +16,9 @@
   		<dependency org="org.apache.logging.log4j" name="log4j-jcl" rev="2.0-beta7" /> <!-- bridge for Jakarta Commons Logging to be routed to Log4j2 -->
 		<dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.0-beta7" /> <!-- bridge for SLF4J to be routed to Log4j2 -->
 		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.0-beta7" />
-        
+		
+		<dependency org="com.google.code.guice" name="guice" rev="1.0"/>
+		
 		<dependency org="commons-configuration" name="commons-configuration" rev="1.9"/>
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>

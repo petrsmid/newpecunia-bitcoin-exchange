@@ -2,6 +2,7 @@ package com.newpecunia.bitstamp;
 
 import org.junit.Test;
 
+import com.newpecunia.net.BitstampRequestCountLimitVerifier;
 import com.newpecunia.net.RequestCountLimitExceededException;
 import com.newpecunia.util.TimeProviderMock;
 
