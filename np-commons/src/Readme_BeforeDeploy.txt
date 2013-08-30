@@ -11,3 +11,6 @@ Steps before deploying the application to production
 - when deploying to a cluster reimplement Timer in trader and unicredit-connector
 - turn off recreating database schema. Turn off echoing SQL to log.
 - setup PostgreSQL 9.1 - do not forget to setup its memory, security and maybe another important things (easy documentation: https://help.ubuntu.com/community/PostgreSQL, create password for postgres linux user and start pgadmin3 as this user)
+
+
+- add better CountryDirectory implementation - the JavaCountryDirectory does not contain all countries!
