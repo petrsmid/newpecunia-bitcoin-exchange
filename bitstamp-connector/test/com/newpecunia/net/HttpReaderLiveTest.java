@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.newpecunia.bitstamp.service.impl.BitstampServiceConstants;
-import com.newpecunia.util.TimeProviderImpl;
+import com.newpecunia.time.TimeProviderImpl;
 
 @RunWith(JUnit4.class)
 public class HttpReaderLiveTest {

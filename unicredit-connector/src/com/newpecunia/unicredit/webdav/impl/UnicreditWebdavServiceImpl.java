@@ -87,7 +87,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	@Override
 	public String uploadForeignPaymentsPackage(ForeignPaymentPackage foreignPaymentPackage) throws IOException {
 		String fileName = fileNameResolver.createNewUploadFileName();
-		uploadFile(fileName, foreignPaymentPackage.toCVS());
+		uploadFile(fileName, foreignPaymentPackage.toMultiCash());
 		return fileName;
 	}
 	

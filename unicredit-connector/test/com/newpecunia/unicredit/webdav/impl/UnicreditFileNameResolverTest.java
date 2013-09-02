@@ -3,19 +3,11 @@ package com.newpecunia.unicredit.webdav.impl;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.newpecunia.persistence.IdGenerator;
+
 public class UnicreditFileNameResolverTest {
 	
-	private String SOME_ID = "01234567890123456789012345678901";
-	
-	@Test
-	public void testIdUniqueness() {
-		UnicreditFileNameResolver fnr = new UnicreditFileNameResolver();
-		String id1 = fnr.generateNewId();
-		System.out.println("ID1: "+id1);
-		String id2 = fnr.generateNewId();
-		System.out.println("ID2: "+id2);
-		Assert.assertNotEquals("ID must never be equal", id1, id2);
-	}
+	private String SOME_ID = IdGenerator.INSTANCE.nextId();
 	
 	//This is just an visual test that the name is generated correctly. Check it visually.
 	@Test
@@ -60,7 +52,7 @@ public class UnicreditFileNameResolverTest {
 		String uploadFileName = fnr.createNewUploadFileName();
 		String id = fnr.getIdFromUploadFile(uploadFileName);
 		
-		String anotherId = fnr.generateNewId();
+		String anotherId = IdGenerator.INSTANCE.nextId();
 		Assert.assertEquals(id.length(), anotherId.length());		
 	}
 

@@ -13,8 +13,6 @@ import com.newpecunia.net.HttpReaderFactoryImpl;
 import com.newpecunia.net.RequestCountLimitVerifier;
 import com.newpecunia.synchronization.ClusterLockProvider;
 import com.newpecunia.synchronization.SingleNodeClusterLockProvider;
-import com.newpecunia.util.TimeProvider;
-import com.newpecunia.util.TimeProviderImpl;
 
 public class BitstampConnectorModule extends AbstractModule {
 
@@ -24,7 +22,6 @@ public class BitstampConnectorModule extends AbstractModule {
 		bind(ClusterLockProvider.class).to(SingleNodeClusterLockProvider.class);
 		
 		bind(BitstampCredentials.class).toInstance(SecureBitstampCredentialsImpl.newInstance());
-		bind(TimeProvider.class).to(TimeProviderImpl.class);
 		bind(RequestCountLimitVerifier.class).to(BitstampRequestCountLimitVerifier.class);
 		bind(BitstampService.class).to(BitstampServiceImpl.class);
 		bind(BitstampWebdriver.class).to(BitstampWebdriverImpl.class);

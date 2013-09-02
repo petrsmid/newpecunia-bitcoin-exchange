@@ -21,4 +21,14 @@ public class JavaCountryDatabase implements CountryDatabase {
 	public List<Country> getListOfCountries() {
 		return countries;
 	}
+
+	@Override
+	public Country getCountryForISO(String isoCode) {
+		for (Country country : countries) {
+			if (country.getIsoCode().equals(isoCode)) {
+				return country;
+			}
+		}
+		return null;
+	}
 }

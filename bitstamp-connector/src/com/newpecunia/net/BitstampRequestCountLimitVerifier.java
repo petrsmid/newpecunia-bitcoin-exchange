@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
-import com.newpecunia.util.TimeProvider;
+import com.newpecunia.time.TimeProvider;
 
 public class BitstampRequestCountLimitVerifier implements RequestCountLimitVerifier {
 	

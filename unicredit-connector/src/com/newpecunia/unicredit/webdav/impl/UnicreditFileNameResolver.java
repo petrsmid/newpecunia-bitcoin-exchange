@@ -1,43 +1,18 @@
 package com.newpecunia.unicredit.webdav.impl;
 
-import java.nio.ByteBuffer;
-import java.util.Random;
-import java.util.UUID;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 
+import com.newpecunia.persistence.IdGenerator;
+
 public class UnicreditFileNameResolver {
 
-	private static final int ID_LENGTH = 32;
+	private static final int ID_LENGTH = IdGenerator.INSTANCE.nextId().length();
 
 	private static final String SUFFIX = ".csv";
 
 	private static final Logger logger = LogManager.getLogger(UnicreditFileNameResolver.class);	
-	
-	private Random random = new Random();
-	
-	/**
-	 * Constructs ID based on UUID for time and random number 
-	 */
-	public String generateNewId() {
-		long now = System.nanoTime();
-		byte[] timeAsBytes = ByteBuffer.allocate(8).putLong(now).array();
-		
-        byte[] randomAsBytes = new byte[8];
-		random.nextBytes(randomAsBytes);
-		
-		//concatenate byte arrays
-		byte[] bytesForUuid3 = new byte[timeAsBytes.length + randomAsBytes.length];
-		System.arraycopy(timeAsBytes, 0, bytesForUuid3, 0, timeAsBytes.length);
-		System.arraycopy(randomAsBytes, 0, bytesForUuid3, timeAsBytes.length, randomAsBytes.length);
-		
-		//construct UUID based on the timestamp and random
-		UUID uuid = UUID.nameUUIDFromBytes(bytesForUuid3);
-		return uuid.toString().replaceAll("-", "");
-	}
-	
 	
 	public String getUploadFileNameForId(String id) {
 		DateTime dt = new DateTime();
@@ -46,7 +21,7 @@ public class UnicreditFileNameResolver {
 	}
 	
 	public String createNewUploadFileName() {
-		return getUploadFileNameForId(generateNewId());
+		return getUploadFileNameForId(IdGenerator.INSTANCE.nextId());
 	}
 	
 	public String getIdFromStatusFile(String fileName) {

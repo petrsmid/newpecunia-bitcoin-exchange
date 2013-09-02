@@ -1,7 +1,10 @@
 Steps before deploying the application to production
 ==========================================================
 
-- when deploying to a cluster always use multi-node cluster implementation for ClusterLockProvider
+- when deploying to a cluster
+	- always use multi-node cluster implementation for ClusterLockProvider
+	- reimplement BalanceService - the substracting of the balance must be replicated through the cluster
+	 
 - create account on BitStamp
 	 - add some money to it
 	 - get verified

@@ -1,5 +1,7 @@
 package com.newpecunia.configuration;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -41,4 +43,25 @@ public enum NPConfiguration {
 	public String getWebdavStatusFolder() {
 		return config.getString("webdav.statusfolder");
 	}
+
+	/**
+	 * update balance from Unicredit maximaly every 10 minutes
+	 */
+	public long getBalanceUpdatePeriad() {
+		return config.getLong("unicredit.balance_update_period_ms");
+	}
+
+	public String getUnicreditAccountCurrency() {
+		return config.getString("unicredit.account_currency");
+	}
+
+	public BigDecimal getUnicreditReserve() {
+		return config.getBigDecimal("unicredit.account_reserve");
+	}
+
+	public BigDecimal getPaymentFee() {
+		return config.getBigDecimal("unicredit.payment_fee");
+	}
+	
+	
 }
