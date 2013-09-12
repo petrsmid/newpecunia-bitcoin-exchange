@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import com.newpecunia.countries.Country;
 
 public class ForeignPayment {
-	private String id; //reference
 	private BigDecimal amount;
 	private String currency;
 
@@ -26,12 +25,6 @@ public class ForeignPayment {
 	private Country bankCountry;
 	
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public BigDecimal getAmount() {
 		return amount;
 	}

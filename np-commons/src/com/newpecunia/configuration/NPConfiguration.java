@@ -4,44 +4,46 @@ import java.math.BigDecimal;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
 
 import com.newpecunia.NPException;
 
-public enum NPConfiguration {
+public class NPConfiguration {
 	
-	INSTANCE;
-
-	private static final String CONFIG_FILENAME = "npconfig.properties";
+	private static final String CONFIG_FILENAME = "npconfig.xml";
 	
-	private Configuration config = null;
-	
-	private NPConfiguration() {
+	public NPConfiguration() {
 		reloadConfiguration();
 	}
 	
-	public static void reloadConfiguration() {
+	private Configuration config = null;
+	
+	public void reloadConfiguration() {
 		try {
-			INSTANCE.config = new PropertiesConfiguration(CONFIG_FILENAME);
+			config = new XMLConfiguration(getClass().getResource(CONFIG_FILENAME));
 		} catch (ConfigurationException e) {
 			throw new NPException("Cannot load config file.", e);
 		}		
 	}
+
+	public String getCredentialsPath() {
+		return config.getString("credentialsPath");
+	}
 	
 	public String getWebdavEncoding() {
-		return config.getString("webdav.fileencoding");
+		return config.getString("unicredit.webdav.fileencoding");
 	}
 
 	public String getWebdavBaseFolder() {
-		return config.getString("webdav.baseurl");
+		return config.getString("unicredit.webdav.baseurl");
 	}
 
 	public String getWebdavForeignUploadFolder() {
-		return config.getString("webdav.upload.foreignfolder");
+		return config.getString("unicredit.webdav.upload.foreignfolder");
 	}
 
 	public String getWebdavStatusFolder() {
-		return config.getString("webdav.statusfolder");
+		return config.getString("unicredit.webdav.statusfolder");
 	}
 
 	/**

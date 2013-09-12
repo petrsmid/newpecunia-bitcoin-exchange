@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.newpecunia.bitstamp.BitstampConnectorModule;
+import com.newpecunia.common.CommonModule;
 
 public class BitstampServiceLiveTest {
 
@@ -21,7 +22,7 @@ public class BitstampServiceLiveTest {
 
 	@Before
 	public void setup() {
-		Injector injector = Guice.createInjector(new BitstampConnectorModule());
+		Injector injector = Guice.createInjector(new BitstampConnectorModule(), new CommonModule());
 		bitstampService = injector.getInstance(BitstampService.class);
 	}
 
@@ -102,6 +103,7 @@ public class BitstampServiceLiveTest {
 		for (UserTransaction userTransaction : userTransactions) {
 			assertNotNull(userTransaction.getAmountBTC());
 			assertNotNull(userTransaction.getAmountUSD());
+			assertNotNull(userTransaction.getBtcPrice());
 			assertNotNull(userTransaction.getDatetime());
 //			assertNotNull(userTransaction.getOrderId()); - for some reason the Bitstamp service returns null as order ID.
 			assertNotNull(userTransaction.getTransactionFee());

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config>
+	<credentialsPath>/home/petr/bitstampcredentials.xml</credentialsPath>
+	
+	<unicredit>
+		<balance_update_period_ms>600000</balance_update_period_ms>
+		<account_currency>USD</account_currency>
+		<account_reserve>100</account_reserve>
+		<payment_fee>0.50</payment_fee>
+	
+		<webdav>
+			<baseurl>https://sk.unicreditbanking.net/webdav/</baseurl>
+			<fileencoding>UTF-8</fileencoding>
+			<statusfolder>status/</statusfolder>
+			<upload>
+				<foreignfolder>upload/foreign/</foreignfolder>
+			</upload>
+		</webdav>
+	</unicredit>
+</config>

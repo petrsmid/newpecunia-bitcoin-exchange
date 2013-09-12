@@ -14,11 +14,14 @@ public class ForeignPaymentPackage {
 	private ForeignPayment payment;
 
 	private TimeProvider timeProvider;
+
+	private String reference;
 	
 	/**
 	 * We use "one payment per package" strategy.
 	 */
-	public ForeignPaymentPackage(ForeignPayment foreignPayment, TimeProvider timeProvider) {
+	public ForeignPaymentPackage(String reference, ForeignPayment foreignPayment, TimeProvider timeProvider) {
+		this.reference = reference;
 		this.payment = foreignPayment;
 		this.timeProvider = timeProvider;
 	}
@@ -32,10 +35,6 @@ public class ForeignPaymentPackage {
 		//header
 		StringBuilder builder = new StringBuilder();
 		appendFixed(builder, 4, ":01:");
-		String reference = payment.getId();
-		if (reference.length() > 16) {
-			reference = reference.substring(reference.length()-16); 
-		}
 		appendVariable(builder, 16, reference);
 		appendNewLine(builder);
 		

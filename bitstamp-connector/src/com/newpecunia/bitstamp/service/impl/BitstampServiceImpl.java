@@ -32,6 +32,7 @@ import com.newpecunia.bitstamp.service.impl.dto.TransactionDTO;
 import com.newpecunia.bitstamp.service.impl.dto.TransactionMapper;
 import com.newpecunia.bitstamp.service.impl.dto.UserTransactionDTO;
 import com.newpecunia.bitstamp.service.impl.dto.UserTransactionMapper;
+import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.net.HttpReader;
 import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.JsonCodec;
@@ -45,11 +46,11 @@ public class BitstampServiceImpl implements BitstampService {
 	private static final BigDecimal MIN_BTC_AMOUNT = new BigDecimal("0.00006"); //minimum wihtdraw BTC amount
 	private static final int MAX_BTC_SCALE = 8; //maximal BTC scale (e.g.: 0.00000001)
 	
-	private BitstampCredentials credentials;
+	private NPCredentials credentials;
 	private HttpReader httpReader;
 	
 	@Inject
-	public BitstampServiceImpl(HttpReaderFactory httpReaderFactory, BitstampCredentials credentials) {
+	public BitstampServiceImpl(HttpReaderFactory httpReaderFactory, NPCredentials credentials) {
 		this.httpReader = httpReaderFactory.createNewHttpSimpleReader();
 		this.credentials = credentials;
 	}
@@ -85,8 +86,8 @@ public class BitstampServiceImpl implements BitstampService {
 		validateOrder(price, amount);
 		
 		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
 		requestParams.add(new BasicNameValuePair("amount", amount.toPlainString()));		
 		requestParams.add(new BasicNameValuePair("price", price.toPlainString()));		
 		
@@ -107,8 +108,8 @@ public class BitstampServiceImpl implements BitstampService {
 		validateOrder(price, amount);
 		
 		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
 		requestParams.add(new BasicNameValuePair("amount", amount.toPlainString()));		
 		requestParams.add(new BasicNameValuePair("price", price.toPlainString()));		
 
@@ -138,8 +139,8 @@ public class BitstampServiceImpl implements BitstampService {
 	@Override
 	public Boolean cancelOrder(String orderId) throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
 		requestParams.add(new BasicNameValuePair("id", orderId));
 		
 		String url = BitstampServiceConstants.CANCEL_ORDER;
@@ -156,8 +157,8 @@ public class BitstampServiceImpl implements BitstampService {
 	@Override
 	public List<Order> getOpenOrders() throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
 		
 		String url = BitstampServiceConstants.OPEN_ORDERS;
 		try {
@@ -190,8 +191,8 @@ public class BitstampServiceImpl implements BitstampService {
 	@Override
 	public AccountBalance getAccountBalance() throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
 		
 		String url = BitstampServiceConstants.ACCOUNT_BALANCE;
 		try {
@@ -216,8 +217,8 @@ public class BitstampServiceImpl implements BitstampService {
 		}
 		
 		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
 		requestParams.add(new BasicNameValuePair("amount", amount.toPlainString()));		
 		requestParams.add(new BasicNameValuePair("address", address));		
 		
@@ -235,8 +236,8 @@ public class BitstampServiceImpl implements BitstampService {
 	@Override
 	public String getBitcoinDepositAddress() throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
 		
 		String url = BitstampServiceConstants.BITCOIN_DEPOSIT_ADDRESS;
 		try {
@@ -257,8 +258,8 @@ public class BitstampServiceImpl implements BitstampService {
 	@Override
 	public List<UserTransaction> getUserTransactions(long offset, long limit) throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
 		requestParams.add(new BasicNameValuePair("offset", Long.toString(offset)));
 		requestParams.add(new BasicNameValuePair("limit", Long.toString(limit)));
 		
@@ -302,8 +303,8 @@ public class BitstampServiceImpl implements BitstampService {
 	@Override
 	public List<UnconfirmedBitcoinDeposit> getUnconfirmedBitcoinDeposits() throws BitstampServiceException {
 		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getPassword()));		
+		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
+		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
 		
 		String url = BitstampServiceConstants.UNCONFIRMED_BTC;
 		try {

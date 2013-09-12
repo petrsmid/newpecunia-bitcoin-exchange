@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
+import com.google.inject.Inject;
 import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.unicredit.webdav.ForeignPaymentPackage;
 import com.newpecunia.unicredit.webdav.Status;
@@ -22,6 +23,13 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	private static final Logger logger = LogManager.getLogger(UnicreditWebdavServiceImpl.class);	
 
 	private UnicreditFileNameResolver fileNameResolver = new UnicreditFileNameResolver();
+
+	private NPConfiguration configuration;
+	
+	@Inject
+	public UnicreditWebdavServiceImpl(NPConfiguration configuration) {
+		this.configuration = configuration;
+	}
 	
 	private Sardine getSardine() {
 		return SardineFactory.begin("username", "password"); //TODO
@@ -38,7 +46,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	
 	private String getFile(String url) throws IOException {
 		InputStream stream = getSardine().get(url);		
-		return IOUtils.toString(stream, NPConfiguration.INSTANCE.getWebdavEncoding());		
+		return IOUtils.toString(stream, configuration.getWebdavEncoding());		
 	}
 	
 	private void uploadFile(String url, String file) throws IOException {
@@ -46,11 +54,11 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	}
 	
 	private String getUploadFolderPath() {
-		return NPConfiguration.INSTANCE.getWebdavBaseFolder()+NPConfiguration.INSTANCE.getWebdavForeignUploadFolder();
+		return configuration.getWebdavBaseFolder()+configuration.getWebdavForeignUploadFolder();
 	}
 	
 	private String getStatusFolderPath() {
-		return NPConfiguration.INSTANCE.getWebdavBaseFolder()+NPConfiguration.INSTANCE.getWebdavStatusFolder();
+		return configuration.getWebdavBaseFolder()+configuration.getWebdavStatusFolder();
 	}
 	
 	/**

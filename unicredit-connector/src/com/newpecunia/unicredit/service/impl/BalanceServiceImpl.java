@@ -15,17 +15,19 @@ public class BalanceServiceImpl implements BalanceService {
 	private BigDecimal balance = null;
 	private long lastBalanceUpdate = 0;
 	private TimeProvider timeProvider;
+	private NPConfiguration configuration;
 
 	@Inject
-	public BalanceServiceImpl(UnicreditWebdriver webdriver, TimeProvider timeProvider) {
+	public BalanceServiceImpl(UnicreditWebdriver webdriver, TimeProvider timeProvider, NPConfiguration configuration) {
 		this.webdriver = webdriver;
 		this.timeProvider = timeProvider;
+		this.configuration = configuration;
 	}
 	
 	@Override
 	public synchronized BigDecimal getApproximateBalance() {
 		long now = timeProvider.now();
-		if (balance == null || (now - lastBalanceUpdate > NPConfiguration.INSTANCE.getBalanceUpdatePeriad())) {
+		if (balance == null || (now - lastBalanceUpdate > configuration.getBalanceUpdatePeriad())) {
 			balance = webdriver.getBalance();
 		}
 		return balance;
@@ -33,7 +35,7 @@ public class BalanceServiceImpl implements BalanceService {
 
 	@Override
 	public synchronized void substractFromBalance(BigDecimal amount, String currency) {
-		String accountCurrency = NPConfiguration.INSTANCE.getUnicreditAccountCurrency().toUpperCase();
+		String accountCurrency = configuration.getUnicreditAccountCurrency().toUpperCase();
 		if (!currency.toUpperCase().equals(accountCurrency)) {
 			throw new ProgrammerException("Cannot substract another currency as"+accountCurrency);
 		}

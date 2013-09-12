@@ -1,16 +1,20 @@
 package com.newpecunia.bitstamp.service;
 
-import com.newpecunia.bitstamp.service.impl.BitstampCredentials;
+import com.newpecunia.configuration.NPCredentials;
 
-public class BitstampCredentialsMock implements BitstampCredentials {
+public class BitstampCredentialsMock extends NPCredentials {
+
+	public BitstampCredentialsMock() {
+		super(null);
+	}
 
 	@Override
-	public String getUsername() {
+	public String getBitstampUsername() {
 		return "username";
 	}
 
 	@Override
-	public String getPassword() {
+	public String getBitstampPassword() {
 		return "password";
 	}
 

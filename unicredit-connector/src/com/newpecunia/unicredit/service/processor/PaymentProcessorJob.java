@@ -28,17 +28,19 @@ public class PaymentProcessorJob implements Runnable {
 	
 	private UnicreditWebdavService webdavService;
 	private ForeignPaymentMapper foreignPaymentMapper;
-
-	private Session session; //TODO
 	private BalanceService balanceService;
 	private TimeProvider timeProvider;
+	private NPConfiguration configuration;
+
+	private Session session; //TODO
 	
 	@Inject
-	public PaymentProcessorJob(UnicreditWebdavService webdavService, BalanceService balanceService, ForeignPaymentMapper foreignPaymentMapper, TimeProvider timeProvider) {
+	public PaymentProcessorJob(UnicreditWebdavService webdavService, BalanceService balanceService, ForeignPaymentMapper foreignPaymentMapper, TimeProvider timeProvider, NPConfiguration configuration) {
 		this.webdavService = webdavService;
 		this.balanceService = balanceService;
 		this.foreignPaymentMapper = foreignPaymentMapper;
 		this.timeProvider = timeProvider;
+		this.configuration = configuration;
 	}
 	
 	@Override
@@ -50,8 +52,8 @@ public class PaymentProcessorJob implements Runnable {
 		logger.info("Sending pending payments to webdav.");
 		
 		Criteria crit = session.createCriteria(ForeignPaymentOrder.class)
-		.add(Restrictions.eqOrIsNull("status", ForeignPaymentOrder.PaymentStatus.NEW))
-		.addOrder(Order.asc("createTimestamp"));
+			.add(Restrictions.eqOrIsNull("status", ForeignPaymentOrder.PaymentStatus.NEW))
+			.addOrder(Order.asc("createTimestamp"));
 		
 		@SuppressWarnings("unchecked")		
 		List<ForeignPaymentOrder> newPayments = crit.list();
@@ -62,8 +64,8 @@ public class PaymentProcessorJob implements Runnable {
 			ForeignPayment foreignPayment = foreignPaymentMapper.mapToPayment(foreignPaymentOrder);
 
 			BigDecimal balance = balanceService.getApproximateBalance();
-			BigDecimal fee = NPConfiguration.INSTANCE.getPaymentFee();
-			BigDecimal reserve = NPConfiguration.INSTANCE.getUnicreditReserve();
+			BigDecimal fee = configuration.getPaymentFee();
+			BigDecimal reserve = configuration.getUnicreditReserve();
 			BigDecimal balanceAfterPayment = balance.subtract(foreignPayment.getAmount()).subtract(fee);
 			
 			if (balanceAfterPayment.compareTo(reserve) < 0) { //not enough money on the account
@@ -74,8 +76,8 @@ public class PaymentProcessorJob implements Runnable {
 				continue;
 			}
 
-			
-			ForeignPaymentPackage foreignPaymentPackage = new ForeignPaymentPackage(foreignPayment, timeProvider); //one payment per package
+			String reference = createPaymentReference(paymentId);
+			ForeignPaymentPackage foreignPaymentPackage = new ForeignPaymentPackage(reference, foreignPayment, timeProvider); //one payment per package
 			try {
 				webdavService.uploadForeignPaymentsPackage(foreignPaymentPackage);
 			} catch (IOException e) {
@@ -90,6 +92,14 @@ public class PaymentProcessorJob implements Runnable {
 			balanceService.substractFromBalance(fee, foreignPayment.getCurrency());
 		}
 		logger.info("Finished sending pending payments to webdav. Unprocessed payments: "+unprocessedPaymentIds);
+	}
+
+	private String createPaymentReference(String paymentId) {
+		String reference = paymentId;
+		if (reference.length() > 16) { //reference can be maximally 16 characters long
+			reference = reference.substring(reference.length()-16); 
+		}
+		return reference;
 	}
 	
 

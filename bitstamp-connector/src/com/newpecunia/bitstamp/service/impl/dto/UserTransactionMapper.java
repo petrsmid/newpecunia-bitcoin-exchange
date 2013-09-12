@@ -10,6 +10,7 @@ public class UserTransactionMapper {
 		UserTransaction ut = new UserTransaction();
 		ut.setAmountBTC(dto.getBtc());
 		ut.setAmountUSD(dto.getUsd());
+		ut.setBtcPrice(dto.getBtc_usd());
 		//e.g.: 2013-06-27 15:41:41.177225  or 2013-06-27 15:41:41
 		if (dto.getDatetime() != null) {
 			String isoDate = dto.getDatetime().replace(' ', 'T');

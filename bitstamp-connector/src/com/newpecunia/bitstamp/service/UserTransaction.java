@@ -13,6 +13,7 @@ public class UserTransaction {
 	private TransactionType type; // transaction type (0 - deposit; 1 - withdrawal; 2 - market trade)
 	private BigDecimal amountUSD; // USD amount
 	private BigDecimal amountBTC; // BTC amount
+	private BigDecimal btcPrice; // how many USD for 1 BTC 
 	private BigDecimal transactionFee; // transaction fee
 	private BigDecimal orderId; // executed order id	
 
@@ -46,6 +47,12 @@ public class UserTransaction {
 	}
 	public void setAmountBTC(BigDecimal amountBTC) {
 		this.amountBTC = amountBTC;
+	}
+	public BigDecimal getBtcPrice() {
+		return btcPrice;
+	}
+	public void setBtcPrice(BigDecimal btcPrice) {
+		this.btcPrice = btcPrice;
 	}
 	public BigDecimal getTransactionFee() {
 		return transactionFee;

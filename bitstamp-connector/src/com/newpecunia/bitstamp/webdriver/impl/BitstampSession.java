@@ -18,12 +18,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.newpecunia.bitstamp.service.impl.BitstampCredentials;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
 import com.newpecunia.bitstamp.webdriver.InternationalWithdrawRequest;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine.WithdrawStatus;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine.WithdrawType;
+import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.net.HttpReader;
 import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.HttpReaderOutput;
@@ -44,12 +44,12 @@ public class BitstampSession {
 	private ClusterLockProvider lockProvider;
 	
 	//package private
-	static BitstampSession createSession(HttpReaderFactory httpReaderFactory, BitstampCredentials credentials, ClusterLockProvider lockProvider) throws IOException, BitstampWebdriverException {
+	static BitstampSession createSession(HttpReaderFactory httpReaderFactory, NPCredentials credentials, ClusterLockProvider lockProvider) throws IOException, BitstampWebdriverException {
 		BitstampSession session = new BitstampSession();
 		
 		session.httpReader = httpReaderFactory.createNewHttpSessionReader();
 		session.lockProvider = lockProvider;
-		session.login(credentials.getUsername(), credentials.getPassword());
+		session.login(credentials.getBitstampUsername(), credentials.getBitstampPassword());
 		return session;
 	}
 

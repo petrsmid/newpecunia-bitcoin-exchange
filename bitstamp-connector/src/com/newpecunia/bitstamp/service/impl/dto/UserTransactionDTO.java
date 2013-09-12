@@ -9,6 +9,7 @@ public class UserTransactionDTO {
 	private Integer type; // transaction type (0 - deposit; 1 - withdrawal; 2 - market trade)
 	private BigDecimal usd; // USD amount
 	private BigDecimal btc; // BTC amount
+	private BigDecimal btc_usd; //USDs for 1 BTC
 	private BigDecimal fee; // transaction fee
 	private BigDecimal order_id; // executed order id
 
@@ -43,6 +44,12 @@ public class UserTransactionDTO {
 	public void setBtc(BigDecimal btc) {
 		this.btc = btc;
 	}
+	public BigDecimal getBtc_usd() {
+		return btc_usd;
+	}
+	public void setBtc_usd(BigDecimal btc_usd) {
+		this.btc_usd = btc_usd;
+	}
 	public BigDecimal getFee() {
 		return fee;
 	}
@@ -55,6 +62,5 @@ public class UserTransactionDTO {
 	public void setOrder_id(BigDecimal order_id) {
 		this.order_id = order_id;
 	}
-	
 	
 }

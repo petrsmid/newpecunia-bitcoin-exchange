@@ -2,9 +2,7 @@ package com.newpecunia.bitstamp;
 
 import com.google.inject.AbstractModule;
 import com.newpecunia.bitstamp.service.BitstampService;
-import com.newpecunia.bitstamp.service.impl.BitstampCredentials;
 import com.newpecunia.bitstamp.service.impl.BitstampServiceImpl;
-import com.newpecunia.bitstamp.service.impl.SecureBitstampCredentialsImpl;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriver;
 import com.newpecunia.bitstamp.webdriver.impl.BitstampWebdriverImpl;
 import com.newpecunia.net.BitstampRequestCountLimitVerifier;
@@ -21,7 +19,6 @@ public class BitstampConnectorModule extends AbstractModule {
 		bind(HttpReaderFactory.class).to(HttpReaderFactoryImpl.class);
 		bind(ClusterLockProvider.class).to(SingleNodeClusterLockProvider.class);
 		
-		bind(BitstampCredentials.class).toInstance(SecureBitstampCredentialsImpl.newInstance());
 		bind(RequestCountLimitVerifier.class).to(BitstampRequestCountLimitVerifier.class);
 		bind(BitstampService.class).to(BitstampServiceImpl.class);
 		bind(BitstampWebdriver.class).to(BitstampWebdriverImpl.class);
