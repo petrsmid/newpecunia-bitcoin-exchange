@@ -1,4 +1,4 @@
-package com.newpecunia.unicredit.service.processor;
+package com.newpecunia.unicredit.service.impl.processor;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -19,8 +19,8 @@ import com.newpecunia.unicredit.service.BalanceService;
 import com.newpecunia.unicredit.service.ForeignPayment;
 import com.newpecunia.unicredit.service.impl.entity.ForeignPaymentMapper;
 import com.newpecunia.unicredit.service.impl.entity.ForeignPaymentOrder;
-import com.newpecunia.unicredit.webdav.ForeignPaymentPackage;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
+import com.newpecunia.unicredit.webdav.impl.MulticashForeignPaymentPackage;
 
 public class PaymentProcessorJob implements Runnable {
 
@@ -76,10 +76,8 @@ public class PaymentProcessorJob implements Runnable {
 				continue;
 			}
 
-			String reference = createPaymentReference(paymentId);
-			ForeignPaymentPackage foreignPaymentPackage = new ForeignPaymentPackage(reference, foreignPayment, timeProvider); //one payment per package
 			try {
-				webdavService.uploadForeignPaymentsPackage(foreignPaymentPackage);
+				webdavService.uploadForeignPaymentPackage(paymentId, foreignPayment);
 			} catch (IOException e) {
 				unprocessedPaymentIds.add(paymentId);
 				String message = "Webdav is out of order now. Processing of payments stopped for this run."; 
@@ -92,14 +90,6 @@ public class PaymentProcessorJob implements Runnable {
 			balanceService.substractFromBalance(fee, foreignPayment.getCurrency());
 		}
 		logger.info("Finished sending pending payments to webdav. Unprocessed payments: "+unprocessedPaymentIds);
-	}
-
-	private String createPaymentReference(String paymentId) {
-		String reference = paymentId;
-		if (reference.length() > 16) { //reference can be maximally 16 characters long
-			reference = reference.substring(reference.length()-16); 
-		}
-		return reference;
 	}
 	
 

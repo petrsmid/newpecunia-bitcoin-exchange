@@ -14,7 +14,8 @@ import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
 import com.google.inject.Inject;
 import com.newpecunia.configuration.NPConfiguration;
-import com.newpecunia.unicredit.webdav.ForeignPaymentPackage;
+import com.newpecunia.time.TimeProvider;
+import com.newpecunia.unicredit.service.ForeignPayment;
 import com.newpecunia.unicredit.webdav.Status;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
 
@@ -25,9 +26,12 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	private UnicreditFileNameResolver fileNameResolver = new UnicreditFileNameResolver();
 
 	private NPConfiguration configuration;
+
+	private TimeProvider timeProvider;
 	
 	@Inject
-	public UnicreditWebdavServiceImpl(NPConfiguration configuration) {
+	public UnicreditWebdavServiceImpl(TimeProvider timeProvider, NPConfiguration configuration) {
+		this.timeProvider = timeProvider;
 		this.configuration = configuration;
 	}
 	
@@ -93,11 +97,23 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String uploadForeignPaymentsPackage(ForeignPaymentPackage foreignPaymentPackage) throws IOException {
-		String fileName = fileNameResolver.createNewUploadFileName();
-		uploadFile(fileName, foreignPaymentPackage.toMultiCash());
+	public String uploadForeignPaymentPackage(String reference, ForeignPayment foreignPayment) throws IOException {
+		String multicashReference = createMulticashReference(reference);
+		MulticashForeignPaymentPackage foreignPaymentPackage = new MulticashForeignPaymentPackage(multicashReference, foreignPayment, timeProvider, configuration); //one payment per package
+		
+		String fileName = fileNameResolver.getUploadFileNameForId(reference);
+		uploadFile(fileName, foreignPaymentPackage.toMultiCashString());
 		return fileName;
 	}
+	
+	private String createMulticashReference(String paymentId) {
+		String reference = paymentId;
+		if (reference.length() > 16) { //reference can be maximally 16 characters long
+			reference = reference.substring(reference.length()-16); 
+		}
+		return reference;
+	}
+	
 	
 	/**
 	 * {@inheritDoc}

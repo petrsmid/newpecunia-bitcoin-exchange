@@ -27,7 +27,7 @@ public class UnicreditFileNameResolverTest {
 	@Test
 	public void testGetIdFromStatusFileInvalid() {
 		UnicreditFileNameResolver fnr = new UnicreditFileNameResolver();		
-		String id = fnr.getIdFromStatusFile("12312123-2013-08-25_16-23-11_BAD_ID.csv.txt");
+		String id = fnr.getIdFromStatusFile("12312123-2013-08-25-16-23-11-BAD-ID.csv.txt");
 		Assert.assertNull(id);
 	}
 	
@@ -41,7 +41,7 @@ public class UnicreditFileNameResolverTest {
 	@Test
 	public void testGetIdFromUploadFileInvalid() {
 		UnicreditFileNameResolver fnr = new UnicreditFileNameResolver();		
-		String id = fnr.getIdFromUploadFile("2013-08-25_16-26-21_BAD_ID.csv");
+		String id = fnr.getIdFromUploadFile("2013-08-25-16-26-21-BAD-ID.csv");
 		Assert.assertNull(id);
 	}
 	
@@ -49,7 +49,7 @@ public class UnicreditFileNameResolverTest {
 	@Test
 	public void testCreateUploadFileName() {
 		UnicreditFileNameResolver fnr = new UnicreditFileNameResolver();
-		String uploadFileName = fnr.createNewUploadFileName();
+		String uploadFileName = fnr.getUploadFileNameForId(SOME_ID);
 		String id = fnr.getIdFromUploadFile(uploadFileName);
 		
 		String anotherId = IdGenerator.INSTANCE.nextId();

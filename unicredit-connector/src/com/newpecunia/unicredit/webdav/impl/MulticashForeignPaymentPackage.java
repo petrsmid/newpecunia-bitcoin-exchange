@@ -1,13 +1,14 @@
-package com.newpecunia.unicredit.webdav;
+package com.newpecunia.unicredit.webdav.impl;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 import com.newpecunia.ProgrammerException;
+import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.time.TimeProvider;
 import com.newpecunia.unicredit.service.ForeignPayment;
 
-public class ForeignPaymentPackage {
+public class MulticashForeignPaymentPackage {
 
 	private static final String NEWLINE = "\r\n";
 
@@ -16,18 +17,21 @@ public class ForeignPaymentPackage {
 	private TimeProvider timeProvider;
 
 	private String reference;
+
+	private NPConfiguration configuration;
 	
 	/**
 	 * We use "one payment per package" strategy.
 	 */
-	public ForeignPaymentPackage(String reference, ForeignPayment foreignPayment, TimeProvider timeProvider) {
+	public MulticashForeignPaymentPackage(String reference, ForeignPayment foreignPayment, TimeProvider timeProvider, NPConfiguration configuration) {
 		this.reference = reference;
 		this.payment = foreignPayment;
 		this.timeProvider = timeProvider;
+		this.configuration = configuration;
 	}
 	
 	
-	public String toMultiCash() {
+	public String toMultiCashString() {
 		BigDecimal roundedAmount = payment.getAmount().setScale(2, BigDecimal.ROUND_HALF_UP);
 		DecimalFormat formatter = new DecimalFormat("0,00");
 		String amountStr = formatter.format(roundedAmount); 					
@@ -47,22 +51,24 @@ public class ForeignPaymentPackage {
 		appendNewLine(builder);
 		
 		appendFixed(builder, 4, ":04:");
-		appendVariable(builder, 11, formatField("UNCRSKBX")); //TODO make configurable
+		appendVariable(builder, 11, formatField(configuration.getPayerBankSwift()));
 		appendNewLine(builder);
 
 		appendFixed(builder, 4, ":05:");
-		appendVariable(builder, 35, formatField("FIRMA s.r.o")); //TODO make configurable
+		appendVariable(builder, 35, formatField(configuration.getPayerName()));
 		appendNewLine(builder);
-		appendVariable(builder, 35, formatField("Ulice 123")); //TODO make configurable
+		appendVariable(builder, 35, formatField(configuration.getPayerStreet()));
 		appendNewLine(builder);
-		appendVariable(builder, 35, formatField("Mesto")); //TODO make configurable
+		appendVariable(builder, 35, formatField(configuration.getPayerCity()));
 		appendNewLine(builder);
-		appendVariable(builder, 35, formatField("Czech republic")); //TODO make configurable
+		appendVariable(builder, 35, formatField(configuration.getPayerCountry()));
 		appendNewLine(builder);
 		
-		String payerBankSwift = formatField("UNCRSKBXAXXX"); //TODO make configurable
-		String payeeSwift = formatField(payment.getSwift()); //TODO FIXED or VARIABLE size?
-		builder.append("{1:F01"+payerBankSwift+"0001000001}{2:I100"+payeeSwift+"N1}{4:");
+		builder.append("{1:F01");
+		appendVariable(builder, 16, formatField(configuration.getPayerBankSwift()));
+		builder.append("0001000001}{2:I100");
+		appendVariable(builder, 16, formatField(payment.getSwift()));
+		builder.append("N1}{4:");
 		
 		//body (text block)
 		appendFixed(builder, 4, ":20:");
@@ -75,25 +81,26 @@ public class ForeignPaymentPackage {
 		appendNewLine(builder);
 
 		appendFixed(builder, 4, ":50:");
-		appendVariable(builder, 35, formatField("FIRMA s.r.o")); //TODO make configurable
+		appendVariable(builder, 35, formatField(configuration.getPayerName()));
 		appendNewLine(builder);
-		appendVariable(builder, 35, formatField("Ulice 123")); //TODO make configurable
+		appendVariable(builder, 35, formatField(configuration.getPayerStreet()));
 		appendNewLine(builder);
-		appendVariable(builder, 35, formatField("Mesto")); //TODO make configurable
+		appendVariable(builder, 35, formatField(configuration.getPayerCity()));
 		appendNewLine(builder);
-		appendVariable(builder, 35, formatField("Czech republic")); //TODO make configurable
+		appendVariable(builder, 35, formatField(configuration.getPayerCountry()));
 		appendNewLine(builder);
 		
 		appendFixed(builder, 5, ":52D:");
-		appendFixed(builder, 16, formatField("0000001234567890123456"));  //TODO make configurable. Btw mistake in example??? Btw. must be leading zeros?
+		String accountWithLeadingZeroes = addLeadingZeroes(formatField(configuration.getPayerAccountNumber()),16);
+		appendFixed(builder, 16, formatField(accountWithLeadingZeroes));
 		appendNewLine(builder);
-		appendFixed(builder, 16, formatField("0000001234567890123456"));  //TODO make configurable. Btw mistake in example??? Btw. must be leading zeros?
+		appendFixed(builder, 16, formatField(accountWithLeadingZeroes));
 		appendNewLine(builder);
-		appendFixed(builder, 3, formatField("USD")); //TODO make configurable - account currency
+		appendFixed(builder, 3, formatField(configuration.getPayerAccountCurrency()));
 		appendBlank(builder);
-		appendFixed(builder, 3, formatField("USD")); //TODO make configurable - charge account currency
+		appendFixed(builder, 3, formatField(configuration.getPayerAccountCurrency()));
 		appendNewLine(builder);
-		appendFixed(builder, 3, formatField("123")); //TODO make configurable - Btw. what is this? - statistical code
+		appendFixed(builder, 3, formatField(configuration.getPaymentStatisticalCode()));
 		appendBlank(builder);
 		appendFixed(builder, 3, formatField(payment.getCountry().getIsoCode()));
 		appendBlank(builder);
@@ -101,7 +108,7 @@ public class ForeignPaymentPackage {
 		appendNewLine(builder);
 
 		appendFixed(builder, 5, ":57A:");
-		appendVariable(builder, 11, formatField(payment.getSwift())); //TODO how come only 11 chars?
+		appendVariable(builder, 34, formatField(payment.getSwift()));
 		appendNewLine(builder);
 
 		appendFixed(builder, 5, ":57D:");
@@ -116,16 +123,17 @@ public class ForeignPaymentPackage {
 		builder.append('/');
 		appendVariable(builder, 34, formatField(payment.getAccountNumber()));
 		appendNewLine(builder);
-		appendVariable(builder, 35, formatField(payment.getName()));
+		String[] twoLinesAddress = optimizeAddressToTwoLines(35, 35, payment.getName(), payment.getAddress(), payment.getCity());
+		appendVariable(builder, 35, formatField(twoLinesAddress[0]));
 		appendNewLine(builder);
-		appendVariable(builder, 35, formatField(payment.getAddress() + " " + payment.getCity())); //TODO be more intelligent - if street + city is longer than field make some optimizations
+		appendVariable(builder, 35, formatField(twoLinesAddress[1]));
 		appendNewLine(builder);
 		
 		appendFixed(builder, 4, ":70:");
-		appendVariable(builder, 35, formatField("Payment detail 1")); //TODO make configurable
-		appendVariable(builder, 35, formatField("Payment detail 2")); //TODO make configurable
-		appendVariable(builder, 35, formatField("Payment detail 3")); //TODO make configurable
-		appendVariable(builder, 35, formatField("Payment detail 4")); //TODO make configurable
+		appendVariable(builder, 35, formatField(configuration.getPaymentDetailToCustomer())); //TODO add possibility to choose
+//		appendVariable(builder, 35, formatField("Payment detail 2"));
+//		appendVariable(builder, 35, formatField("Payment detail 3"));
+//		appendVariable(builder, 35, formatField("Payment detail 4"));
 		appendNewLine(builder);
 
 		appendFixed(builder, 4, ":71:");
@@ -142,9 +150,9 @@ public class ForeignPaymentPackage {
 		appendFixed(builder, 2, "00");
 		appendNewLine(builder);
 		
-		appendFixed(builder, 35, "Petr Smid, telephone"); //TODO make configurable
+		appendFixed(builder, 35, formatField(configuration.getPaymentContact()));
 		appendNewLine(builder);
-		appendFixed(builder, 35, "extended text message"); //TODO make configurable
+		appendFixed(builder, 35, ""); //must be empty - filled with spaces
 		appendNewLine(builder);
 		
 		//footer
@@ -153,6 +161,21 @@ public class ForeignPaymentPackage {
 		return builder.toString();
 	}
 			
+	private String[] optimizeAddressToTwoLines(int line1Length, int line2Length, String name, String street, String city) {
+
+		return null;
+	}
+
+
+	private String addLeadingZeroes(String text, int length) {
+		StringBuilder sb = new StringBuilder(text);
+		while (sb.length() < length) {
+			sb.insert(0, '0');
+		}
+		return sb.toString();
+	}
+
+
 	private void appendFixed(StringBuilder builder, int length, String text) {
 		appendVariable(builder, length, text);
 		//add whitespace

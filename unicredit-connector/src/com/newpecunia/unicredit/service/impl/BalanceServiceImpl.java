@@ -35,7 +35,7 @@ public class BalanceServiceImpl implements BalanceService {
 
 	@Override
 	public synchronized void substractFromBalance(BigDecimal amount, String currency) {
-		String accountCurrency = configuration.getUnicreditAccountCurrency().toUpperCase();
+		String accountCurrency = configuration.getPayerAccountCurrency().toUpperCase();
 		if (!currency.toUpperCase().equals(accountCurrency)) {
 			throw new ProgrammerException("Cannot substract another currency as"+accountCurrency);
 		}
