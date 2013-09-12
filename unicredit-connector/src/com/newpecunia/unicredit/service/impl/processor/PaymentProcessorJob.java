@@ -14,13 +14,11 @@ import org.hibernate.criterion.Restrictions;
 
 import com.google.inject.Inject;
 import com.newpecunia.configuration.NPConfiguration;
-import com.newpecunia.time.TimeProvider;
 import com.newpecunia.unicredit.service.BalanceService;
 import com.newpecunia.unicredit.service.ForeignPayment;
 import com.newpecunia.unicredit.service.impl.entity.ForeignPaymentMapper;
 import com.newpecunia.unicredit.service.impl.entity.ForeignPaymentOrder;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
-import com.newpecunia.unicredit.webdav.impl.MulticashForeignPaymentPackage;
 
 public class PaymentProcessorJob implements Runnable {
 
@@ -29,17 +27,15 @@ public class PaymentProcessorJob implements Runnable {
 	private UnicreditWebdavService webdavService;
 	private ForeignPaymentMapper foreignPaymentMapper;
 	private BalanceService balanceService;
-	private TimeProvider timeProvider;
 	private NPConfiguration configuration;
 
 	private Session session; //TODO
 	
 	@Inject
-	public PaymentProcessorJob(UnicreditWebdavService webdavService, BalanceService balanceService, ForeignPaymentMapper foreignPaymentMapper, TimeProvider timeProvider, NPConfiguration configuration) {
+	public PaymentProcessorJob(UnicreditWebdavService webdavService, BalanceService balanceService, ForeignPaymentMapper foreignPaymentMapper, NPConfiguration configuration) {
 		this.webdavService = webdavService;
 		this.balanceService = balanceService;
 		this.foreignPaymentMapper = foreignPaymentMapper;
-		this.timeProvider = timeProvider;
 		this.configuration = configuration;
 	}
 	
