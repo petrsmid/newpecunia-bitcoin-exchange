@@ -249,11 +249,7 @@ public class MulticashForeignPaymentPackage {
 	}
 	
 	private String formatField(String text) {
-		if (text == null) {
-			return "";
-		} else {
-			return formatTextToAllowedChars(text.trim());
-		}
+		return text == null ? "" : formatTextToAllowedChars(text.trim());
 	}
 	
 	private void appendNewLine(StringBuilder builder) {
