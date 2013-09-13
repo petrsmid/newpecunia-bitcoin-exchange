@@ -15,6 +15,7 @@ import com.github.sardine.SardineFactory;
 import com.google.common.base.Charsets;
 import com.google.inject.Inject;
 import com.newpecunia.configuration.NPConfiguration;
+import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.time.TimeProvider;
 import com.newpecunia.unicredit.service.ForeignPayment;
 import com.newpecunia.unicredit.webdav.Status;
@@ -29,15 +30,18 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	private NPConfiguration configuration;
 
 	private TimeProvider timeProvider;
+
+	private NPCredentials credentials;
 	
 	@Inject
-	public UnicreditWebdavServiceImpl(TimeProvider timeProvider, NPConfiguration configuration) {
+	public UnicreditWebdavServiceImpl(TimeProvider timeProvider, NPConfiguration configuration, NPCredentials credentials) {
 		this.timeProvider = timeProvider;
 		this.configuration = configuration;
+		this.credentials = credentials;
 	}
 	
 	private Sardine getSardine() {
-		return SardineFactory.begin("username", "password"); //TODO
+		return SardineFactory.begin(credentials.getUnicreditWebdavUsername(), credentials.getUnicreditWebdavPassword());
 	}
 	
 	private List<String> listFolder(String url) throws IOException {
