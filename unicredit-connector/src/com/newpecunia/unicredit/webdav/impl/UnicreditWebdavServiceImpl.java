@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
+import com.google.common.base.Charsets;
 import com.google.inject.Inject;
 import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.time.TimeProvider;
@@ -50,11 +51,11 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	
 	private String getFile(String url) throws IOException {
 		InputStream stream = getSardine().get(url);		
-		return IOUtils.toString(stream, configuration.getWebdavEncoding());		
+		return IOUtils.toString(stream, Charsets.UTF_8);		
 	}
 	
 	private void uploadFile(String url, String file) throws IOException {
-		getSardine().put(url, IOUtils.toInputStream(file));
+		getSardine().put(url, IOUtils.toInputStream(file, Charsets.UTF_8));
 	}
 	
 	private String getUploadFolderPath() {
@@ -102,7 +103,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 		MulticashForeignPaymentPackage foreignPaymentPackage = new MulticashForeignPaymentPackage(multicashReference, foreignPayment, timeProvider, configuration); //one payment per package
 		
 		String fileName = fileNameResolver.getUploadFileNameForId(reference);
-		uploadFile(fileName, foreignPaymentPackage.toMultiCashString());
+		uploadFile(fileName, foreignPaymentPackage.toMultiCashFileContent());
 		return fileName;
 	}
 	

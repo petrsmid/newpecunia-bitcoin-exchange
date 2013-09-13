@@ -7,27 +7,26 @@
 	<unicredit>
 		<balanceUpdatePeriodMs>600000</balanceUpdatePeriodMs>
 		<accountReserve>100</accountReserve>
-		<paymentFee>0.50</paymentFee>
+		<paymentFee>13.34</paymentFee>
 	
 		<payerName>PEKAT s.r.o</payerName>
 		<payerStreet>Svatopluka Cecha 57</payerStreet>
 		<payerCity>61200 Brno</payerCity>
 		<payerCountry>Czech Republic</payerCountry>
-		<payerAccountNumber>0000001234567890123456</payerAccountNumber>
+		<payerAccountNumber>1222977006</payerAccountNumber>
 		<payerAccountCurrency>USD</payerAccountCurrency>
 		<payerBankSwift>UNCRSKBX</payerBankSwift>
-				
-		<paymentStatisticalCode>123</paymentStatisticalCode>
-		<paymentDetailToCustomer>New Pecunia: Repayment for Your Bitcoins.</paymentDetailToCustomer>
-		<paymentDetailToBitstamp>Deposit to Bitstamp account. Petr Smid.</paymentDetailToBitstamp>
-		<paymentContact>Petr Smid petr.smid@pekat.cz</paymentContact>
+		<payerBankSwiftLong>UNCRSKBXAXXX</payerBankSwiftLong>
+						
+		<paymentStatisticalCode>335</paymentStatisticalCode> <!-- Finantial services -->
+		<paymentDetailToCustomer>New Pecunia Repayment for Your BTCs</paymentDetailToCustomer>
+		<paymentDetailToBitstamp>Deposit to Bitstamp. Petr Smid.</paymentDetailToBitstamp>
 		
 		<webdav>
 			<baseurl>https://sk.unicreditbanking.net/webdav/</baseurl>
-			<fileencoding>UTF-8</fileencoding>
 			<statusfolder>status/</statusfolder>
 			<upload>
-				<foreignfolder>upload/foreign/</foreignfolder>
+				<foreignfolder>upload/foreign/</foreignfolder> <!-- !! Always use folder for uploading files in UTF-8. -->
 			</upload>
 		</webdav>
 	</unicredit>

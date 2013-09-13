@@ -30,10 +30,6 @@ public class NPConfiguration {
 		return config.getString("credentialsPath");
 	}
 	
-	public String getWebdavEncoding() {
-		return config.getString("unicredit.webdav.fileencoding");
-	}
-
 	public String getWebdavBaseFolder() {
 		return config.getString("unicredit.webdav.baseurl");
 	}
@@ -85,6 +81,10 @@ public class NPConfiguration {
 		return config.getString("unicredit.payerBankSwift");
 	}	
 
+	public String getPayerBankSwiftLong() {
+		return config.getString("unicredit.payerBankSwiftLong");
+	}	
+
 	public String getPaymentStatisticalCode() {
 		return config.getString("unicredit.paymentStatisticalCode");
 	}	
@@ -99,10 +99,6 @@ public class NPConfiguration {
 
 	public BigDecimal getPaymentFee() {
 		return config.getBigDecimal("unicredit.paymentFee");
-	}
-	
-	public String getPaymentContact() {
-		return config.getString("unicredit.paymentContact");
 	}
 	
 	
