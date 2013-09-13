@@ -45,7 +45,7 @@ public class NPConfiguration {
 	/**
 	 * update balance from Unicredit maximaly every 10 minutes
 	 */
-	public long getBalanceUpdatePeriad() {
+	public long getBalanceUpdatePeriod() {
 		return config.getLong("unicredit.balanceUpdatePeriodMs");
 	}
 

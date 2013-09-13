@@ -32,12 +32,15 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	private TimeProvider timeProvider;
 
 	private NPCredentials credentials;
+
+	private GpgFileSigner gpgFileSigner;
 	
 	@Inject
-	public UnicreditWebdavServiceImpl(TimeProvider timeProvider, NPConfiguration configuration, NPCredentials credentials) {
+	public UnicreditWebdavServiceImpl(TimeProvider timeProvider, NPConfiguration configuration, NPCredentials credentials, GpgFileSigner gpgFileSigner) {
 		this.timeProvider = timeProvider;
 		this.configuration = configuration;
 		this.credentials = credentials;
+		this.gpgFileSigner = gpgFileSigner;
 	}
 	
 	private Sardine getSardine() {
@@ -58,8 +61,8 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 		return IOUtils.toString(stream, Charsets.UTF_8);		
 	}
 	
-	private void uploadFile(String url, String file) throws IOException {
-		getSardine().put(url, IOUtils.toInputStream(file, Charsets.UTF_8));
+	private void uploadFile(String url, byte[] data) throws IOException {
+		getSardine().put(url, data);
 	}
 	
 	private String getUploadFolderPath() {
@@ -107,7 +110,9 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 		MulticashForeignPaymentPackage foreignPaymentPackage = new MulticashForeignPaymentPackage(multicashReference, foreignPayment, timeProvider, configuration); //one payment per package
 		
 		String fileName = fileNameResolver.getUploadFileNameForId(reference);
-		uploadFile(fileName, foreignPaymentPackage.toMultiCashFileContent());
+		byte[] data = foreignPaymentPackage.toMultiCashFileContent().getBytes(Charsets.UTF_8);
+		byte[] signedData = gpgFileSigner.sign(data);
+		uploadFile(fileName, signedData);
 		return fileName;
 	}
 	
