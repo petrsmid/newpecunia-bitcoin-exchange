@@ -18,7 +18,7 @@
 		<payerBankSwift>UNCRSKBX</payerBankSwift>
 				
 		<paymentStatisticalCode>123</paymentStatisticalCode>
-		<paymentDetailToCustomer>New Pecunia: Repayment for Your Bitcoins.</paymentDetail>
+		<paymentDetailToCustomer>New Pecunia: Repayment for Your Bitcoins.</paymentDetailToCustomer>
 		<paymentDetailToBitstamp>Deposit to Bitstamp account. Petr Smid.</paymentDetailToBitstamp>
 		<paymentContact>Petr Smid petr.smid@pekat.cz</paymentContact>
 		
