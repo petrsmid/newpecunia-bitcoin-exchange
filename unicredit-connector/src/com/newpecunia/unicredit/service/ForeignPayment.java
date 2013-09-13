@@ -5,10 +5,13 @@ import java.math.BigDecimal;
 import com.newpecunia.countries.Country;
 
 public class ForeignPayment {
+	public enum PayeeType {CUSTOMER, BITSTAMP}
+
 	private BigDecimal amount;
 	private String currency;
 
 	//payee information
+	private PayeeType payeeType;
 	private String name;
 	private String address; //street
 	private String city;
@@ -36,6 +39,12 @@ public class ForeignPayment {
 	}
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+	public PayeeType getPayeeType() {
+		return payeeType;
+	}
+	public void setPayeeType(PayeeType payeeType) {
+		this.payeeType = payeeType;
 	}
 	public String getName() {
 		return name;
@@ -109,8 +118,5 @@ public class ForeignPayment {
 	public void setBankCountry(Country bankCountry) {
 		this.bankCountry = bankCountry;
 	}
-	
-	
-	
 	
 }

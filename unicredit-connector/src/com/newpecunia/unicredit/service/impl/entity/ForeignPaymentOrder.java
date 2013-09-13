@@ -15,6 +15,8 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.newpecunia.unicredit.service.ForeignPayment.PayeeType;
+
 @Entity
 @Table(name = "PAYMENTS")
 public class ForeignPaymentOrder {
@@ -43,6 +45,9 @@ public class ForeignPaymentOrder {
 	private String currency;
 
 	//payee information
+	@Column(name="PAYEE_TYPE")
+	@Enumerated(EnumType.STRING)
+	private PayeeType payeeType;
 	@Column(name="PAYEE_NAME")
 	private String name;
 	@Column(name="PAYEE_ADDRESS")
@@ -101,6 +106,12 @@ public class ForeignPaymentOrder {
 	}
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+	public PayeeType getPayeeType() {
+		return payeeType;
+	}
+	public void setPayeeType(PayeeType payeeType) {
+		this.payeeType = payeeType;
 	}
 	public String getName() {
 		return name;

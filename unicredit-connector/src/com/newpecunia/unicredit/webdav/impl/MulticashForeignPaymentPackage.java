@@ -6,14 +6,19 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.newpecunia.ProgrammerException;
 import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.time.TimeProvider;
 import com.newpecunia.unicredit.service.ForeignPayment;
+import com.newpecunia.unicredit.service.ForeignPayment.PayeeType;
 
 public class MulticashForeignPaymentPackage {
 
+	private static final Logger logger = LogManager.getLogger(MulticashForeignPaymentPackage.class);	
+	
 	private static final String NEWLINE = "\r\n";
 
 	private ForeignPayment payment;
@@ -23,7 +28,7 @@ public class MulticashForeignPaymentPackage {
 	private String reference;
 
 	private NPConfiguration configuration;
-	
+
 	/**
 	 * We use "one payment per package" strategy.
 	 */
@@ -183,13 +188,19 @@ public class MulticashForeignPaymentPackage {
 				
 		appendFixed(builder, 4, ":70:");
 		if (!StringUtils.isBlank(configuration.getPaymentDetailToCustomer())) {
-			appendVariable(builder, 35, formatField(configuration.getPaymentDetailToCustomer())); //TODO add possibility to choose
+			if (PayeeType.CUSTOMER.equals(payment.getPayeeType())) {
+				appendVariable(builder, 35, formatField(configuration.getPaymentDetailToCustomer()));
+			} else if (PayeeType.BITSTAMP.equals(payment.getPayeeType())) {
+				appendVariable(builder, 35, formatField(configuration.getPaymentDetailToBitstamp()));
+			} else {
+				logger.warn("Payee type not known -> no payment detail set.");
+			}
 			appendNewLine(builder);
 			//here are allowed 4 lines but we use only the first one
 		}
 	
 		appendFixed(builder, 5, ":71A:");
-		appendFixed(builder, 3, "BN1"); //TODO add possibility to specify charges splitting details
+		appendFixed(builder, 3, "BN1"); //charge splitting details: BN1 - expenses are shared,  OUR - all expenses are payed by the ordering party, BN2 - all expenses are payed by the beneficiary party (! NOT ALLOWED IN EU)
 		appendNewLine(builder);
 		
 		appendFixed(builder, 4, ":72:");

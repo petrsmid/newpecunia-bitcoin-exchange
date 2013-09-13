@@ -19,12 +19,14 @@ public class ForeignPaymentMapper {
 		this.countryDatabase = countryDatabase;
 		
 		mapperFactory.classMap(ForeignPayment.class, ForeignPaymentOrder.class)
-			.exclude("country").exclude("bankCountry").byDefault()
-			.register();
+			.exclude("country")
+			.exclude("bankCountry")
+			.byDefault().register();
 
 		mapperFactory.classMap(ForeignPaymentOrder.class, ForeignPayment.class)
-		.exclude("country").exclude("bankCountry").byDefault()
-		.register();
+			.exclude("country")
+			.exclude("bankCountry")
+			.byDefault().register();
 	}
 	
 	public ForeignPaymentOrder mapToOrder(ForeignPayment payment) {

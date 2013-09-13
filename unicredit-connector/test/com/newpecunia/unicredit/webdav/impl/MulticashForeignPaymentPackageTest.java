@@ -9,6 +9,7 @@ import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.countries.Country;
 import com.newpecunia.time.TimeProviderImpl;
 import com.newpecunia.unicredit.service.ForeignPayment;
+import com.newpecunia.unicredit.service.ForeignPayment.PayeeType;
 
 public class MulticashForeignPaymentPackageTest {
 	
@@ -21,8 +22,9 @@ public class MulticashForeignPaymentPackageTest {
 		
 		payment.setAmount(new BigDecimal("20.001"));
 		payment.setCurrency("USD");
-
 		payment.setAccountNumber("SK9511110000001222977022");
+		payment.setPayeeType(PayeeType.CUSTOMER);
+
 		payment.setName("PEKAT s.r.o");
 		payment.setAddress("Svatopluka Cecha 57");
 		payment.setCity("Brno");
