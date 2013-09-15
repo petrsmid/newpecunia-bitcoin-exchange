@@ -24,9 +24,9 @@
 		
 		<webdav>
 			<baseurl>https://sk.unicreditbanking.net/webdav/</baseurl>
-			<statusfolder>status/</statusfolder>
+			<statusfolder>upload/status/</statusfolder>
 			<upload>
-				<foreignfolder>upload/foreign/</foreignfolder> <!-- !! Always use folder for uploading files in UTF-8. -->
+				<foreignfolder>upload/foreign/MultiCash format/UTF-8/</foreignfolder> <!-- !! Always use folder for uploading files in UTF-8. -->
 			</upload>
 		</webdav>
 	</unicredit>
