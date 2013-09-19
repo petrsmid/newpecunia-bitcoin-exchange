@@ -17,6 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import com.google.inject.Inject;
 import com.newpecunia.NPException;
 import com.newpecunia.configuration.NPConfiguration;
+import com.newpecunia.time.TimeProvider;
 import com.newpecunia.unicredit.service.BalanceService;
 import com.newpecunia.unicredit.service.ForeignPayment;
 import com.newpecunia.unicredit.service.impl.entity.ForeignPaymentMapper;
@@ -33,14 +34,17 @@ public class PaymentProcessorJob implements Runnable {
 	private ForeignPaymentMapper foreignPaymentMapper;
 	private BalanceService balanceService;
 	private NPConfiguration configuration;
+	private TimeProvider timeProvider;
 
 	
 	@Inject
-	public PaymentProcessorJob(SessionFactory sessionFactory, UnicreditWebdavService webdavService, BalanceService balanceService, ForeignPaymentMapper foreignPaymentMapper, NPConfiguration configuration) {
+	public PaymentProcessorJob(SessionFactory sessionFactory, UnicreditWebdavService webdavService, BalanceService balanceService, 
+			ForeignPaymentMapper foreignPaymentMapper, NPConfiguration configuration, TimeProvider timeProvider) {
 		this.webdavService = webdavService;
 		this.balanceService = balanceService;
 		this.foreignPaymentMapper = foreignPaymentMapper;
 		this.configuration = configuration;
+		this.timeProvider = timeProvider;
 	}
 	
 	@Override
@@ -107,6 +111,7 @@ public class PaymentProcessorJob implements Runnable {
 		try {
 			tx = session.beginTransaction();
 			foreignPaymentOrder.setStatus(PaymentStatus.SENT_TO_WEBDAV);
+			foreignPaymentOrder.setUpdateTimestamp(timeProvider.nowCalendar());
 			session.update(foreignPaymentOrder);
 			session.flush();
 			tx.commit();
