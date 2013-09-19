@@ -1,16 +1,16 @@
 package com.newpecunia.persistence;
 
-import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import com.google.inject.AbstractModule;
-import com.newpecunia.persistence.hibernate.SessionProvider;
+import com.newpecunia.persistence.hibernate.SessionFactoryBuilder;
 
 
 public class PersistenceModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(Session.class).toProvider(SessionProvider.class);
+		bind(SessionFactory.class).toInstance(SessionFactoryBuilder.buildSessionFactory());
 	}
 
 }

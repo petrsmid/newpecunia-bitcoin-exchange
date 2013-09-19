@@ -9,30 +9,34 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.google.inject.Inject;
+import com.newpecunia.NPException;
 import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.unicredit.service.BalanceService;
 import com.newpecunia.unicredit.service.ForeignPayment;
 import com.newpecunia.unicredit.service.impl.entity.ForeignPaymentMapper;
 import com.newpecunia.unicredit.service.impl.entity.ForeignPaymentOrder;
+import com.newpecunia.unicredit.service.impl.entity.ForeignPaymentOrder.PaymentStatus;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
 
 public class PaymentProcessorJob implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(PaymentProcessorJob.class);	
 	
+	private SessionFactory sessionFactory;
 	private UnicreditWebdavService webdavService;
 	private ForeignPaymentMapper foreignPaymentMapper;
 	private BalanceService balanceService;
 	private NPConfiguration configuration;
 
-	private Session session; //TODO
 	
 	@Inject
-	public PaymentProcessorJob(UnicreditWebdavService webdavService, BalanceService balanceService, ForeignPaymentMapper foreignPaymentMapper, NPConfiguration configuration) {
+	public PaymentProcessorJob(SessionFactory sessionFactory, UnicreditWebdavService webdavService, BalanceService balanceService, ForeignPaymentMapper foreignPaymentMapper, NPConfiguration configuration) {
 		this.webdavService = webdavService;
 		this.balanceService = balanceService;
 		this.foreignPaymentMapper = foreignPaymentMapper;
@@ -47,12 +51,14 @@ public class PaymentProcessorJob implements Runnable {
 	private void processPendingPayments() {
 		logger.info("Sending pending payments to webdav.");
 		
+		Session session = sessionFactory.openSession();
 		Criteria crit = session.createCriteria(ForeignPaymentOrder.class)
 			.add(Restrictions.eqOrIsNull("status", ForeignPaymentOrder.PaymentStatus.NEW))
 			.addOrder(Order.asc("createTimestamp"));
 		
 		@SuppressWarnings("unchecked")		
 		List<ForeignPaymentOrder> newPayments = crit.list();
+		List<String> sentPaymentIds = new ArrayList<>();		
 		List<String> unprocessedPaymentIds = new ArrayList<>();		
 		for (ForeignPaymentOrder foreignPaymentOrder : newPayments) {
 			String paymentId = foreignPaymentOrder.getId();
@@ -81,11 +87,38 @@ public class PaymentProcessorJob implements Runnable {
 				logger.info(message, e);
 				break;
 			}
-						
+
+			sentPaymentIds.add(paymentId);
 			balanceService.substractFromBalance(foreignPayment.getAmount(), foreignPayment.getCurrency());
 			balanceService.substractFromBalance(fee, foreignPayment.getCurrency());
+			
+			updateStatusOfPaymentInDB(session, foreignPaymentOrder);
 		}
-		logger.info("Finished sending pending payments to webdav. Unprocessed payments: "+unprocessedPaymentIds);
+
+		session.close();
+		
+		logger.info("Finished sending pending payments to webdav. " +
+				"Payments sent to webdav: "+sentPaymentIds+". " +
+				"Unprocessed payments: "+unprocessedPaymentIds);
+	}
+
+	private void updateStatusOfPaymentInDB(Session session, ForeignPaymentOrder foreignPaymentOrder) {
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			foreignPaymentOrder.setStatus(PaymentStatus.SENT_TO_WEBDAV);
+			session.update(foreignPaymentOrder);
+			session.flush();
+			tx.commit();
+		} catch (Exception e) {
+			try {
+				tx.rollback();
+			} catch (Exception rollbackException) {
+				//do nothing - the NPException is following.
+			}
+			throw new NPException("Error ocurred while setting status of payment "+ foreignPaymentOrder.getId() + 
+					" to "+PaymentStatus.SENT_TO_WEBDAV+". Payee: "+foreignPaymentOrder.getName(), e);
+		}
 	}
 	
 
