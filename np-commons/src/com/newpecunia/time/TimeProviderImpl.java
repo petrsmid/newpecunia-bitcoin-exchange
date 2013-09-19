@@ -1,6 +1,7 @@
 package com.newpecunia.time;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.joda.time.DateTime;
@@ -20,6 +21,11 @@ public class TimeProviderImpl implements TimeProvider {
 	@Override
 	public DateTime nowDateTime() {
 		return new DateTime();
+	}
+	
+	@Override
+	public Date nowDate() {
+		return new Date();
 	}
 
 }

@@ -100,6 +100,5 @@ public class NPConfiguration {
 	public BigDecimal getPaymentFee() {
 		return config.getBigDecimal("unicredit.paymentFee");
 	}
-	
-	
+
 }

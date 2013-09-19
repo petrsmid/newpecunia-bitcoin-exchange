@@ -42,5 +42,12 @@ public class NPCredentials {
 		return credentials.getString("unicreditWebdav.password");
 	}
 	
+	public String getPrivateSignatureKeyFilePath() {
+		return credentials.getString("unicreditWebdav.privateKeyFilePath");
+	}
+	
+	public String getPrivateKeyPassword() {
+		return credentials.getString("unicreditWebdav.privateKeyPassword");
+	}
 		
 }

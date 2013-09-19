@@ -1,10 +1,50 @@
 package com.newpecunia.unicredit.webdav.impl;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Provider;
+import java.security.Security;
+import java.security.SignatureException;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openpgp.PGPException;
+
+import com.google.inject.Inject;
+import com.newpecunia.NPException;
+import com.newpecunia.configuration.NPCredentials;
+import com.newpecunia.time.TimeProvider;
+import com.newpecunia.unicredit.webdav.impl.pgp.BouncyCastleSigner;
+
 public class GpgFileSignerImpl implements GpgFileSigner {
+	
+	private NPCredentials credentials;
+	private Provider securityProvider;
+	private TimeProvider timeProvider;
+
+	@Inject
+	public GpgFileSignerImpl(NPCredentials credentials, TimeProvider timeProvider) {
+		this.timeProvider = timeProvider;
+		this.credentials = credentials;
+		this.securityProvider = new BouncyCastleProvider();
+        Security.addProvider(securityProvider);
+	}
 	
 	@Override
 	public byte[] sign(byte[] content) {
-		return null; //TODO
+        
+        try {
+			return BouncyCastleSigner.signFile(content, "fakeFileName", new FileInputStream(credentials.getPrivateSignatureKeyFilePath()), 
+					credentials.getPrivateKeyPassword().toCharArray(), securityProvider, timeProvider);
+		} catch (NoSuchAlgorithmException | NoSuchProviderException
+				| SignatureException | IOException
+				| PGPException e) {
+			
+			throw new NPException("Error ocurred while signing the file.", e);
+		}
 	}
 
+	
+	
 }
