@@ -137,9 +137,9 @@ public class MulticashForeignPaymentPackage {
 		appendNewLine(builder);
 		appendFixed(builder, 3, formatField(configuration.getPaymentStatisticalCode()));
 		appendBlank(builder);
-		appendFixed(builder, 2, formatField(payment.getCountry().getIsoCode()));
-		appendBlank(builder);
 		appendFixed(builder, 2, formatField(payment.getBankCountry().getIsoCode()));
+		appendBlank(builder);
+		appendFixed(builder, 2, formatField(payment.getCountry().getIsoCode()));
 		appendNewLine(builder);
 
 		appendFixed(builder, 5, ":57A:");
