@@ -56,12 +56,9 @@ public class PaymentProcessorJob implements Runnable {
 		logger.info("Sending pending payments to webdav.");
 		
 		Session session = sessionFactory.openSession();
-		Criteria crit = session.createCriteria(ForeignPaymentOrder.class)
-			.add(Restrictions.eqOrIsNull("status", ForeignPaymentOrder.PaymentStatus.NEW))
-			.addOrder(Order.asc("createTimestamp"));
+		//load new payments
+		List<ForeignPaymentOrder> newPayments = loadNewPaymentsFromDB(session);
 		
-		@SuppressWarnings("unchecked")		
-		List<ForeignPaymentOrder> newPayments = crit.list();
 		List<String> sentPaymentIds = new ArrayList<>();		
 		List<String> unprocessedPaymentIds = new ArrayList<>();		
 		for (ForeignPaymentOrder foreignPaymentOrder : newPayments) {
@@ -74,6 +71,7 @@ public class PaymentProcessorJob implements Runnable {
 			BigDecimal reserve = configuration.getUnicreditReserve();
 			BigDecimal balanceAfterPayment = balance.subtract(foreignPayment.getAmount()).subtract(fee);
 			
+			//check available balance
 			if (balanceAfterPayment.compareTo(reserve) < 0) { //not enough money on the account
 				logger.info("Not enough money on bank account to process payment "+paymentId+" for "+foreignPayment.getName()
 						+". Payment amount: "+foreignPayment.getAmount().toPlainString()+". Account balance: "+balance.toPlainString()
@@ -82,6 +80,7 @@ public class PaymentProcessorJob implements Runnable {
 				continue;
 			}
 
+			//send to webdav
 			try {
 				webdavService.uploadForeignPaymentPackage(paymentId, foreignPayment);
 			} catch (IOException e) {
@@ -93,9 +92,12 @@ public class PaymentProcessorJob implements Runnable {
 			}
 
 			sentPaymentIds.add(paymentId);
+			
+			//adjust available balance
 			balanceService.substractFromBalance(foreignPayment.getAmount(), foreignPayment.getCurrency());
 			balanceService.substractFromBalance(fee, foreignPayment.getCurrency());
 			
+			//update status of the payment
 			updateStatusOfPaymentInDB(session, foreignPaymentOrder);
 		}
 
@@ -104,6 +106,15 @@ public class PaymentProcessorJob implements Runnable {
 		logger.info("Finished sending pending payments to webdav. " +
 				"Payments sent to webdav: "+sentPaymentIds+". " +
 				"Unprocessed payments: "+unprocessedPaymentIds);
+	}
+
+	private List<ForeignPaymentOrder> loadNewPaymentsFromDB(Session session) {
+		Criteria crit = session.createCriteria(ForeignPaymentOrder.class)
+			.add(Restrictions.eqOrIsNull("status", ForeignPaymentOrder.PaymentStatus.NEW))
+			.addOrder(Order.asc("createTimestamp"));		
+		@SuppressWarnings("unchecked")		
+		List<ForeignPaymentOrder> newPayments = crit.list();
+		return newPayments;
 	}
 
 	private void updateStatusOfPaymentInDB(Session session, ForeignPaymentOrder foreignPaymentOrder) {
