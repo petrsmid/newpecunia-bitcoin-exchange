@@ -66,16 +66,8 @@ public class PaymentProcessorJob implements Runnable {
 			logger.info("Processing payment "+paymentId+" for "+foreignPaymentOrder.getName());
 			ForeignPayment foreignPayment = foreignPaymentMapper.mapToPayment(foreignPaymentOrder);
 
-			BigDecimal balance = balanceService.getApproximateBalance();
-			BigDecimal fee = configuration.getPaymentFee();
-			BigDecimal reserve = configuration.getUnicreditReserve();
-			BigDecimal balanceAfterPayment = balance.subtract(foreignPayment.getAmount()).subtract(fee);
-			
-			//check available balance
-			if (balanceAfterPayment.compareTo(reserve) < 0) { //not enough money on the account
-				logger.info("Not enough money on bank account to process payment "+paymentId+" for "+foreignPayment.getName()
-						+". Payment amount: "+foreignPayment.getAmount().toPlainString()+". Account balance: "+balance.toPlainString()
-						+". Account reserve: "+reserve.toPlainString()+". Payment fee: "+fee.toPlainString());
+			//check account balance
+			if (!checkAccountBalance(paymentId, foreignPayment)) {
 				unprocessedPaymentIds.add(paymentId);
 				continue;
 			}
@@ -93,11 +85,10 @@ public class PaymentProcessorJob implements Runnable {
 
 			sentPaymentIds.add(paymentId);
 			
-			//adjust available balance
-			balanceService.substractFromBalance(foreignPayment.getAmount(), foreignPayment.getCurrency());
-			balanceService.substractFromBalance(fee, foreignPayment.getCurrency());
+			//adjust account balance
+			adjustAccountBalance(foreignPayment);
 			
-			//update status of the payment
+			//update status of the payment in the DB
 			updateStatusOfPaymentInDB(session, foreignPaymentOrder);
 		}
 
@@ -106,6 +97,28 @@ public class PaymentProcessorJob implements Runnable {
 		logger.info("Finished sending pending payments to webdav. " +
 				"Payments sent to webdav: "+sentPaymentIds+". " +
 				"Unprocessed payments: "+unprocessedPaymentIds);
+	}
+
+	private void adjustAccountBalance(ForeignPayment foreignPayment) {
+		balanceService.substractFromBalance(foreignPayment.getAmount(), foreignPayment.getCurrency());
+		BigDecimal fee = configuration.getPaymentFee();
+		balanceService.substractFromBalance(fee, foreignPayment.getCurrency());
+	}
+
+	private boolean checkAccountBalance(String paymentId, ForeignPayment foreignPayment) {
+		BigDecimal balance = balanceService.getApproximateBalance();
+		BigDecimal fee = configuration.getPaymentFee();
+		BigDecimal reserve = configuration.getUnicreditReserve();
+		BigDecimal balanceAfterPayment = balance.subtract(foreignPayment.getAmount()).subtract(fee);
+		
+		//check available balance
+		if (balanceAfterPayment.compareTo(reserve) < 0) { //not enough money on the account
+			logger.info("Not enough money on bank account to process payment "+paymentId+" for "+foreignPayment.getName()
+					+". Payment amount: "+foreignPayment.getAmount().toPlainString()+". Account balance: "+balance.toPlainString()
+					+". Account reserve: "+reserve.toPlainString()+". Payment fee: "+fee.toPlainString());
+			return false;
+		}
+		return true;
 	}
 
 	private List<ForeignPaymentOrder> loadNewPaymentsFromDB(Session session) {
