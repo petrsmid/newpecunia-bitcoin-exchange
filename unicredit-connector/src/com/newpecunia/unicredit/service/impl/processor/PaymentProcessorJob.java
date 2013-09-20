@@ -77,9 +77,7 @@ public class PaymentProcessorJob implements Runnable {
 				webdavService.uploadForeignPaymentPackage(paymentId, foreignPayment);
 			} catch (IOException e) {
 				unprocessedPaymentIds.add(paymentId);
-				String message = "Webdav is out of order now. Processing of payments stopped for this run."; 
-				logger.info(message);
-				logger.info(message, e);
+				logger.error("Webdav is out of order now. Processing of payments stopped for this run.", e);
 				break;
 			}
 

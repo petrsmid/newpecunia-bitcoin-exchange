@@ -28,7 +28,7 @@ public interface UnicreditWebdavService {
 	 * Returns actual status of the uploaded package or null if the status file for the package was not found
 	 * @param packageId id of the package
 	 */
-	Status getStatusOfPackage(String fileName) throws IOException;
+	Status getStatusOfPackage(String reference) throws IOException;
 
 
 

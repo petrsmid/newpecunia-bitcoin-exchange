@@ -22,6 +22,7 @@ import com.newpecunia.unicredit.service.ForeignPayment.PayeeType;
 public class ForeignPaymentOrder {
 	
 	public static enum PaymentStatus {
+		ERROR,
 		NEW, 
 		SENT_TO_WEBDAV, 
 		WEBDAV_PENDING, 
