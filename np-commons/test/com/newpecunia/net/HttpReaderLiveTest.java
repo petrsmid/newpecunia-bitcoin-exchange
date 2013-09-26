@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.newpecunia.bitstamp.service.impl.BitstampServiceConstants;
 import com.newpecunia.time.TimeProviderImpl;
 
 @RunWith(JUnit4.class)
@@ -19,8 +18,7 @@ public class HttpReaderLiveTest {
 	
 	@Test
 	public void test() throws IOException {
-		String output = httpReader.get(BitstampServiceConstants.TICKER_URL);
-		assertTrue(output.startsWith("{"));
-		assertTrue(output.endsWith("}"));
+		String output = httpReader.get("http://www.google.com");
+		assertTrue(output.toLowerCase().contains("html"));
 	}
 }

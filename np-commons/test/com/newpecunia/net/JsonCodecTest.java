@@ -1,14 +1,10 @@
 package com.newpecunia.net;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 
 import org.junit.Test;
-
-import com.newpecunia.bitstamp.service.impl.dto.OrderDTO;
-import com.newpecunia.net.JsonCodec;
-import com.newpecunia.net.JsonParsingException;
 
 public class JsonCodecTest {
 
@@ -18,7 +14,7 @@ public class JsonCodecTest {
 	
 	@Test
 	public void parseFromJson() throws JsonParsingException {
-		OrderDTO order = JsonCodec.INSTANCE.parseJson(jsonOrder, OrderDTO.class);
+		TestDTO order = JsonCodec.INSTANCE.parseJson(jsonOrder, TestDTO.class);
 		assertEquals(new BigDecimal("10000"), order.getPrice());
 		assertEquals(new BigDecimal("0.01"), order.getAmount());
 		assertEquals("4477442", order.getId());
@@ -27,7 +23,7 @@ public class JsonCodecTest {
 	
 	@Test
 	public void parseListFromJson() throws JsonParsingException {
-		OrderDTO[] orders = JsonCodec.INSTANCE.parseJson(jsonOrderList, OrderDTO[].class);
+		TestDTO[] orders = JsonCodec.INSTANCE.parseJson(jsonOrderList, TestDTO[].class);
 		assertEquals(2, orders.length);
 	}
 }
