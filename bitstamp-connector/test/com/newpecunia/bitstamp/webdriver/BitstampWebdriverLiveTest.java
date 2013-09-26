@@ -10,6 +10,7 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.newpecunia.bitstamp.BitstampConnectorModule;
+import com.newpecunia.common.CommonModule;
 
 public class BitstampWebdriverLiveTest {
 
@@ -18,7 +19,7 @@ public class BitstampWebdriverLiveTest {
 	
 	@Before
 	public void setup() {
-		Injector injector = Guice.createInjector(new BitstampConnectorModule());
+		Injector injector = Guice.createInjector(new BitstampConnectorModule(), new CommonModule());
 		bitstampWebdriver = injector.getInstance(BitstampWebdriver.class);
 	}
 	

@@ -12,9 +12,6 @@
     <dependencies>
         <dependency name="np-commons" rev="latest.integration" conf="compile"/>
         <!-- To add an external library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
-        <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.2.5"/>
-        <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.11"/>
-        <dependency org="org.jsoup" name="jsoup" rev="1.7.2"/>
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
     </dependencies>

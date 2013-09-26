@@ -217,7 +217,7 @@ public class BitstampServiceLiveTest {
 //	@Test
 	public void testBitcoinWithdrawal() throws Exception {
 		//CAUTION: the following live test will perform REAL operation with REAL money (BTC).
-		Boolean status = bitstampService.bitcoinWithdrawal(new BigDecimal("0.00006"), "1wGjmUwFLqfL2C15BVUACCDosVRFNbfcR"); //in my Electum wallet
+		Boolean status = bitstampService.bitcoinWithdrawal(new BigDecimal("0.00006"), "1wGjmUwFLqfL2C15BVUACCDosVRFNbfcR"); //in my Electrum wallet
 		assertTrue(status);
 	}
 	

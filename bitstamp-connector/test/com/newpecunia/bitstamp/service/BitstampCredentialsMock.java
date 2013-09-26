@@ -17,5 +17,10 @@ public class BitstampCredentialsMock extends NPCredentials {
 	public String getBitstampPassword() {
 		return "password";
 	}
+	
+	@Override
+	public void reloadCredentials() {
+		//do nothing
+	}
 
 }

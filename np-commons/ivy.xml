@@ -17,6 +17,9 @@
 		<dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.0-beta7" /> <!-- bridge for SLF4J to be routed to Log4j2 -->
 		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.0-beta7" />
         
+        <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.2.5"/>
+        <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.11"/>
+        <dependency org="org.jsoup" name="jsoup" rev="1.7.2"/>
         <dependency org="joda-time" name="joda-time" rev="2.2"/>
 		<dependency org="com.google.code.guice" name="guice" rev="1.0"/>
         <dependency org="com.google.code.guice" name="guice" rev="1.0"/>
