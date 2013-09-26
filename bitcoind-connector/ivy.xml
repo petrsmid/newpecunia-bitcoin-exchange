@@ -1,0 +1,26 @@
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+       xmlns:m="http://ant.apache.org/ivy/maven">
+       
+    <info organisation="com.newpecunia" module="bitcoind-connector" status="integration"/>
+    
+    <configurations>
+	    <conf name="compile" visibility="public" />
+	    <conf name="test" visibility="private" />
+	</configurations>
+	<publications>
+	    <artifact name="bitcoind-connector" type="jar" conf="compile" ext="jar"/>
+	</publications>    
+    
+    <dependencies>
+		<dependency name="np-commons" rev="latest.integration" conf="compile"/>
+		<!-- To add a library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
+		<dependency org="commons-io" name="commons-io" rev="2.4"/>
+		<dependency org="commons-httpclient" name="commons-httpclient" rev="3.1"/>
+		<dependency org="net.sf.json-lib" name="json-lib" rev="2.4"> 
+			<artifact name="json-lib" type="jar" m:classifier="jdk15"/>
+		</dependency>
+		<!-- TEST dependencies -->
+		<dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
+    </dependencies>
+</ivy-module>
