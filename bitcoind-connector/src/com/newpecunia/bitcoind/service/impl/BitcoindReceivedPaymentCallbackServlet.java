@@ -7,8 +7,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/btcPaymentCallback_dgqac0akerd1c4e7asiy5d8zqjdg68652u") //the address has non-guesable postfix to prevent calling it by some attacker
-public class BtcPaymentCallbackServlet extends HttpServlet {
+
+/**
+ * Servlet for receiving callbacks from bitcoind when some money was received.
+ * Call the servlet with parameter txId - this is the transaction ID of the bitcoin payment 
+ */
+@WebServlet("/bitcoindReceivedPaymentCallback_dgqac0akerd1c4e7asiy5d8zqjdg68652u") //the address has non-guesable postfix to prevent calling it by some attacker
+public class BitcoindReceivedPaymentCallbackServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
