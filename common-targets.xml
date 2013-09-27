@@ -45,5 +45,10 @@
 		<ivy:resolve />
 		<ivy:retrieve /> <!-- automatically copies them to ./lib -->
 	</target>
+
+	<target name="report" depends="resolve">
+	    <mkdir dir="report" />
+	    <ivy:report todir="report" />
+	</target>	
 	
 </project>

@@ -27,6 +27,8 @@
         <dependency org="org.apache.commons" name="commons-lang3" rev="3.1"/>
 		<dependency org="ma.glasnost.orika" name="orika-core" rev="1.4.3" />
 		<dependency org="commons-configuration" name="commons-configuration" rev="1.9"/>
+		<exclude org="javax.servlet" name="servlet-api"/>
+				
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
     </dependencies>
