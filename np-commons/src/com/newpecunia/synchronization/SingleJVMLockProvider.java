@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Provides locking across only one JVM.
  */
-public class SingleNodeClusterLockProvider implements ClusterLockProvider {
+public class SingleJVMLockProvider implements LockProvider {
 
 	@Override
 	public Lock getLock() {

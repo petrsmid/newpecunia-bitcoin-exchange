@@ -58,5 +58,9 @@ public class NPCredentials {
 	public String getBitcoindRpcPassword() {
 		return credentials.getString("bitcoind.rpcpassword");
 	}
+
+	public String getBitcoindWalletPassword() {
+		return credentials.getString("bitcoind.walletpassword");
+	}
 		
 }

@@ -10,7 +10,7 @@ import com.newpecunia.bitstamp.webdriver.InternationalWithdrawRequest;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine;
 import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.net.HttpReaderFactory;
-import com.newpecunia.synchronization.ClusterLockProvider;
+import com.newpecunia.synchronization.LockProvider;
 
 public class BitstampWebdriverImpl implements BitstampWebdriver {
 
@@ -18,14 +18,14 @@ public class BitstampWebdriverImpl implements BitstampWebdriver {
 	
 	private NPCredentials credentials;
 	private HttpReaderFactory httpReaderFactory;
-	private ClusterLockProvider lockProvider;
+	private LockProvider lockProvider;
 	
 	private long startTimeOfActiveSession = 0;
 	private BitstampSession activeBitstampSession = null;
 	
 	
 	@Inject
-	public BitstampWebdriverImpl(HttpReaderFactory httpReaderFactory, NPCredentials credentials, ClusterLockProvider lockProvider) {
+	public BitstampWebdriverImpl(HttpReaderFactory httpReaderFactory, NPCredentials credentials, LockProvider lockProvider) {
 		this.httpReaderFactory = httpReaderFactory;
 		this.credentials = credentials;
 		this.lockProvider = lockProvider;

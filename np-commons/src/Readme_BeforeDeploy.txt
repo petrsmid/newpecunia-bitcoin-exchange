@@ -5,7 +5,7 @@ Steps before deploying the application to production
   - generate pool of bitcoin addresses (ca 10000) and put them into the configuration - you can do it with BitcoinTest.generateAccounts()
 
 - when deploying to a cluster
-	- always use multi-node cluster implementation for ClusterLockProvider
+	- always use multi-node cluster implementation for LockProvider
 	- reimplement BalanceService - the substracting of the balance must be replicated through the cluster
 	 
 - create account on BitStamp

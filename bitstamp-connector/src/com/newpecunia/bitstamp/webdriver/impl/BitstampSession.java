@@ -27,7 +27,7 @@ import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.net.HttpReader;
 import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.HttpReaderOutput;
-import com.newpecunia.synchronization.ClusterLockProvider;
+import com.newpecunia.synchronization.LockProvider;
 
 public class BitstampSession {
 	
@@ -41,10 +41,10 @@ public class BitstampSession {
 	private BitstampSession() {}
 	
 	private String lastOpenedUrl = null; //for Referer header
-	private ClusterLockProvider lockProvider;
+	private LockProvider lockProvider;
 	
 	//package private
-	static BitstampSession createSession(HttpReaderFactory httpReaderFactory, NPCredentials credentials, ClusterLockProvider lockProvider) throws IOException, BitstampWebdriverException {
+	static BitstampSession createSession(HttpReaderFactory httpReaderFactory, NPCredentials credentials, LockProvider lockProvider) throws IOException, BitstampWebdriverException {
 		BitstampSession session = new BitstampSession();
 		
 		session.httpReader = httpReaderFactory.createNewHttpSessionReader();
