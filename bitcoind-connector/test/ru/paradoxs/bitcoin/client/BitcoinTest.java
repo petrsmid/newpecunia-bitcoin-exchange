@@ -64,7 +64,7 @@ public class BitcoinTest {
 
     public BitcoinTest(){
     	if (IS_TESTNET){
-    		bClient = new BitcoinClient("127.0.0.1", RPCUSER, RPCPASSWORD, 18332);
+    		bClient = new BitcoinClient("127.0.0.1", RPCUSER, RPCPASSWORD, 12347);
     	} else {
     		bClient = new BitcoinClient("127.0.0.1", RPCUSER, RPCPASSWORD, 8332);
     	}
@@ -204,7 +204,7 @@ public class BitcoinTest {
 
     @Test
     public void testListReceivedByAddress() {
-        List<AddressInfo> addressInfos = bClient.listReceivedByAddress(1, false);
+        List<AddressInfo> addressInfos = bClient.listReceivedByAddress(1, true);
 
         System.out.println("addressInfos = " + addressInfos);
 
@@ -306,7 +306,7 @@ public class BitcoinTest {
 
         System.out.println("account = " + account);
     }
-
+    
     @Test
     public void testValidateAddress() {
     	String sendAddress = IS_TESTNET ? TESTNET_FAUCET_ADDRESS : BITCOIN_TO_ADDRESS;
@@ -484,4 +484,34 @@ public class BitcoinTest {
         assertEquals(new BigDecimal("1.00000012"), BitcoinClient.roundToEightDecimals(new BigDecimal("1.000000115")));
         assertEquals(new BigDecimal("0.00000001"), BitcoinClient.roundToEightDecimals(new BigDecimal("0.0000000149")));
     }
+    
+    
+    /**
+     * I realised that after 100 generated addresses the bitcoind returns 500 (internal error).
+     * A workaround is to open the BitcoinQT, create manually one more address.
+     * Afterward you can again generate next 100 addresses.
+     * Maybe running "./bitcoind -keypool=10000" can fix the issue.
+     */
+    @Test
+    @Ignore("Run this test only initialy when creating accounts.")
+    public void generateAccounts() {
+        for (int i = 1; i < 10000; i++) {
+        	String prefix = "";
+        	if (i < 10000) {prefix = "0" + prefix;}
+        	if (i < 1000) {prefix = "0" + prefix;}
+        	if (i < 100) {prefix = "0" + prefix;}
+        	if (i < 10) {prefix = "0" + prefix;}
+            String newAccount = "NP"+prefix+i;
+            String address = bClient.getAccountAddress(null);
+            System.out.println("Adding address "+address);
+			bClient.setAccountForAddress(address, newAccount);
+			String account = bClient.getAccount(address);
+			
+			assertEquals(newAccount, account);
+			
+			System.out.println("as account " + account);
+		}
+    }    
+    
+    
 }
