@@ -2,7 +2,7 @@
 
 <configuration>
     
-	<credentialsPath>/home/petr/bitstampcredentials.xml</credentialsPath>
+	<credentialsPath>/home/petr/npcredentials.xml</credentialsPath>
 	
 	<unicredit>
 		<balanceUpdatePeriodMs>600000</balanceUpdatePeriodMs>
@@ -30,5 +30,10 @@
 			</upload>
 		</webdav>
 	</unicredit>
+	
+	<bitcoind>
+	    <address>127.0.0.1</address>
+	    <port>8332</port>
+	</bitcoind>
 	
 </configuration>

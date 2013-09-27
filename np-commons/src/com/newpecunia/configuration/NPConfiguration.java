@@ -101,4 +101,12 @@ public class NPConfiguration {
 		return config.getBigDecimal("unicredit.paymentFee");
 	}
 
+	public String getBitcoindServerAddress() {
+		return config.getString("bitcoind.address");
+	}
+
+	public int getBitcoindServerPort() {
+		return config.getInt("bitcoind.port");
+	}
+
 }

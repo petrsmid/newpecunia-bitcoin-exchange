@@ -49,5 +49,14 @@ public class NPCredentials {
 	public String getPrivateKeyPassword() {
 		return credentials.getString("unicreditWebdav.privateKeyPassword");
 	}
+
+	public String getBitcoindRpcUser() {
+		return credentials.getString("bitcoind.rpcuser");
+
+	}
+
+	public String getBitcoindRpcPassword() {
+		return credentials.getString("bitcoind.rpcpassword");
+	}
 		
 }
