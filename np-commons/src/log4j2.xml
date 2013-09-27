@@ -6,11 +6,16 @@
 		</Console>
 	</appenders>
 	<loggers>
-<!--  Uncomment to see what happens on the wire  -->
+<!--  Uncomment to see what happens on the wire - Apache HttpClient 4  -->
 <!-- 		<logger name="org.apache.http.wire" level="DEBUG" additivity="false"> -->
 <!-- 			<appender-ref ref="Console" /> -->
 <!-- 		</logger> -->
-		 
+
+		<!-- Remove spam of INFO messages comming from Apache HttpClient 3 -->
+		<logger name="org.apache.commons.httpclient" level="WARN" additivity="false">
+		    <appender-ref ref="Console" />
+		</logger> 
+		
 		<root level="INFO">
 			<appender-ref ref="Console" />
 		</root>
