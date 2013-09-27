@@ -20,6 +20,8 @@
 		<dependency org="net.sf.json-lib" name="json-lib" rev="2.4"> 
 			<artifact name="json-lib" type="jar" m:classifier="jdk15"/>
 		</dependency>
+		<dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" />
+
 		<!-- TEST dependencies -->
 		<dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
     </dependencies>
