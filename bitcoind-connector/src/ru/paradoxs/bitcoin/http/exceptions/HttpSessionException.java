@@ -16,7 +16,9 @@
 package ru.paradoxs.bitcoin.http.exceptions;
 
 public class HttpSessionException extends RuntimeException {
-    public HttpSessionException(String message) {
+	private static final long serialVersionUID = 1L;
+
+	public HttpSessionException(String message) {
         super(message);
     }
 

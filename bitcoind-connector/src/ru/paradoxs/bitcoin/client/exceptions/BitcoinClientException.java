@@ -16,7 +16,9 @@
 package ru.paradoxs.bitcoin.client.exceptions;
 
 public class BitcoinClientException extends RuntimeException {
-    public BitcoinClientException(String message) {
+	private static final long serialVersionUID = 1L;
+
+	public BitcoinClientException(String message) {
         super(message);
     }
 
