@@ -520,14 +520,14 @@ public class BitcoinClient {
      * @return information about the transaction with that ID
      * @since 0.3.18
      */
-    public String getTransactionJSON(String txId) {
+    public TransactionInfo getTransactionJSON(String txId) {
         try {
             JSONArray parameters = new JSONArray().element(txId);
             JSONObject request = createRequest("gettransaction", parameters);
             JSONObject response = session.sendAndReceive(request);
             JSONObject result = (JSONObject) response.get("result");
 
-            return result.toString();
+            return parseTransactionInfoFromJson(result);
         } catch (JSONException e) {
             throw new BitcoinClientException("Exception when getting transaction info for this id: " + txId, e);
         }
@@ -555,8 +555,24 @@ public class BitcoinClient {
     }
 
     private TransactionInfo parseTransactionInfoFromJson(JSONObject jObject) throws JSONException {
-        TransactionInfo info = new TransactionInfo();
-
+    	/*{
+    	  "amount":-0.01,
+    	  "fee":-1.0E-4,
+    	  "confirmations":0,
+    	  "txid":"cee98d417604951c46f6e548d6d86d05cbfc7706140b5914364956f0526b40c9",
+    	  "time":1380834835,
+    	  "timereceived":1380834835,
+    	  "comment":"Loan Repayment",
+    	  "to":"Faucet",
+    	  "details":[{"account":"",
+    	  			  "address":"mq7se9wy2egettFxPbmn99cK8v5AFq55Lx",
+    	  			  "category":"send",
+    	  			  "amount":-0.01,
+    	  			  "fee":-1.0E-4
+    	  			 }]
+    	  }        
+    	*/
+    	TransactionInfo info = new TransactionInfo();
         info.setAmount(getBigDecimal(jObject, "amount"));
 
         if (jObject.has("category")) {
@@ -577,6 +593,23 @@ public class BitcoinClient {
 
         if (jObject.has("time")) {
             info.setTime(jObject.getLong("time"));
+        }
+
+        if (jObject.has("comment")) {
+            info.setComment(jObject.getString("comment"));
+        }
+        
+        if (jObject.has("details")) {
+        	JSONArray details = jObject.getJSONArray("details");
+        	if (details.size() > 0) {
+        		JSONObject detail = details.getJSONObject(0);
+        		if (detail.has("address")) {
+        			info.setAddress(detail.getString("address"));
+        		}
+        		if (detail.has("category")) {
+        			info.setCategory(detail.getString("category"));
+        		}
+        	}
         }
 
         return info;

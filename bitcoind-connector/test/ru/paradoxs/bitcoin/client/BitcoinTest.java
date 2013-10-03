@@ -377,14 +377,19 @@ public class BitcoinTest {
         TransactionInfo info = bClient.getTransaction(txId);
 
         assertNotNull(info);
-        assertNull(info.getCategory());    // https://github.com/gavinandresen/bitcoin-git/issues/issue/20
+//        assertNull(info.getCategory());    // https://github.com/gavinandresen/bitcoin-git/issues/issue/20
         assertEquals(txId, info.getTxId());
         assertEquals(new BigDecimal("-" + BITCOIN_AMOUNT_TO_SEND), info.getAmount());
         assertEquals(0, info.getFee().compareTo(new BigDecimal(FEE)));
 
-        String rawJSONInfo = bClient.getTransactionJSON(txId);
+        TransactionInfo info2 = bClient.getTransactionJSON(txId); //{"amount":-0.01,"fee":-1.0E-4,"confirmations":0,"txid":"cee98d417604951c46f6e548d6d86d05cbfc7706140b5914364956f0526b40c9","time":1380834835,"timereceived":1380834835,"comment":"Loan Repayment","to":"Faucet","details":[{"account":"","address":"mq7se9wy2egettFxPbmn99cK8v5AFq55Lx","category":"send","amount":-0.01,"fee":-1.0E-4}]}
 
-        assertTrue(rawJSONInfo.length() > 0);
+        assertNotNull(info2);
+        assertNotNull(info2.getCategory());    // https://github.com/gavinandresen/bitcoin-git/issues/issue/20
+        assertEquals(txId, info2.getTxId());
+        assertEquals(sendAddress, info2.getAddress());
+        assertEquals(new BigDecimal("-" + BITCOIN_AMOUNT_TO_SEND), info2.getAmount());
+        assertEquals(0, info2.getFee().compareTo(new BigDecimal(FEE)));        
     }
 
     @Test

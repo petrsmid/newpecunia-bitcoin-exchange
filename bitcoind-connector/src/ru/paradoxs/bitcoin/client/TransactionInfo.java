@@ -32,6 +32,8 @@ public class TransactionInfo {
     private long confirmations;  // only for generate/send/receive
     private String txId;         // only for generate/send/receive
     private long time;
+    private String comment;
+    private String address;
 
     public String getCategory() {
         return category;
@@ -105,6 +107,22 @@ public class TransactionInfo {
 		this.time = time;
 	}
 
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	@Override
     public String toString() {
         return "TransactionInfo{" +
@@ -113,7 +131,10 @@ public class TransactionInfo {
                 ", time=" + time +
                 ", fee=" + fee +
                 ", confirmations=" + confirmations +
+                ", comment=" + comment +
+                ", address=" + address +
                 ", txId='" + txId + '\'' +
                 '}';
     }
+
 }

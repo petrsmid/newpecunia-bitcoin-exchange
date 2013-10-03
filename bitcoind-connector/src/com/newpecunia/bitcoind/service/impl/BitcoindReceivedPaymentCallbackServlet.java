@@ -24,7 +24,7 @@ public class BitcoindReceivedPaymentCallbackServlet extends AbstractInjectableSe
 	private static final Logger logger = LogManager.getLogger(BitcoindReceivedPaymentCallbackServlet.class);	
 	
 	@Inject
-	private CallbackManager callbackManager;	
+	private ReceiveBTCCallbackManager callbackManager = null;	
 	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse res) {
@@ -38,7 +38,7 @@ public class BitcoindReceivedPaymentCallbackServlet extends AbstractInjectableSe
 				}
 			} else {
 				try {
-					
+					callbackManager.serve(txId);
 				} catch (Exception e) {
 					logger.error("Error ocurred while processing callback by receiving Bitcoins. Transaction ID: "+txId);
 				}

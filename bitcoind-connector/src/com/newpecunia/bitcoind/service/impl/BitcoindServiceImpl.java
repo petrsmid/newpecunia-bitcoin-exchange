@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 import java.util.concurrent.locks.Lock;
 
 import ru.paradoxs.bitcoin.client.BitcoinClient;
+import ru.paradoxs.bitcoin.client.TransactionInfo;
 
 import com.google.inject.Inject;
 import com.newpecunia.bitcoind.service.BitcoindException;
 import com.newpecunia.bitcoind.service.BitcoindService;
-import com.newpecunia.bitcoind.service.ReceiveMoneyCallback;
 import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.synchronization.LockProvider;
@@ -30,8 +30,8 @@ public class BitcoindServiceImpl implements BitcoindService {
 
 	@Override
 	public BigDecimal getBalance() {
+		bitcoindLock.lock();
 		try {
-			bitcoindLock.lock();
 			return btcClient.getBalance();
 		} finally {
 			bitcoindLock.unlock();
@@ -40,9 +40,8 @@ public class BitcoindServiceImpl implements BitcoindService {
 
 	@Override
 	public void sendMoney(String address, BigDecimal amount, String comment, String commentTo) {
+		bitcoindLock.lock();
 		try {
-			bitcoindLock.lock();
-			
 			btcClient.walletpassphrase(credentials.getBitcoindWalletPassword(), 10);   //unlock wallet
 	        String txId = btcClient.sendToAddress(address, amount, comment, commentTo);
 	        btcClient.walletlock(); //lock wallet
@@ -53,18 +52,16 @@ public class BitcoindServiceImpl implements BitcoindService {
 			bitcoindLock.unlock();
 		}
 	}
-
-	@Override
-	public String addReceiveMoneyCallback(ReceiveMoneyCallback callback) {
-		//TODO
-		return null;
-	}
 	
 	@Override
-	public void removeReceiveMoneyCallback(String destinationAddress) {
-		//TODO
-	}
+	public TransactionInfo getTransactionInfo(String txId) {
+		bitcoindLock.lock();
+		try {
+			return btcClient.getTransactionJSON(txId);
+		} finally {
+			bitcoindLock.unlock();
+		}
 
-	
+	}
 
 }
