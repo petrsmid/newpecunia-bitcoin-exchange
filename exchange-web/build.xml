@@ -1,3 +1,20 @@
 <project xmlns:ivy="antlib:org.apache.ivy.ant" name="exchange-web" basedir="." default="dist">
-    <import file="../common-targets.xml" />
+	<property name="war.file" location="npexchange.war" />
+	<property name="web.dir" location="web" />
+		
+	<import file="../common-targets.xml" />
+
+	<target name="dist" depends="common-build.dist" description="generate the war file">
+	    <copy file="${dist}/${ant.project.name}.jar" todir="${lib}" /> <!-- add the jar file to lib folder so it is included in the war file -->
+	    
+		<war destfile="${war.file}" webxml="${web.dir}/web.xml">
+   			<fileset dir="${web.dir}" excludes="web.xml"/>
+			<lib dir="${lib}"/>
+		</war>
+	</target>    
+	
+	<target name="clean" depends="common-build.clean">
+		<delete file="${war.file}"/>	    	    
+	</target>
+
 </project>

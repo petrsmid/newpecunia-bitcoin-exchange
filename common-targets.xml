@@ -25,8 +25,6 @@
 
 		<!-- Put everything in ${build} into the project.jar file -->
 		<jar jarfile="${dist}/${ant.project.name}.jar" basedir="${build}"/>
-		
-		<!--  -->
 	</target>
 
 	<target name="publish" depends="dist" description="--> publish this project in the local ivy repository">   
