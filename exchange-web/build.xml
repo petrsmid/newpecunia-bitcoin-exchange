@@ -7,7 +7,7 @@
 	<target name="dist" depends="common-build.dist" description="generate the war file">
 	    <copy file="${dist}/${ant.project.name}.jar" todir="${lib}" /> <!-- add the jar file to lib folder so it is included in the war file -->
 	    
-		<war destfile="${war.file}" webxml="${web.dir}/web.xml">
+		<war destfile="${war.file}" webxml="${web.dir}/WEB-INF/web.xml">
    			<fileset dir="${web.dir}" excludes="web.xml"/>
 			<lib dir="${lib}"/>
 		</war>
