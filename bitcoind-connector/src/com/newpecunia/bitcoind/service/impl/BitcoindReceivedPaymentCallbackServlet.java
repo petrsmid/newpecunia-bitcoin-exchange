@@ -3,9 +3,14 @@ package com.newpecunia.bitcoind.service.impl;
 import java.io.IOException;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.inject.Inject;
+import com.newpecunia.servlet.AbstractInjectableServlet;
 
 
 /**
@@ -13,23 +18,32 @@ import javax.servlet.http.HttpServletResponse;
  * Call the servlet with parameter txId - this is the transaction ID of the bitcoin payment 
  */
 @WebServlet("/bitcoindReceivedPaymentCallback_dgqac0akerd1c4e7asiy5d8zqjdg68652u") //the address has non-guesable postfix to prevent calling it by some attacker
-public class BitcoindReceivedPaymentCallbackServlet extends HttpServlet {
+public class BitcoindReceivedPaymentCallbackServlet extends AbstractInjectableServlet {
 	private static final long serialVersionUID = 1L;
 
+	private static final Logger logger = LogManager.getLogger(BitcoindReceivedPaymentCallbackServlet.class);	
+	
+	@Inject
+	private CallbackManager callbackManager;	
+	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse res) {
-		try {
 			String txId = req.getParameter("txId");
 			if (txId == null) {
-				res.getOutputStream().write("No transaction ID provided.".getBytes());
 				res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				try {
+					res.getOutputStream().write("No transaction ID provided.".getBytes());
+				} catch (IOException e) {
+					//do nothing - the connection was probably closed
+				}
 			} else {
-				//TODO call CallbackManager with the TxID
+				try {
+					
+				} catch (Exception e) {
+					logger.error("Error ocurred while processing callback by receiving Bitcoins. Transaction ID: "+txId);
+				}
 			}
 			
-		} catch (IOException e) {
-			//do nothing - the output would not be written anywhere - the connection was probably closed
-		}
 		
 	}
 	

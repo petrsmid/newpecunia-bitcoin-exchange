@@ -11,7 +11,7 @@ public interface BitcoindService {
 	/**
 	 * @return Bitcoin address where the money comes
 	 */
-	String receiveMoney(ReceiveMoneyCallback callback);
+	String addReceiveMoneyCallback(ReceiveMoneyCallback callback);
 
 	void removeReceiveMoneyCallback(String destinationAddress);
 

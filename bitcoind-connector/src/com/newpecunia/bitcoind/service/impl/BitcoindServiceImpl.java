@@ -55,7 +55,7 @@ public class BitcoindServiceImpl implements BitcoindService {
 	}
 
 	@Override
-	public String receiveMoney(ReceiveMoneyCallback callback) {
+	public String addReceiveMoneyCallback(ReceiveMoneyCallback callback) {
 		//TODO
 		return null;
 	}

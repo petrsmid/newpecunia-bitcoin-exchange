@@ -16,8 +16,10 @@
         <dependency name="persistence" rev="latest.integration" conf="compile"/>
         <dependency name="trader" rev="latest.integration" conf="compile"/>
         <dependency name="unicredit-connector" rev="latest.integration" conf="compile"/>
-        
+
         <!-- To add a library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
+		<dependency org="com.google.inject.extensions" name="guice-servlet" rev="3.0"/>
+		
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
     </dependencies>
