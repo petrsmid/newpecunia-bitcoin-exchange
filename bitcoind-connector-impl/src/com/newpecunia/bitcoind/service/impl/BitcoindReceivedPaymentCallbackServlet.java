@@ -24,12 +24,13 @@ public class BitcoindReceivedPaymentCallbackServlet extends AbstractInjectableSe
 	private static final Logger logger = LogManager.getLogger(BitcoindReceivedPaymentCallbackServlet.class);	
 	
 	@Inject
-	private ReceiveBTCCallbackManager callbackManager = null;	
+	private ReceiveBTCCallback callback = null;	
 	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse res) {
 			String txId = req.getParameter("txId");
 			if (txId == null) {
+				logger.warn("Servlet for Bitcoind callbacks called without transaction number.");
 				res.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				try {
 					res.getOutputStream().write("No transaction ID provided.".getBytes());
@@ -38,7 +39,8 @@ public class BitcoindReceivedPaymentCallbackServlet extends AbstractInjectableSe
 				}
 			} else {
 				try {
-					callbackManager.serve(txId);
+					logger.info("Servlet for Bitcoind callbacks called with transaction ID "+txId);
+					callback.serve(txId);
 				} catch (Exception e) {
 					logger.error("Error ocurred while processing callback by receiving Bitcoins. Transaction ID: "+txId);
 				}

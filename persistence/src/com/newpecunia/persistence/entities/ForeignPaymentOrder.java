@@ -22,6 +22,7 @@ import com.newpecunia.unicredit.service.ForeignPayment.PayeeType;
 public class ForeignPaymentOrder {
 	
 	public static enum PaymentStatus {
+		WAITING_FOR_BTC,
 		ERROR,
 		NEW, 
 		SENT_TO_WEBDAV, 
@@ -76,6 +77,8 @@ public class ForeignPaymentOrder {
 	@Column(name="PAYEE_BANK_COUNTRY")
 	private String bankCountry;
 	
+	@Column(name="ACCEPTING_BTC_ADDRESS")
+	private String acceptingBtcAddress;
 	
 	@Column(name="STATUS")
 	@Enumerated(EnumType.STRING)
@@ -186,6 +189,12 @@ public class ForeignPaymentOrder {
 	public void setBankCountry(String bankCountry) {
 		this.bankCountry = bankCountry;
 	}
+	public String getAcceptingBtcAddress() {
+		return acceptingBtcAddress;
+	}
+	public void setAcceptingBtcAddress(String acceptingBtcAddress) {
+		this.acceptingBtcAddress = acceptingBtcAddress;
+	}
 	public PaymentStatus getStatus() {
 		return status;
 	}
@@ -204,7 +213,6 @@ public class ForeignPaymentOrder {
 	public void setUpdateTimestamp(Calendar updateTimestamp) {
 		this.updateTimestamp = updateTimestamp;
 	}
-	
 	
 	
 }
