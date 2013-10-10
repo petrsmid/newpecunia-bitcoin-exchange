@@ -1,13 +1,17 @@
 package com.newpecunia.bitcoind.service.impl;
 
-import ru.paradoxs.bitcoin.client.TransactionInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.newpecunia.bitcoind.service.BitcoindService;
 import com.newpecunia.bitcoind.service.ReceiveBTCCallback;
+import com.newpecunia.bitcoind.service.TransactionInfo;
 
 public class ReceiveBTCCallbackManager {
 
+	private static final Logger logger = LogManager.getLogger(ReceiveBTCCallbackManager.class);	
+	
 	private BitcoindService bitcoindService;
 
 	@Inject

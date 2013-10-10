@@ -2,8 +2,6 @@ package com.newpecunia.bitcoind.service;
 
 import java.math.BigDecimal;
 
-import ru.paradoxs.bitcoin.client.TransactionInfo;
-
 public interface BitcoindService {
 	
 	BigDecimal getBalance();

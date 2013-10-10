@@ -3,17 +3,23 @@ package com.newpecunia.bitcoind.service.impl;
 import java.math.BigDecimal;
 import java.util.concurrent.locks.Lock;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ru.paradoxs.bitcoin.client.BitcoinClient;
-import ru.paradoxs.bitcoin.client.TransactionInfo;
 
 import com.google.inject.Inject;
 import com.newpecunia.bitcoind.service.BitcoindException;
 import com.newpecunia.bitcoind.service.BitcoindService;
+import com.newpecunia.bitcoind.service.TransactionInfo;
+import com.newpecunia.bitcoind.service.TransactionInfo.Category;
 import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.synchronization.LockProvider;
 
 public class BitcoindServiceImpl implements BitcoindService {
+
+	private static final Logger logger = LogManager.getLogger(BitcoindServiceImpl.class);	
 
 	private NPCredentials credentials;
 	private BitcoinClient btcClient = null;
@@ -57,11 +63,30 @@ public class BitcoindServiceImpl implements BitcoindService {
 	public TransactionInfo getTransactionInfo(String txId) {
 		bitcoindLock.lock();
 		try {
-			return btcClient.getTransactionJSON(txId);
+			return mapTransactionInfo(btcClient.getTransactionJSON(txId));
 		} finally {
 			bitcoindLock.unlock();
 		}
 
+	}
+
+	private TransactionInfo mapTransactionInfo(ru.paradoxs.bitcoin.client.TransactionInfo paradoxsTx) {
+		TransactionInfo tx = new TransactionInfo();
+		tx.setAddress(paradoxsTx.getAddress());
+		tx.setAmount(paradoxsTx.getAmount());
+		for (Category category : Category.values()) {
+			if (category.name().equalsIgnoreCase(paradoxsTx.getCategory())) {
+				tx.setCategory(category);
+			}
+		}
+		if (paradoxsTx.getCategory() != null && tx.getCategory() == null) {
+			logger.error("Could not map bitcoin transaction category '"+paradoxsTx.getCategory()+"' to Category enum.");
+		}
+		tx.setComment(paradoxsTx.getComment());
+		tx.setConfirmations(paradoxsTx.getConfirmations());
+		tx.setFee(paradoxsTx.getFee());
+		tx.setTxId(paradoxsTx.getTxId());
+		return null;
 	}
 
 }
