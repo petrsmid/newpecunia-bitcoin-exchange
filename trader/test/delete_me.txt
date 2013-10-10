@@ -1,1 +1,0 @@
-Delete this file when the directory will contain some file(s). Git is not able to commit empty directories.

@@ -1,3 +1,0 @@
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="unicredit-connector" basedir="." default="dist">
-    <import file="../common-targets.xml" />
-</project>

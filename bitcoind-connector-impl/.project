@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>exchange-web</name>
+	<name>bitcoind-connector-impl</name>
 	<comment></comment>
 	<projects>
-		<project>np-commons</project>
-		<project>persistence</project>
-		<project>unicredit-connector-api</project>
-		<project>trader-api</project>
-		<project>bitstamp-connector-api</project>
-		<project>bitcoind-connector-api</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

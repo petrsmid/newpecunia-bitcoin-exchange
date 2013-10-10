@@ -39,6 +39,7 @@
 	</target>
 
 	<target name="resolve" description="retrieve dependencies with ivy">
+		<mkdir dir="${lib}" />
 		<!-- resolve IVY dependencies -->
 		<ivy:resolve />
 		<ivy:retrieve /> <!-- automatically copies them to ./lib -->

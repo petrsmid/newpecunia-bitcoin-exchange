@@ -1,0 +1,3 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="bitstamp-connector-impl" basedir="." default="dist">
+    <import file="../common-targets.xml" />
+</project>
