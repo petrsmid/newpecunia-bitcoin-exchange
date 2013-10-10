@@ -18,5 +18,6 @@
         <!-- To add an external library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
-    </dependencies>
+        <dependency name="np-commons" rev="latest.integration" conf="test->*"/>
+	</dependencies>
 </ivy-module>
