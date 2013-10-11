@@ -13,7 +13,6 @@
 			<property name="hibernate.connection.url" value="jdbc:postgresql://localhost/newpecunia" />
 			<property name="hibernate.connection.username" value="newpecunia" />
 			<property name="hibernate.connection.password" value="newpecunia" />
-<!-- 			<property name="hibernate.connection.autocommit" value="false" /> -->
 			
 			<!-- JDBC connection pool (use the built-in) -->
 			<property name="hibernate.connection.pool_size" value="10" />

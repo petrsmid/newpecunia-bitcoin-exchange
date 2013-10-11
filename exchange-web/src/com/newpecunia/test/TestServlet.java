@@ -26,7 +26,7 @@ public class TestServlet extends HttpServlet {
 	@Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ForeignPayment preOrder = new ForeignPayment();
-		preOrder.setName("Test User 2");
-		paymentService.createPreOrderWaitingForBTC(preOrder, "testAddress 2");
+		preOrder.setName("Test User 3");
+		paymentService.createPreOrderWaitingForBTC(preOrder, "testAddress 3");
 	}
 }
