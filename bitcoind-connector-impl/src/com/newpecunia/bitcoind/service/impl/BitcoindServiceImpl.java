@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import ru.paradoxs.bitcoin.client.BitcoinClient;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.newpecunia.bitcoind.service.BitcoindException;
 import com.newpecunia.bitcoind.service.BitcoindService;
 import com.newpecunia.bitcoind.service.TransactionInfo;
@@ -17,6 +18,7 @@ import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.synchronization.LockProvider;
 
+@Singleton
 public class BitcoindServiceImpl implements BitcoindService {
 
 	private static final Logger logger = LogManager.getLogger(BitcoindServiceImpl.class);	
@@ -26,7 +28,7 @@ public class BitcoindServiceImpl implements BitcoindService {
 	private Lock bitcoindLock = null;
 	
 	@Inject
-	public BitcoindServiceImpl(NPConfiguration configuration, NPCredentials credentials, LockProvider lockProvider) {
+	BitcoindServiceImpl(NPConfiguration configuration, NPCredentials credentials, LockProvider lockProvider) {
 		this.credentials = credentials;
 		
 		bitcoindLock = lockProvider.getLock();

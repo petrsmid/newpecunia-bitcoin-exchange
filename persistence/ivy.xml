@@ -20,7 +20,7 @@
 		<dependency org="postgresql" name="postgresql" rev="9.1-901.jdbc4"/>
 		<dependency org="org.hibernate" name="hibernate-core" rev="4.2.4.Final"/>
 		<dependency org="org.hibernate" name="hibernate-entitymanager" rev="4.2.4.Final"/>
-		
+		<dependency org="com.google.inject.extensions" name="guice-persist" rev="3.0"/>
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
     </dependencies>

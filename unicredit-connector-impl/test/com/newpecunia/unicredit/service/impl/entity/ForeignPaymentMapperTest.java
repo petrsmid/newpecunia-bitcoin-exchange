@@ -1,6 +1,7 @@
 package com.newpecunia.unicredit.service.impl.entity;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
@@ -8,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.newpecunia.countries.Country;
-import com.newpecunia.countries.JavaCountryDatabase;
+import com.newpecunia.countries.CountryDatabase;
 import com.newpecunia.persistence.entities.ForeignPaymentOrder;
 import com.newpecunia.unicredit.service.ForeignPayment;
 import com.newpecunia.unicredit.service.ForeignPayment.PayeeType;
@@ -18,7 +19,7 @@ public class ForeignPaymentMapperTest {
 	@Test
 	public void testBackAndForceMapping() {
 		ForeignPaymentMapper mapper = new ForeignPaymentMapper(
-				new DefaultMapperFactory.Builder().build(), new JavaCountryDatabase());
+				new DefaultMapperFactory.Builder().build(), new MockCountryDatabase());
 		
 		ForeignPayment fp1 = new ForeignPayment();
 		fp1.setAddress("street");
@@ -34,4 +35,20 @@ public class ForeignPaymentMapperTest {
 		Assert.assertEquals(fp1.getPayeeType(), fp2.getPayeeType());
 	}
 
+	
+	private class MockCountryDatabase implements CountryDatabase {
+		@Override
+		public List<Country> getListOfCountries() {
+			return null;
+		}
+
+		@Override
+		public Country getCountryForISO(String isoCode) {
+			if ("CZ".equals(isoCode)) {
+				return new Country("CZ", "Czech Republic");
+			} else {
+				return null;
+			}
+		}		
+	}	
 }

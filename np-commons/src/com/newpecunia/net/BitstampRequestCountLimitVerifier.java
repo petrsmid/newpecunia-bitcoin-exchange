@@ -7,8 +7,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.newpecunia.time.TimeProvider;
 
+@Singleton
 public class BitstampRequestCountLimitVerifier implements RequestCountLimitVerifier {
 	
 	private static final long TIME_WINDOW = 10*60*1000; //10 minutes
@@ -20,7 +22,7 @@ public class BitstampRequestCountLimitVerifier implements RequestCountLimitVerif
 	private Deque<Long> requestTimestamps = new ArrayDeque<>();
 	
 	@Inject
-	public BitstampRequestCountLimitVerifier(TimeProvider timeProvider) {
+	BitstampRequestCountLimitVerifier(TimeProvider timeProvider) {
 		this.timeProvider = timeProvider;
 	}
 	

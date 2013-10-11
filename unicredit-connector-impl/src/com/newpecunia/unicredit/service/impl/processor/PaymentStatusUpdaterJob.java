@@ -4,15 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.newpecunia.persistence.entities.ForeignPaymentOrder;
 import com.newpecunia.persistence.entities.ForeignPaymentOrder.PaymentStatus;
 import com.newpecunia.time.TimeProvider;
@@ -23,27 +25,27 @@ public class PaymentStatusUpdaterJob implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(PaymentStatusUpdaterJob.class);	
 	
-	private SessionFactory sessionFactory;
 	private UnicreditWebdavService webdavService;
 	private TimeProvider timeProvider;
+	private Provider<EntityManager> enitityManagerProvider;
 
 	@Inject
-	public PaymentStatusUpdaterJob(SessionFactory sessionFactory, UnicreditWebdavService webdavService, TimeProvider timeProvider) {
-		this.sessionFactory = sessionFactory;
+	public PaymentStatusUpdaterJob(Provider<EntityManager> enitityManagerProvider, UnicreditWebdavService webdavService, TimeProvider timeProvider) {
+		this.enitityManagerProvider = enitityManagerProvider;
 		this.webdavService = webdavService;
 		this.timeProvider = timeProvider;
 	}
 	
 	@Override
 	public void run() {
-		Session session = sessionFactory.openSession();
+		Session session = enitityManagerProvider.get().unwrap(Session.class);
 		Transaction tx = session.beginTransaction();
 		
 		updateStatusOfUnsignedPayments(session);
 		
 		session.flush();
 		tx.commit();
-		session.close();		
+		enitityManagerProvider.get().close();
 	}
 
 	private void updateStatusOfUnsignedPayments(Session session) {

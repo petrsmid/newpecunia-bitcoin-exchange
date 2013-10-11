@@ -5,16 +5,18 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.newpecunia.NPException;
 import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.persistence.entities.ForeignPaymentOrder;
@@ -29,23 +31,24 @@ public class PaymentProcessorJob implements Runnable {
 
 	private static final Logger logger = LogManager.getLogger(PaymentProcessorJob.class);	
 	
-	private SessionFactory sessionFactory;
 	private UnicreditWebdavService webdavService;
 	private ForeignPaymentMapper foreignPaymentMapper;
 	private BalanceService balanceService;
 	private NPConfiguration configuration;
 	private TimeProvider timeProvider;
-
+	private Provider<EntityManager> enitityManagerProvider;
+	
+	
 	
 	@Inject
-	public PaymentProcessorJob(SessionFactory sessionFactory, UnicreditWebdavService webdavService, BalanceService balanceService, 
+	public PaymentProcessorJob(Provider<EntityManager> enitityManagerProvider, UnicreditWebdavService webdavService, BalanceService balanceService, 
 			ForeignPaymentMapper foreignPaymentMapper, NPConfiguration configuration, TimeProvider timeProvider) {
 		this.webdavService = webdavService;
 		this.balanceService = balanceService;
 		this.foreignPaymentMapper = foreignPaymentMapper;
 		this.configuration = configuration;
 		this.timeProvider = timeProvider;
-		this.sessionFactory = sessionFactory;
+		this.enitityManagerProvider = enitityManagerProvider;
 	}
 	
 	@Override
@@ -55,8 +58,8 @@ public class PaymentProcessorJob implements Runnable {
 
 	private void processPendingPayments() {
 		logger.info("Sending pending payments to webdav.");
-		
-		Session session = sessionFactory.openSession();
+		EntityManager entityManager = enitityManagerProvider.get();
+		Session session = entityManager.unwrap(Session.class);
 		//load new payments
 		List<ForeignPaymentOrder> newPayments = loadNewPaymentsFromDB(session);
 		
@@ -91,7 +94,7 @@ public class PaymentProcessorJob implements Runnable {
 			updateStatusOfPaymentInDB(session, foreignPaymentOrder);
 		}
 
-		session.close();
+		entityManager.close();
 		
 		logger.info("Finished sending pending payments to webdav. " +
 				"Payments sent to webdav: "+sentPaymentIds+". " +

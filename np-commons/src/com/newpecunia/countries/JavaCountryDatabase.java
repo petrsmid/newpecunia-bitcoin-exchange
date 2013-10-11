@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class JavaCountryDatabase implements CountryDatabase {
 
 	List<Country> countries;
 	
-	public JavaCountryDatabase() {
+	JavaCountryDatabase() {
 		String[] countryCodes = Locale.getISOCountries();
 		countries = new ArrayList<Country>(countryCodes.length);
 		for (String countryCode : countryCodes) {

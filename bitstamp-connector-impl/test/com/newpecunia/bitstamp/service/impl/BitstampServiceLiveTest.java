@@ -1,4 +1,4 @@
-package com.newpecunia.bitstamp.service;
+package com.newpecunia.bitstamp.service.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -13,6 +13,17 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.newpecunia.bitstamp.BitstampConnectorModule;
+import com.newpecunia.bitstamp.service.AccountBalance;
+import com.newpecunia.bitstamp.service.BitstampService;
+import com.newpecunia.bitstamp.service.BitstampServiceException;
+import com.newpecunia.bitstamp.service.EurUsdRate;
+import com.newpecunia.bitstamp.service.Order;
+import com.newpecunia.bitstamp.service.OrderBook;
+import com.newpecunia.bitstamp.service.PriceAndAmount;
+import com.newpecunia.bitstamp.service.Ticker;
+import com.newpecunia.bitstamp.service.Transaction;
+import com.newpecunia.bitstamp.service.UnconfirmedBitcoinDeposit;
+import com.newpecunia.bitstamp.service.UserTransaction;
 import com.newpecunia.common.CommonModule;
 
 public class BitstampServiceLiveTest {

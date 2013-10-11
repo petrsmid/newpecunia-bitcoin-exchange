@@ -1,4 +1,4 @@
-package com.newpecunia.trader;
+package com.newpecunia.trader.service;
 
 import java.math.BigDecimal;
 

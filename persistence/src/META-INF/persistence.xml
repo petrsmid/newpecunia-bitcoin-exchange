@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+	http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" version="1.0">
+
+	<!-- A JPA Persistence Unit -->
+	<persistence-unit name="productionJpaUnit" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<properties>
+			<!-- Database connection settings -->
+			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
+			<property name="hibernate.connection.url" value="jdbc:postgresql://localhost/newpecunia" />
+			<property name="hibernate.connection.username" value="newpecunia" />
+			<property name="hibernate.connection.password" value="newpecunia" />
+<!-- 			<property name="hibernate.connection.autocommit" value="false" /> -->
+			
+			<!-- JDBC connection pool (use the built-in) -->
+			<property name="hibernate.connection.pool_size" value="10" />
+	
+			<!-- SQL dialect -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect" />
+	
+			<!-- Disable the second-level cache -->
+			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.internal.NoCacheProvider" />
+	
+			<!-- Echo all executed SQL to stdout -->
+			<property name="hibernate.show_sql" value="true" /> <!-- !!!! turn off before going into production -->
+	
+			<!-- Drop and re-create the database schema on startup -->
+			<property name="hibernate.hbm2ddl.auto" value="update" /> <!-- !!!! remove before going into production -->
+		</properties>
+	</persistence-unit>
+
+</persistence>

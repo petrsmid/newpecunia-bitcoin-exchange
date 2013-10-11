@@ -1,4 +1,4 @@
-package com.newpecunia.bitstamp.service;
+package com.newpecunia.bitstamp.service.impl;
 
 import static org.junit.Assert.assertEquals;
 
@@ -9,6 +9,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.newpecunia.bitstamp.service.BitstampService;
+import com.newpecunia.bitstamp.service.OrderBook;
+import com.newpecunia.bitstamp.service.PriceAndAmount;
+import com.newpecunia.bitstamp.service.Ticker;
 import com.newpecunia.bitstamp.service.impl.BitstampServiceImpl;
 
 @RunWith(JUnit4.class)

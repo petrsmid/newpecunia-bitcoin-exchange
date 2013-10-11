@@ -14,6 +14,7 @@ import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
 import com.google.common.base.Charsets;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.time.TimeProvider;
@@ -21,6 +22,7 @@ import com.newpecunia.unicredit.service.ForeignPayment;
 import com.newpecunia.unicredit.webdav.Status;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
 
+@Singleton
 public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 
 	private static final Logger logger = LogManager.getLogger(UnicreditWebdavServiceImpl.class);	
@@ -36,7 +38,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	private GpgFileSigner gpgFileSigner;
 	
 	@Inject
-	public UnicreditWebdavServiceImpl(TimeProvider timeProvider, NPConfiguration configuration, NPCredentials credentials, GpgFileSigner gpgFileSigner) {
+	UnicreditWebdavServiceImpl(TimeProvider timeProvider, NPConfiguration configuration, NPCredentials credentials, GpgFileSigner gpgFileSigner) {
 		this.timeProvider = timeProvider;
 		this.configuration = configuration;
 		this.credentials = credentials;

@@ -1,4 +1,4 @@
-package com.newpecunia.bitstamp.service;
+package com.newpecunia.bitstamp.service.impl;
 
 import com.newpecunia.net.HttpReader;
 import com.newpecunia.net.HttpReaderFactory;

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriver;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
 import com.newpecunia.bitstamp.webdriver.InternationalWithdrawRequest;
@@ -12,6 +13,7 @@ import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.synchronization.LockProvider;
 
+@Singleton
 public class BitstampWebdriverImpl implements BitstampWebdriver {
 
 	private static final long MAX_SESSION_AGE_MS = 10*60*1000; //ten minutes (in milliseconds)
@@ -25,7 +27,7 @@ public class BitstampWebdriverImpl implements BitstampWebdriver {
 	
 	
 	@Inject
-	public BitstampWebdriverImpl(HttpReaderFactory httpReaderFactory, NPCredentials credentials, LockProvider lockProvider) {
+	BitstampWebdriverImpl(HttpReaderFactory httpReaderFactory, NPCredentials credentials, LockProvider lockProvider) {
 		this.httpReaderFactory = httpReaderFactory;
 		this.credentials = credentials;
 		this.lockProvider = lockProvider;

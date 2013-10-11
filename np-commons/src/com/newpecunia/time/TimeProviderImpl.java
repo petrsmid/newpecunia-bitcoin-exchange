@@ -6,6 +6,9 @@ import java.util.GregorianCalendar;
 
 import org.joda.time.DateTime;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class TimeProviderImpl implements TimeProvider {
 
 	@Override

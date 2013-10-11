@@ -12,11 +12,13 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openpgp.PGPException;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.newpecunia.NPException;
 import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.time.TimeProvider;
 import com.newpecunia.unicredit.webdav.impl.pgp.BouncyCastleSigner;
 
+@Singleton
 public class GpgFileSignerImpl implements GpgFileSigner {
 	
 	private NPCredentials credentials;
@@ -24,7 +26,7 @@ public class GpgFileSignerImpl implements GpgFileSigner {
 	private TimeProvider timeProvider;
 
 	@Inject
-	public GpgFileSignerImpl(NPCredentials credentials, TimeProvider timeProvider) {
+	GpgFileSignerImpl(NPCredentials credentials, TimeProvider timeProvider) {
 		this.timeProvider = timeProvider;
 		this.credentials = credentials;
 		this.securityProvider = new BouncyCastleProvider();

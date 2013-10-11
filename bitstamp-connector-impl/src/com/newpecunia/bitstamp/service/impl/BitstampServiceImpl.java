@@ -10,6 +10,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.newpecunia.bitstamp.service.AccountBalance;
 import com.newpecunia.bitstamp.service.BitstampService;
 import com.newpecunia.bitstamp.service.BitstampServiceException;
@@ -38,6 +39,7 @@ import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.JsonCodec;
 import com.newpecunia.net.JsonParsingException;
 
+@Singleton
 public class BitstampServiceImpl implements BitstampService {
 
 	private static final BigDecimal MIN_AMOUNT_IN_USD = BigDecimal.ONE; //minimum order is 1 USD
@@ -50,7 +52,7 @@ public class BitstampServiceImpl implements BitstampService {
 	private HttpReader httpReader;
 	
 	@Inject
-	public BitstampServiceImpl(HttpReaderFactory httpReaderFactory, NPCredentials credentials) {
+	BitstampServiceImpl(HttpReaderFactory httpReaderFactory, NPCredentials credentials) {
 		this.httpReader = httpReaderFactory.createNewHttpSimpleReader();
 		this.credentials = credentials;
 	}

@@ -1,4 +1,4 @@
-package com.newpecunia.bitstamp;
+package com.newpecunia.net;
 
 import org.junit.Test;
 

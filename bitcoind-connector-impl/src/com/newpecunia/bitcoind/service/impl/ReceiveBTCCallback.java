@@ -6,11 +6,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.newpecunia.bitcoind.service.BitcoindService;
 import com.newpecunia.bitcoind.service.TransactionInfo;
-import com.newpecunia.trader.TraderService;
+import com.newpecunia.trader.service.TraderService;
 import com.newpecunia.unicredit.service.PaymentService;
 
+@Singleton
 public class ReceiveBTCCallback {
 
 	private static final Logger logger = LogManager.getLogger(ReceiveBTCCallback.class);	

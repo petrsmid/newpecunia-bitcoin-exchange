@@ -5,6 +5,10 @@
 	<projects>
 		<project>np-commons</project>
 		<project>persistence</project>
+		<project>bitcoind-connector-impl</project>
+		<project>trader-impl</project>
+		<project>unicredit-connector-impl</project>
+		<project>bitstamp-connector-impl</project>
 		<project>unicredit-connector-api</project>
 		<project>trader-api</project>
 		<project>bitstamp-connector-api</project>
