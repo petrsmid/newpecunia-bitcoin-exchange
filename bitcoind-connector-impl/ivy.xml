@@ -15,6 +15,7 @@
     <dependencies>
 		<dependency name="bitcoind-connector-api" rev="latest.integration" conf="compile"/>
 		<dependency name="np-commons" rev="latest.integration" conf="compile"/>
+		<dependency name="persistence" rev="latest.integration" conf="compile"/>
 		<dependency name="trader-api" rev="latest.integration" conf="compile"/>
 		<dependency name="unicredit-connector-api" rev="latest.integration" conf="compile"/>
 				
