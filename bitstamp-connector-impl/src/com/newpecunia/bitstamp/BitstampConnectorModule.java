@@ -9,15 +9,12 @@ import com.newpecunia.net.BitstampRequestCountLimitVerifier;
 import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.HttpReaderFactoryImpl;
 import com.newpecunia.net.RequestCountLimitVerifier;
-import com.newpecunia.synchronization.LockProvider;
-import com.newpecunia.synchronization.SingleJVMLockProvider;
 
 public class BitstampConnectorModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
 		bind(HttpReaderFactory.class).to(HttpReaderFactoryImpl.class);
-		bind(LockProvider.class).to(SingleJVMLockProvider.class);
 		
 		bind(RequestCountLimitVerifier.class).to(BitstampRequestCountLimitVerifier.class);
 		bind(BitstampService.class).to(BitstampServiceImpl.class);
