@@ -12,6 +12,8 @@ import javax.persistence.EntityTransaction;
 
 import junit.framework.Assert;
 
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,9 +74,10 @@ public class BitcoindServiceImplTest {
 	}
 	
 	@Test
-	public void testAcquireBtcAddressTest() {
+	public void testAcquireBtcAddress() {
 		String address = service.acquireAddressForReceivingBTC();
 		Assert.assertNotNull(address);
+		Assert.assertEquals(AddressStatus.USED, getAddrStatus(address).getStatus());
 	}
 	
 	@Test
@@ -116,5 +119,24 @@ public class BitcoindServiceImplTest {
 	    for (String addr : theAddresses) {
 			System.out.println(addr);
 		}
+	}
+	
+	@Test
+	public void testAcquireAndRelease() {
+		String address = service.acquireAddressForReceivingBTC();
+		Assert.assertNotNull(address);
+		Assert.assertEquals(AddressStatus.USED, getAddrStatus(address).getStatus());
+
+		service.releaseAddressForReceivingBTC(address);
+		
+		//test whether it is in status FREE
+		Assert.assertEquals(AddressStatus.FREE, getAddrStatus(address).getStatus());
+	}
+	
+	private ReceivingBitcoinAddressStatus getAddrStatus(String address) {
+		Provider<EntityManager> emProvider = injector.getProvider(EntityManager.class);
+		return (ReceivingBitcoinAddressStatus) emProvider.get().unwrap(Session.class).createCriteria(ReceivingBitcoinAddressStatus.class)
+				.add(Restrictions.eq("address", address))
+				.uniqueResult();
 	}
 }
