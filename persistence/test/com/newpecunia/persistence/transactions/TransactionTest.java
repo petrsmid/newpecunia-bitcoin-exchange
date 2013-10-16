@@ -13,8 +13,8 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 public class TransactionTest {
 
 	private TestService testService;
-	Injector injector = null;
-	PersistService persistService;
+	private Injector injector = null;
+	private PersistService persistService;
 	
 	@Before
 	public void setup() {
