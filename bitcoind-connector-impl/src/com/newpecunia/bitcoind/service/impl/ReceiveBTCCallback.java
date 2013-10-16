@@ -10,7 +10,6 @@ import com.google.inject.Singleton;
 import com.newpecunia.bitcoind.service.BitcoindService;
 import com.newpecunia.bitcoind.service.TransactionInfo;
 import com.newpecunia.trader.service.TraderService;
-import com.newpecunia.unicredit.service.PaymentService;
 
 @Singleton
 public class ReceiveBTCCallback {
@@ -19,23 +18,19 @@ public class ReceiveBTCCallback {
 	
 	private BitcoindService bitcoindService;
 	private TraderService traderService;
-	private PaymentService paymentService;
 
 	@Inject
-	ReceiveBTCCallback(BitcoindService bitcoindService, TraderService traderService, PaymentService paymentService) {
+	ReceiveBTCCallback(BitcoindService bitcoindService, TraderService traderService) {
 		this.bitcoindService = bitcoindService;
 		this.traderService = traderService;
-		this.paymentService = paymentService;
 	}
 	
 	public void serve(String txId) {
 		TransactionInfo info = bitcoindService.getTransactionInfo(txId);
-		BigDecimal amount = info.getAmount();
+		BigDecimal btcAmount = info.getAmount();
 		String receivingBtcAddress = info.getAddress();
 		
-		BigDecimal amountUsd = traderService.getNPBtcBuyPriceInUSD(amount);
-		paymentService.createOrderFromPreOrder(receivingBtcAddress, amountUsd);
-		
+		traderService.payForReceivedBTCs(receivingBtcAddress, btcAmount);
 	}
 	
 }

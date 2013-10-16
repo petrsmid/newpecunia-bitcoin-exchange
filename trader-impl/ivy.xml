@@ -15,6 +15,7 @@
     <dependencies>
         <dependency name="trader-api" rev="latest.integration" conf="compile"/>
         <dependency name="np-commons" rev="latest.integration" conf="compile"/>
+        <dependency name="unicredit-connector-api" rev="latest.integration" conf="compile"/>
         <!-- To add an external library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
