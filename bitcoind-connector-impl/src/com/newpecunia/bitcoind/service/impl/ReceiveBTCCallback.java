@@ -37,9 +37,5 @@ public class ReceiveBTCCallback {
 		paymentService.createOrderFromPreOrder(receivingBtcAddress, amountUsd);
 		
 	}
-
-	public void addReceiveBTCCallback(ReceiveBTCCallback callback) {
-		
-	}
 	
 }
