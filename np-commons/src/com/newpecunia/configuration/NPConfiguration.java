@@ -41,14 +41,15 @@ public class NPConfiguration {
 	public String getWebdavStatusFolder() {
 		return config.getString("unicredit.webdav.statusfolder");
 	}
-
-	/**
-	 * update balance from Unicredit maximaly every 10 minutes
-	 */
-	public long getBalanceUpdatePeriod() {
-		return config.getLong("unicredit.balanceUpdatePeriodMs");
+	
+	public String getWebdavStatementsFolder() {
+		return config.getString("unicredit.webdav.statements.folder");
 	}
 
+	public String getWebdavStatementsFileName() {
+		return config.getString("unicredit.webdav.statements.filename");
+	}
+	
 	public BigDecimal getUnicreditReserve() {
 		return config.getBigDecimal("unicredit.accountReserve");
 	}
@@ -87,14 +88,6 @@ public class NPConfiguration {
 
 	public String getPaymentStatisticalCode() {
 		return config.getString("unicredit.paymentStatisticalCode");
-	}	
-
-	public String getPaymentDetailToCustomer() {
-		return config.getString("unicredit.paymentDetailToCustomer");
-	}	
-
-	public String getPaymentDetailToBitstamp() {
-		return config.getString("unicredit.paymentDetailToBitstamp");
 	}	
 
 	public BigDecimal getPaymentFee() {

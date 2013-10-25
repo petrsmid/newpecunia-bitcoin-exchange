@@ -37,12 +37,14 @@ public class BitcoindServiceImpl implements BitcoindService {
 	private BitcoinClient btcClient = null;
 	
 	private Lock bitcoindLock;
+	private Lock acquireAddressLock;
 	
 	@Inject
 	BitcoindServiceImpl(Provider<EntityManager> emProvider, NPConfiguration configuration, NPCredentials credentials, LockProvider lockProvider) {
 		this.emProvider = emProvider;
 		this.credentials = credentials;		
 		bitcoindLock = lockProvider.getLock();
+		acquireAddressLock = lockProvider.getLock();
 		
 		btcClient = new BitcoinClient(configuration.getBitcoindServerAddress(), credentials.getBitcoindRpcUser(), credentials.getBitcoindRpcPassword(), configuration.getBitcoindServerPort());
 	}
@@ -110,12 +112,19 @@ public class BitcoindServiceImpl implements BitcoindService {
 		EntityManager em = getEntityManager();
 		
 		Session session = em.unwrap(Session.class);
-		acquiredAddress = (ReceivingBitcoinAddressStatus)
-			session.createCriteria(ReceivingBitcoinAddressStatus.class)
-			.add(Restrictions.eq("status", AddressStatus.FREE))
-			.setMaxResults(1)
-			.setLockMode(LockMode.PESSIMISTIC_WRITE)
-			.uniqueResult();
+		try {
+			acquireAddressLock.lock(); //The lock is probably unneeded because we use PESSIMISTIC_WRITE (SELECT ... FOR UPDATE). 
+			                           //However I am not sure whether some deadlock theoretically could not happen 
+                                       // - because of changing selected rows. 
+			acquiredAddress = (ReceivingBitcoinAddressStatus)
+				session.createCriteria(ReceivingBitcoinAddressStatus.class)
+				.add(Restrictions.eq("status", AddressStatus.FREE))
+				.setMaxResults(1)
+				.setLockMode(LockMode.PESSIMISTIC_WRITE)
+				.uniqueResult();
+		} finally {
+			acquireAddressLock.unlock();
+		}
 		
 		if (acquiredAddress == null) {
 			throw new BitcoindException("All bitcoin addresses are in use!");

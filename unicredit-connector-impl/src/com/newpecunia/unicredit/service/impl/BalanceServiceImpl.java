@@ -1,47 +1,97 @@
 package com.newpecunia.unicredit.service.impl;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
+import javax.persistence.EntityManager;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.newpecunia.ProgrammerException;
+import com.google.inject.persist.Transactional;
 import com.newpecunia.configuration.NPConfiguration;
-import com.newpecunia.time.TimeProvider;
+import com.newpecunia.persistence.entities.ForeignPaymentOrder;
+import com.newpecunia.persistence.entities.ForeignPaymentOrder.PaymentStatus;
+import com.newpecunia.persistence.entities.LastKnownBalance;
 import com.newpecunia.unicredit.service.BalanceService;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
 
 @Singleton
 public class BalanceServiceImpl implements BalanceService {
-		
-	private BigDecimal balance = null;
-	private long lastBalanceUpdate = 0;
-	private TimeProvider timeProvider;
-	private NPConfiguration configuration;
+
+	private static final Logger logger = LogManager.getLogger(BalanceServiceImpl.class);	
+	
 	private UnicreditWebdavService webdavService;
+	private Provider<EntityManager> emProvider;
+	private BigDecimal paymentFee;
 
 	@Inject
-	BalanceServiceImpl(UnicreditWebdavService webdavService, TimeProvider timeProvider, NPConfiguration configuration) {
+	BalanceServiceImpl(Provider<EntityManager> emProvider, UnicreditWebdavService webdavService, NPConfiguration configuration) {
+		this.emProvider = emProvider;
 		this.webdavService = webdavService;
-		this.timeProvider = timeProvider;
-		this.configuration = configuration;
+		this.paymentFee = configuration.getPaymentFee();
+	}
+	
+	private Criterion getFilterCriterion() {
+		return Restrictions.in("status", new PaymentStatus[] {
+				PaymentStatus.NEW,
+				PaymentStatus.SENT_TO_WEBDAV,
+				PaymentStatus.WEBDAV_PENDING,
+				PaymentStatus.WEBDAV_SIGNED,
+		});
 	}
 	
 	@Override
-	public synchronized BigDecimal getApproximateBalance() {
-		long now = timeProvider.now();
-		if (balance == null || (now - lastBalanceUpdate > configuration.getBalanceUpdatePeriod())) {
-//			balance = webdavService....  TODO
+	@Transactional
+	public BigDecimal getApproximateBalance() {
+		BigDecimal lastKnownBalance = null;
+		try {
+			lastKnownBalance = webdavService.getLastBalance();
+			if (lastKnownBalance == null) { //no balance known yet or no transactions for last 30 days
+				lastKnownBalance = readLastKnownId();
+			}
+		} catch (IOException e) { //problem while connecting to webdav
+			logger.error("Cannot connect to webdav.", e);
+			lastKnownBalance = readLastKnownId();
 		}
-		return balance;
+		
+		Session session = emProvider.get().unwrap(Session.class);
+		BigDecimal unbilledOrdersSumAmount = (BigDecimal) session.createCriteria(ForeignPaymentOrder.class)
+				.add(getFilterCriterion())
+				.setProjection(Projections.sum("amount"))
+				.uniqueResult();
+
+		BigDecimal unbilledOrdersCount = (BigDecimal) session.createCriteria(ForeignPaymentOrder.class)
+				.add(getFilterCriterion())
+				.setProjection(Projections.rowCount())
+				.uniqueResult();
+		
+		BigDecimal fees = paymentFee.multiply(unbilledOrdersCount);
+		
+		BigDecimal actualBalance = lastKnownBalance.subtract(unbilledOrdersSumAmount).subtract(fees);
+		saveActualBalance(actualBalance);
+		return actualBalance;
+		
 	}
 
-	@Override
-	public synchronized void substractFromBalance(BigDecimal amount, String currency) {
-		String accountCurrency = configuration.getPayerAccountCurrency().toUpperCase();
-		if (!currency.toUpperCase().equals(accountCurrency)) {
-			throw new ProgrammerException("Cannot substract another currency as"+accountCurrency);
-		}
-		balance = balance.subtract(amount);		
+	private void saveActualBalance(BigDecimal actualBalance) {
+		EntityManager entityManager = emProvider.get();
+		LastKnownBalance balance = entityManager.find(LastKnownBalance.class, LastKnownBalance.CONSTANT_ID);
+		balance.setBalance(actualBalance);
+		entityManager.persist(balance);
+	}
+
+	private BigDecimal readLastKnownId() {
+		EntityManager entityManager = emProvider.get();
+		LastKnownBalance balance = entityManager.find(LastKnownBalance.class, LastKnownBalance.CONSTANT_ID);
+		return balance.getBalance();
 	}
 
 }

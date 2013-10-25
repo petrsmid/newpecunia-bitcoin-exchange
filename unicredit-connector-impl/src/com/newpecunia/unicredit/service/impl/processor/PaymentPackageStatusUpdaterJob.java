@@ -21,16 +21,16 @@ import com.newpecunia.time.TimeProvider;
 import com.newpecunia.unicredit.webdav.Status.PackageStatus;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
 
-public class PaymentStatusUpdaterJob implements Runnable {
+public class PaymentPackageStatusUpdaterJob implements Runnable {
 
-	private static final Logger logger = LogManager.getLogger(PaymentStatusUpdaterJob.class);	
+	private static final Logger logger = LogManager.getLogger(PaymentPackageStatusUpdaterJob.class);	
 	
 	private UnicreditWebdavService webdavService;
 	private TimeProvider timeProvider;
 	private Provider<EntityManager> enitityManagerProvider;
 
 	@Inject
-	public PaymentStatusUpdaterJob(Provider<EntityManager> enitityManagerProvider, UnicreditWebdavService webdavService, TimeProvider timeProvider) {
+	public PaymentPackageStatusUpdaterJob(Provider<EntityManager> enitityManagerProvider, UnicreditWebdavService webdavService, TimeProvider timeProvider) {
 		this.enitityManagerProvider = enitityManagerProvider;
 		this.webdavService = webdavService;
 		this.timeProvider = timeProvider;

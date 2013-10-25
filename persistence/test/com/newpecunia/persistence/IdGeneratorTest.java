@@ -10,6 +10,7 @@ public class IdGeneratorTest {
 		String last = IdGenerator.INSTANCE.nextId();
 		for(int i = 0; i < 100000; i++) {
 			String next = IdGenerator.INSTANCE.nextId();
+			System.out.println(next);
 			Assert.assertNotEquals(last, next);
 			last = next;
 		}	
@@ -19,6 +20,7 @@ public class IdGeneratorTest {
 	public void testIdGeneratorAlphaNumericFormat() {
 		for(int i = 0; i < 10000; i++) {
 			String id = IdGenerator.INSTANCE.nextId();
+			System.out.println(id);
 			Assert.assertTrue("ID "+id +" must consist of alphanumerical characters.",
 					id.matches("^[a-zA-Z0-9]*$"));
 		}
@@ -29,10 +31,10 @@ public class IdGeneratorTest {
 		String last = IdGenerator.INSTANCE.nextId();
 		for(int i = 0; i < 10000; i++) {
 			String next = IdGenerator.INSTANCE.nextId();
+			System.out.println(next);
 			Assert.assertEquals(last.length(), next.length());
 			last = next;
 		}
 	}
-	
 
 }

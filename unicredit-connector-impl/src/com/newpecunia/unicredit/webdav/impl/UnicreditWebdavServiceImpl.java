@@ -2,7 +2,9 @@ package com.newpecunia.unicredit.webdav.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -15,6 +17,7 @@ import com.github.sardine.SardineFactory;
 import com.google.common.base.Charsets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.newpecunia.ProgrammerException;
 import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.configuration.NPCredentials;
 import com.newpecunia.time.TimeProvider;
@@ -37,12 +40,16 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 
 	private GpgFileSigner gpgFileSigner;
 	
+	private StructuredMulticashStatementParser structuredMulticashStatementParser;
+	
 	@Inject
-	UnicreditWebdavServiceImpl(TimeProvider timeProvider, NPConfiguration configuration, NPCredentials credentials, GpgFileSigner gpgFileSigner) {
+	UnicreditWebdavServiceImpl(TimeProvider timeProvider, NPConfiguration configuration, 
+			NPCredentials credentials, GpgFileSigner gpgFileSigner,StructuredMulticashStatementParser structuredMulticashStatementParser) {
 		this.timeProvider = timeProvider;
 		this.configuration = configuration;
 		this.credentials = credentials;
 		this.gpgFileSigner = gpgFileSigner;
+		this.structuredMulticashStatementParser = structuredMulticashStatementParser;
 	}
 	
 	private Sardine getSardine() {
@@ -73,6 +80,10 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	
 	private String getStatusFolderPath() {
 		return configuration.getWebdavBaseFolder()+configuration.getWebdavStatusFolder();
+	}
+
+	private String getStatementsFolderPath() {
+		return configuration.getWebdavBaseFolder()+configuration.getWebdavStatementsFolder();
 	}
 	
 	/**
@@ -108,7 +119,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	 */
 	@Override
 	public String uploadForeignPaymentPackage(String reference, ForeignPayment foreignPayment) throws IOException {
-		String multicashReference = createMulticashReference(reference);
+		String multicashReference = checkReferenceLength(reference);
 		MulticashForeignPaymentPackage foreignPaymentPackage = new MulticashForeignPaymentPackage(multicashReference, foreignPayment, timeProvider, configuration); //one payment per package
 		
 		String fileName = fileNameResolver.getUploadFileNameForId(reference);
@@ -118,10 +129,10 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 		return fileName;
 	}
 	
-	private String createMulticashReference(String paymentId) {
+	private String checkReferenceLength(String paymentId) {
 		String reference = paymentId;
 		if (reference.length() > 16) { //reference can be maximally 16 characters long
-			reference = reference.substring(reference.length()-16); 
+			throw new ProgrammerException("The reference of a multicash package can be maximally 16 characters long."); 
 		}
 		return reference;
 	}
@@ -142,5 +153,37 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 		}
 		logger.info("Status file not found for package with ID "+packageId);
 		return null;
+	}
+
+	private Statement getLastStatement() throws IOException {
+		List<String> statementSubFolders = listFolder(getStatementsFolderPath());
+		if (!statementSubFolders.isEmpty()) {
+			Collections.sort(statementSubFolders);
+			String lastSubfolder = statementSubFolders.get(statementSubFolders.size()-1);			
+			String statementFileContent = getFile(getStatementsFolderPath()+lastSubfolder+"/"+configuration.getWebdavStatementsFileName());
+			return structuredMulticashStatementParser.parseStatements(statementFileContent);
+		} else {
+			return null;
+		}
+	}
+	
+	@Override
+	public List<String> findOutgoingPaymentRefsInLastStatement() throws IOException {
+		Statement lastStatement = getLastStatement();
+		if (lastStatement == null) {
+			return new ArrayList<>();
+		} else {
+			return lastStatement.getFoundPaymentReferences();
+		}
+	}
+
+	@Override
+	public BigDecimal getLastBalance() throws IOException {
+		Statement lastStatement = getLastStatement();
+		if (lastStatement == null) {
+			return null;
+		} else {
+			return lastStatement.getBalance();
+		}
 	}
 }

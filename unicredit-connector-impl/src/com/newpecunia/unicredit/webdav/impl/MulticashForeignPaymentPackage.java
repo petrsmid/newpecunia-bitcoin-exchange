@@ -17,6 +17,10 @@ import com.newpecunia.unicredit.service.ForeignPayment.PayeeType;
 
 public class MulticashForeignPaymentPackage {
 
+	//Transaction texts are used to match the performed payments. The format must correspond with StructuredMulticashStatementParser.PAYMENT_REFERENCE_PATTERN
+	private static final String TRANSACTION_TEXT_FORMAT_FOR_BITSTAMP = "2BS Pecunia X%sX"; //must correspond with StructuredMulticashStatementParser.PAYMENT_REFERENCE_PATTERN
+	private static final String TRANSACTION_TEXT_FORMAT_FOR_CUSTOMER = "New Pecunia X%sX"; //must correspond with StructuredMulticashStatementParser.PAYMENT_REFERENCE_PATTERN
+
 	private static final Logger logger = LogManager.getLogger(MulticashForeignPaymentPackage.class);	
 	
 	private static final String NEWLINE = "\r\n";
@@ -25,7 +29,7 @@ public class MulticashForeignPaymentPackage {
 
 	private TimeProvider timeProvider;
 
-	private String reference;
+	private String shortPaymentReference;
 
 	private NPConfiguration configuration;
 
@@ -33,7 +37,7 @@ public class MulticashForeignPaymentPackage {
 	 * We use "one payment per package" strategy.
 	 */
 	public MulticashForeignPaymentPackage(String reference, ForeignPayment foreignPayment, TimeProvider timeProvider, NPConfiguration configuration) {
-		this.reference = reference;
+		this.shortPaymentReference = reference;
 		this.payment = foreignPayment;
 		this.timeProvider = timeProvider;
 		this.configuration = configuration;
@@ -53,8 +57,8 @@ public class MulticashForeignPaymentPackage {
 		StringBuilder builder = new StringBuilder();
 		appendNewLine(builder);
 		appendFixed(builder, 4, ":01:");
-		if (!StringUtils.isBlank(reference)) {
-			appendVariable(builder, 16, reference);
+		if (!StringUtils.isBlank(shortPaymentReference)) {
+			appendVariable(builder, 16, shortPaymentReference);
 		}
 		appendNewLine(builder);
 		
@@ -86,7 +90,7 @@ public class MulticashForeignPaymentPackage {
 			appendNewLine(builder);
 		}
 		appendFixed(builder, 4, ":07:");
-		String referenceSuffix = reference.length() <= 12 ? reference : reference.substring(reference.length()-12, reference.length());
+		String referenceSuffix = shortPaymentReference.length() <= 12 ? shortPaymentReference : shortPaymentReference.substring(shortPaymentReference.length()-12, shortPaymentReference.length());
 		appendVariable(builder, 12, referenceSuffix); //should be file name but it is not necessary to provide the real name of the file
 		appendNewLine(builder);
 
@@ -100,7 +104,7 @@ public class MulticashForeignPaymentPackage {
 		
 		//body (text block)
 		appendFixed(builder, 4, ":20:");
-		appendFixed(builder, 16, reference);
+		appendFixed(builder, 16, shortPaymentReference);
 		appendNewLine(builder);
 
 		appendFixed(builder, 5, ":32A:");
@@ -187,17 +191,15 @@ public class MulticashForeignPaymentPackage {
 		}
 				
 		appendFixed(builder, 4, ":70:");
-		if (!StringUtils.isBlank(configuration.getPaymentDetailToCustomer())) {
-			if (PayeeType.CUSTOMER.equals(payment.getPayeeType())) {
-				appendVariable(builder, 35, formatField(configuration.getPaymentDetailToCustomer()));
-			} else if (PayeeType.BITSTAMP.equals(payment.getPayeeType())) {
-				appendVariable(builder, 35, formatField(configuration.getPaymentDetailToBitstamp()));
-			} else {
-				logger.warn("Payee type not known -> no payment detail set.");
-			}
-			appendNewLine(builder);
-			//here are allowed 4 lines but we use only the first one
+		if (PayeeType.CUSTOMER.equals(payment.getPayeeType())) {
+			appendVariable(builder, 35, formatField(String.format(TRANSACTION_TEXT_FORMAT_FOR_CUSTOMER, shortPaymentReference)));
+		} else if (PayeeType.BITSTAMP.equals(payment.getPayeeType())) {
+			appendVariable(builder, 35, formatField(String.format(TRANSACTION_TEXT_FORMAT_FOR_BITSTAMP, shortPaymentReference)));
+		} else {
+			logger.warn("Payee type not known -> no payment detail set.");
 		}
+		appendNewLine(builder);
+		//here are allowed 4 lines but we use only the first one
 	
 		appendFixed(builder, 5, ":71A:");
 		appendFixed(builder, 3, "BN1"); //charge splitting details: BN1 - expenses are shared,  OUR - all expenses are payed by the ordering party, BN2 - all expenses are payed by the beneficiary party (! NOT ALLOWED IN EU)

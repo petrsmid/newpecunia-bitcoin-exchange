@@ -67,6 +67,7 @@ public class PaymentProcessorJob implements Runnable {
 		List<String> unprocessedPaymentIds = new ArrayList<>();		
 		for (ForeignPaymentOrder foreignPaymentOrder : newPayments) {
 			String paymentId = foreignPaymentOrder.getId();
+			String shortRefId = foreignPaymentOrder.getShortUnicreditReference();
 			logger.info("Processing payment "+paymentId+" for "+foreignPaymentOrder.getName());
 			ForeignPayment foreignPayment = foreignPaymentMapper.mapToPayment(foreignPaymentOrder);
 
@@ -78,7 +79,7 @@ public class PaymentProcessorJob implements Runnable {
 
 			//send to webdav
 			try {
-				webdavService.uploadForeignPaymentPackage(paymentId, foreignPayment);
+				webdavService.uploadForeignPaymentPackage(shortRefId, foreignPayment);
 			} catch (IOException e) {
 				unprocessedPaymentIds.add(paymentId);
 				logger.error("Webdav is out of order now. Processing of payments stopped for this run.", e);
@@ -86,9 +87,6 @@ public class PaymentProcessorJob implements Runnable {
 			}
 
 			sentPaymentIds.add(paymentId);
-			
-			//adjust account balance
-			adjustAccountBalance(foreignPayment);
 			
 			//update status of the payment in the DB
 			updateStatusOfPaymentInDB(session, foreignPaymentOrder);
@@ -99,12 +97,6 @@ public class PaymentProcessorJob implements Runnable {
 		logger.info("Finished sending pending payments to webdav. " +
 				"Payments sent to webdav: "+sentPaymentIds+". " +
 				"Unprocessed payments: "+unprocessedPaymentIds);
-	}
-
-	private void adjustAccountBalance(ForeignPayment foreignPayment) {
-		balanceService.substractFromBalance(foreignPayment.getAmount(), foreignPayment.getCurrency());
-		BigDecimal fee = configuration.getPaymentFee();
-		balanceService.substractFromBalance(fee, foreignPayment.getCurrency());
 	}
 
 	private boolean checkAccountBalance(String paymentId, ForeignPayment foreignPayment) {

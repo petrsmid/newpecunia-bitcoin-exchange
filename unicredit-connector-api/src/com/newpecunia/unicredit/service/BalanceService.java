@@ -6,6 +6,4 @@ public interface BalanceService {
 	
 	BigDecimal getApproximateBalance();
 	
-	void substractFromBalance(BigDecimal amount, String currency);
-
 }

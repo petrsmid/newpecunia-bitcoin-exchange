@@ -5,7 +5,6 @@
 	<credentialsPath>/home/petr/npcredentials.xml</credentialsPath>
 	
 	<unicredit>
-		<balanceUpdatePeriodMs>600000</balanceUpdatePeriodMs>
 		<accountReserve>100</accountReserve>
 		<paymentFee>13.34</paymentFee>
 	
@@ -19,11 +18,13 @@
 		<payerBankSwiftLong>UNCRSKBXAXXX</payerBankSwiftLong>
 						
 		<paymentStatisticalCode>335</paymentStatisticalCode> <!-- Finantial services -->
-		<paymentDetailToCustomer>New Pecunia Repayment for Your BTCs</paymentDetailToCustomer>
-		<paymentDetailToBitstamp>Deposit to Bitstamp. Petr Smid.</paymentDetailToBitstamp>
 		
 		<webdav>
 			<baseurl>https://sk.unicreditbanking.net/webdav/</baseurl>
+			<statements>
+			    <folder>statements/</folder>
+			    <filename>statements.txt</filename>
+			</statements>
 			<statusfolder>upload/status/</statusfolder>
 			<upload>
 				<foreignfolder>upload/foreign/MultiCash format/UTF-8/</foreignfolder> <!-- !! Always use folder for uploading files in UTF-8. -->

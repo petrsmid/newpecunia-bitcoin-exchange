@@ -1,6 +1,7 @@
 package com.newpecunia.unicredit.webdav;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.newpecunia.unicredit.service.ForeignPayment;
@@ -29,6 +30,19 @@ public interface UnicreditWebdavService {
 	 * @param packageId id of the package
 	 */
 	Status getStatusOfPackage(String reference) throws IOException;
+
+	/**
+	 * Returns references of outgoing payments found in last statement file
+	 * @return list of found references
+	 * @throws IOException 
+	 */
+	List<String> findOutgoingPaymentRefsInLastStatement() throws IOException;
+
+	/**
+	 * Returns balance found in last statement file
+	 * @throws IOException 
+	 */
+	BigDecimal getLastBalance() throws IOException;
 
 
 

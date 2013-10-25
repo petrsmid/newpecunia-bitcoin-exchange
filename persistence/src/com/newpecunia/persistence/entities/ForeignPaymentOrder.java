@@ -29,14 +29,15 @@ public class ForeignPaymentOrder {
 		WEBDAV_PENDING, 
 		WEBDAV_ERROR, 
 		WEBDAV_SIGNED, 
-		IN_BANK, 
 		PROCESSED, 
 		REJECTED
 	}
 	
 	@Id
-	@GeneratedValue(generator="uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid2")
+//	@GeneratedValue(generator="uuid")
+//	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	@GenericGenerator(name="np_id_generator", strategy="com.newpecunia.persistence.HibernateIdGenerator")
+	@GeneratedValue(generator="np_id_generator")	
 	@Column(name = "ID", unique=true)
 	private String id;
 	
@@ -92,6 +93,8 @@ public class ForeignPaymentOrder {
 	@Temporal(TemporalType.TIMESTAMP)	
 	private Calendar updateTimestamp;
 	
+	private String shortUnicreditReference;
+
 	
 	public String getId() {
 		return id;
@@ -212,6 +215,12 @@ public class ForeignPaymentOrder {
 	}
 	public void setUpdateTimestamp(Calendar updateTimestamp) {
 		this.updateTimestamp = updateTimestamp;
+	}
+	public String getShortUnicreditReference() {
+		return shortUnicreditReference;
+	}
+	public void setShortUnicreditReference(String shortUnicreditReference) {
+		this.shortUnicreditReference = shortUnicreditReference;
 	}
 	
 	

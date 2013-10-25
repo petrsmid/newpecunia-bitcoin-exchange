@@ -7,7 +7,6 @@ Steps before deploying the application to production
 
 - when deploying to a cluster
 	- always use multi-node cluster implementation for LockProvider
-	- reimplement BalanceService - the substracting of the balance must be replicated through the cluster
 	 
 - create account on BitStamp
 	 - add some money to it
@@ -20,3 +19,5 @@ Steps before deploying the application to production
 - setup PostgreSQL 9.1 - do not forget to setup its memory, security and maybe another important things (easy documentation: https://help.ubuntu.com/community/PostgreSQL, create password for postgres linux user and start pgadmin3 as this user)
 
 - add better CountryDirectory implementation - the JavaCountryDirectory does not contain all countries!
+
+- set actual balance into table BALANCE - into row with ID=1
