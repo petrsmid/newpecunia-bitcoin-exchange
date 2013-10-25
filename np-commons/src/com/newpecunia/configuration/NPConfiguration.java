@@ -102,4 +102,8 @@ public class NPConfiguration {
 		return config.getInt("bitcoind.port");
 	}
 
+	public String getGmailAddress() {
+		return config.getString("gmail.address");
+	}
+
 }

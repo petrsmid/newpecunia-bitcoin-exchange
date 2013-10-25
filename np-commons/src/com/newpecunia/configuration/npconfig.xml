@@ -4,6 +4,10 @@
     
 	<credentialsPath>/home/petr/npcredentials.xml</credentialsPath>
 	
+	<gmail>
+	    <address>petr.smid@pekat.cz</address>
+	</gmail>
+	
 	<unicredit>
 		<accountReserve>100</accountReserve>
 		<paymentFee>13.34</paymentFee>
