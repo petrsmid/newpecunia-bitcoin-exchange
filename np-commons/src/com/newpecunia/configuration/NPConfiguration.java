@@ -105,5 +105,9 @@ public class NPConfiguration {
 	public String getGmailAddress() {
 		return config.getString("gmail.address");
 	}
+	
+	public String getReportingEmailAddress() {
+		return config.getString("reportingEmail");
+	}
 
 }

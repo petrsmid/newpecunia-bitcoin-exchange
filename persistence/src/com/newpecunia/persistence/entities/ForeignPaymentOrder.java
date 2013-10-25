@@ -81,6 +81,9 @@ public class ForeignPaymentOrder {
 	@Column(name="ACCEPTING_BTC_ADDRESS")
 	private String acceptingBtcAddress;
 	
+	@Column(name="REQUESTOR_EMAIL")
+	private String requestorEmail;
+	
 	@Column(name="STATUS")
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus status;
@@ -197,6 +200,12 @@ public class ForeignPaymentOrder {
 	}
 	public void setAcceptingBtcAddress(String acceptingBtcAddress) {
 		this.acceptingBtcAddress = acceptingBtcAddress;
+	}
+	public String getRequestorEmail() {
+		return requestorEmail;
+	}
+	public void setRequestorEmail(String requestorEmail) {
+		this.requestorEmail = requestorEmail;
 	}
 	public PaymentStatus getStatus() {
 		return status;

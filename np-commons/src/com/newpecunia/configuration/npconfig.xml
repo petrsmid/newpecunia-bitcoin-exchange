@@ -3,7 +3,7 @@
 <configuration>
     
 	<credentialsPath>/home/petr/npcredentials.xml</credentialsPath>
-	
+
 	<gmail>
 	    <address>petr.smid@pekat.cz</address>
 	</gmail>
@@ -35,6 +35,8 @@
 			</upload>
 		</webdav>
 	</unicredit>
+	
+	<reportingEmail>petr.smid@pekat.cz</reportingEmail>
 	
 	<bitcoind>
 	    <address>127.0.0.1</address>

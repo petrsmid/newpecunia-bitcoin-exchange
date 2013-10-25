@@ -42,6 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
 	private ForeignPaymentOrder createOrderFromPayment(ForeignPayment payment, ForeignPaymentOrder.PaymentStatus status, String acceptingBtcAddress) {
 		ForeignPaymentOrder paymentOrder = mapper.mapToOrder(payment);
 		Calendar now = timeProvider.nowCalendar();
+//		paymentOrder.setRequestorEmail() TODO - set e-mail of the requestor
 		paymentOrder.setAcceptingBtcAddress(acceptingBtcAddress);
 		paymentOrder.setStatus(status);
 		paymentOrder.setCreateTimestamp(now);
