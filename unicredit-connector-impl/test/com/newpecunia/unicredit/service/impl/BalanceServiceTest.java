@@ -15,9 +15,8 @@ import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
-import com.newpecunia.common.CommonModule;
+import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.persistence.entities.LastKnownBalance;
-import com.newpecunia.unicredit.UnicreditConnectorModule;
 import com.newpecunia.unicredit.service.BalanceService;
 
 public class BalanceServiceTest {
@@ -28,11 +27,11 @@ public class BalanceServiceTest {
 	
 	@Before
 	public void setup() {
-		Injector injector = Guice.createInjector(new JpaPersistModule("testingJpaUnit"), new UnicreditConnectorModule(), new CommonModule());
+		Injector injector = Guice.createInjector(new JpaPersistModule("testingJpaUnit"));
 		persistence = injector.getInstance(PersistService.class);
 		emProvider = injector.getProvider(EntityManager.class);
 		persistence.start();
-		balanceService = injector.getInstance(BalanceService.class);
+		balanceService = new BalanceServiceImpl(emProvider, new UnicreditWebdavServiceMock(), new NPConfiguration());
 		setupBalanceTable();
 	}
 	
