@@ -67,13 +67,16 @@ public class BalanceServiceImpl implements BalanceService {
 				.add(getFilterCriterion())
 				.setProjection(Projections.sum("amount"))
 				.uniqueResult();
+		if (unbilledOrdersSumAmount == null) {
+			unbilledOrdersSumAmount = BigDecimal.ZERO;
+		}
 
-		BigDecimal unbilledOrdersCount = (BigDecimal) session.createCriteria(ForeignPaymentOrder.class)
+		long unbilledOrdersCount = (long) session.createCriteria(ForeignPaymentOrder.class)
 				.add(getFilterCriterion())
 				.setProjection(Projections.rowCount())
 				.uniqueResult();
 		
-		BigDecimal fees = paymentFee.multiply(unbilledOrdersCount);
+		BigDecimal fees = paymentFee.multiply(new BigDecimal(unbilledOrdersCount));
 		
 		BigDecimal actualBalance = lastKnownBalance.subtract(unbilledOrdersSumAmount).subtract(fees);
 		saveActualBalance(actualBalance);
