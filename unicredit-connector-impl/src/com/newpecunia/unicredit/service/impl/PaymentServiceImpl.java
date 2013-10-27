@@ -53,10 +53,11 @@ public class PaymentServiceImpl implements PaymentService {
 		return paymentOrder;
 	}
 	
+	//we do not use base64 because it uses characters '/', '+' and '-' and we want only alphanumeric characters
 	private String convertToBase32(int shortId) {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(4);		
 		byteBuffer.putInt(shortId);
-		Base32 base32 = new Base32(); //we do not use base64 because it uses characters '/', '+' and '-' and we want only alphanumeric characters
+		Base32 base32 = new Base32(); 
 		return base32.encodeToString(byteBuffer.array());		
 	}
 	
