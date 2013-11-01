@@ -27,9 +27,9 @@ import com.newpecunia.unicredit.service.ForeignPayment;
 import com.newpecunia.unicredit.service.impl.entity.ForeignPaymentMapper;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
 
-public class PaymentProcessorJob implements Runnable {
+public class PaymentPackageUploaderJob implements Runnable {
 
-	private static final Logger logger = LogManager.getLogger(PaymentProcessorJob.class);	
+	private static final Logger logger = LogManager.getLogger(PaymentPackageUploaderJob.class);	
 	
 	private UnicreditWebdavService webdavService;
 	private ForeignPaymentMapper foreignPaymentMapper;
@@ -41,7 +41,7 @@ public class PaymentProcessorJob implements Runnable {
 	
 	
 	@Inject
-	public PaymentProcessorJob(Provider<EntityManager> enitityManagerProvider, UnicreditWebdavService webdavService, BalanceService balanceService, 
+	public PaymentPackageUploaderJob(Provider<EntityManager> enitityManagerProvider, UnicreditWebdavService webdavService, BalanceService balanceService, 
 			ForeignPaymentMapper foreignPaymentMapper, NPConfiguration configuration, TimeProvider timeProvider) {
 		this.webdavService = webdavService;
 		this.balanceService = balanceService;

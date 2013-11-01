@@ -8,6 +8,8 @@
 	    <address>petr.smid@pekat.cz</address>
 	</gmail>
 	
+	<maxTimeToWaitForBtcInSeconds>86400</maxTimeToWaitForBtcInSeconds> <!-- one day -->
+	
 	<unicredit>
 		<accountReserve>100</accountReserve>
 		<paymentFee>13.34</paymentFee>

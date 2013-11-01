@@ -23,6 +23,7 @@ public class ForeignPaymentOrder {
 	
 	public static enum PaymentStatus {
 		WAITING_FOR_BTC,
+		TIMEOUTED_WAITING_FOR_BTC,
 		ERROR,
 		NEW, 
 		SENT_TO_WEBDAV, 

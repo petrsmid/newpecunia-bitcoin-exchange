@@ -110,4 +110,8 @@ public class NPConfiguration {
 		return config.getString("reportingEmail");
 	}
 
+	public int getMaxTimeToWaitForBtcInSeconds() {
+		return config.getInt("maxTimeToWaitForBtcInSeconds");
+	}
+
 }
