@@ -18,6 +18,8 @@ public class ForeignPayment {
 	private String postalCode;
 	private Country country;
 
+	private String requestorEmail;
+
 	//payee bank information
 	private String accountNumber;
 	private String swift; //SWIFT / BIC code of the bank
@@ -117,6 +119,12 @@ public class ForeignPayment {
 	}
 	public void setBankCountry(Country bankCountry) {
 		this.bankCountry = bankCountry;
+	}
+	public String getRequestorEmail() {
+		return requestorEmail;
+	}
+	public void setRequestorEmail(String requestorEmail) {
+		this.requestorEmail = requestorEmail;
 	}
 	
 }

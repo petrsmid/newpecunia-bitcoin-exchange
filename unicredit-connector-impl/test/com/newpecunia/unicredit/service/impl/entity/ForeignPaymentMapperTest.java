@@ -26,6 +26,7 @@ public class ForeignPaymentMapperTest {
 		fp1.setAmount(BigDecimal.TEN);
 		fp1.setBankCountry(new Country("CZ", "Czech Republic"));
 		fp1.setPayeeType(PayeeType.CUSTOMER);
+		fp1.setRequestorEmail("some@email.com");
 		
 		ForeignPaymentOrder fpo = mapper.mapToOrder(fp1);
 		ForeignPayment fp2 = mapper.mapToPayment(fpo);
@@ -33,6 +34,7 @@ public class ForeignPaymentMapperTest {
 		Assert.assertEquals(0, BigDecimal.TEN.compareTo(fp2.getAmount()));
 		Assert.assertEquals(fp1.getBankCountry(), fp2.getBankCountry());
 		Assert.assertEquals(fp1.getPayeeType(), fp2.getPayeeType());
+		Assert.assertEquals(fp1.getRequestorEmail(), fp2.getRequestorEmail());
 	}
 
 	
