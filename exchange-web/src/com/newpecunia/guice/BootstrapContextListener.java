@@ -1,7 +1,5 @@
 package com.newpecunia.guice;
 
-import javax.servlet.annotation.WebListener;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.PersistFilter;
@@ -16,8 +14,8 @@ import com.newpecunia.persistence.PersistenceModule;
 import com.newpecunia.test.TestServlet;
 import com.newpecunia.trader.TraderModule;
 import com.newpecunia.unicredit.UnicreditConnectorModule;
+
 	 
-@WebListener
 public class BootstrapContextListener extends GuiceServletContextListener {
     @Override
     protected Injector getInjector() {
