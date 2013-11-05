@@ -77,7 +77,7 @@ public class PreorderCleanerJob implements Job {
 	private List<ForeignPaymentOrder> loadTheTimeoutedPreOrders(Session session, Calendar now) {
 		return session.createCriteria(ForeignPaymentOrder.class)
 				.add(Restrictions.eq("status", PaymentStatus.TIMEOUTED_WAITING_FOR_BTC))
-				.add(Restrictions.lt("updateTimestamp", now))
+				.add(Restrictions.eq("updateTimestamp", now))
 				.list();
 	}
 
