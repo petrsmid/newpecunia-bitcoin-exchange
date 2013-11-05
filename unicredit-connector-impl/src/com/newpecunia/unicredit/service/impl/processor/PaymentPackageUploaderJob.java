@@ -67,6 +67,7 @@ public class PaymentPackageUploaderJob implements Job {
 		logger.info("Sending pending payments to webdav.");
 		EntityManager entityManager = enitityManagerProvider.get();
 		Session session = entityManager.unwrap(Session.class);
+		entityManager.clear();
 		//load new payments
 		List<ForeignPaymentOrder> newPayments = loadNewPaymentsFromDB(session);
 		
@@ -99,8 +100,7 @@ public class PaymentPackageUploaderJob implements Job {
 			updateStatusOfPaymentInDB(session, foreignPaymentOrder);
 		}
 
-		entityManager.close();
-		
+		entityManager.clear();
 		logger.info("Finished sending pending payments to webdav. " +
 				"Payments sent to webdav: "+sentPaymentIds+". " +
 				"Unprocessed payments: "+unprocessedPaymentIds);

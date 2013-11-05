@@ -47,6 +47,7 @@ public class PaymentStatusReportingJob implements Job {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		logger.info("Starting job "+PaymentStatusReportingJob.class.getSimpleName());
 		
+		emProvider.get().clear();
 		List<ForeignPaymentOrder> pendingOrErrorOrders = loadPendingOrErrorPayments(emProvider.get().unwrap(Session.class));
 		
 		List<ForeignPaymentOrder> errorOrders = filterByStatus(pendingOrErrorOrders, 
@@ -82,7 +83,8 @@ public class PaymentStatusReportingJob implements Job {
 		
 		logger.info("Sending e-mail with daily report.");
 		emailSender.sendEmail(configuration.getReportingEmailAddress(), "Daily report of payments states", sb.toString());
-		
+
+		emProvider.get().clear();
 		logger.info("Finished job "+PaymentStatusReportingJob.class.getSimpleName());
 	}
 

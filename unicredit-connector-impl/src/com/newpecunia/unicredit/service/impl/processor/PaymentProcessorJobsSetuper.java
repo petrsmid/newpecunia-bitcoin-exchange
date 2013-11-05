@@ -47,12 +47,12 @@ public class PaymentProcessorJobsSetuper {
 
 	private void preparePaymentPackageUploaderJob() {
 		setupJobAndTrigger(PaymentPackageUploaderJob.class, 
-				CronScheduleBuilder.cronSchedule("0 0/5 * * * ?")); //every 5 minutes starting immediately
+				CronScheduleBuilder.cronSchedule("0 1/5 * * * ?")); //every 5 minutes starting after 1 minute
 	}
 
 	private void preparePaymentPackageStatusUpdaterJob() {
 		setupJobAndTrigger(PaymentPackageStatusUpdaterJob.class, 
-				CronScheduleBuilder.cronSchedule("0 0/11 * * * ?")); //every 11 minutes
+				CronScheduleBuilder.cronSchedule("0 3/11 * * * ?")); //every 11 minutes starting after 3 minutes
 	}
 
 	private void preparePaymentStatementStatusUpdaterJob() {

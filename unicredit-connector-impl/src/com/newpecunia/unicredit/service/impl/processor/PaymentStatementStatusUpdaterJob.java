@@ -43,13 +43,14 @@ public class PaymentStatementStatusUpdaterJob implements Job {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		logger.info("Starting job "+PaymentStatementStatusUpdaterJob.class.getSimpleName());
 		Session session = enitityManagerProvider.get().unwrap(Session.class);
+		session.clear();
 		Transaction tx = session.beginTransaction();
 		
 		updateStatusOfPaymentsAccordingToStatus(session);
 		
 		session.flush();
 		tx.commit();
-		enitityManagerProvider.get().close();
+		session.clear();
 		logger.info("Finished job "+PaymentStatementStatusUpdaterJob.class.getSimpleName());
 	}
 
