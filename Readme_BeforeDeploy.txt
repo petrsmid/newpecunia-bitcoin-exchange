@@ -7,6 +7,7 @@ Steps before deploying the application to production
 
 - when deploying to a cluster
 	- always use multi-node cluster implementation for LockProvider
+	- change Quartz configuration to use clustered DB job store instead of RamJobStore
 	 
 - create account on BitStamp
 	 - add some money to it
