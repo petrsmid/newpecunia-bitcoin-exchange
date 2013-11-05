@@ -14,6 +14,10 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.quartz.DisallowConcurrentExecution;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -27,7 +31,8 @@ import com.newpecunia.unicredit.service.ForeignPayment;
 import com.newpecunia.unicredit.service.impl.entity.ForeignPaymentMapper;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
 
-public class PaymentPackageUploaderJob implements Runnable {
+@DisallowConcurrentExecution
+public class PaymentPackageUploaderJob implements Job {
 
 	private static final Logger logger = LogManager.getLogger(PaymentPackageUploaderJob.class);	
 	
@@ -52,8 +57,10 @@ public class PaymentPackageUploaderJob implements Runnable {
 	}
 	
 	@Override
-	public void run() {
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		logger.info("Starting job "+PaymentPackageUploaderJob.class.getSimpleName());
 		processPendingPayments();
+		logger.info("Finished job "+PaymentPackageUploaderJob.class.getSimpleName());
 	}
 
 	private void processPendingPayments() {

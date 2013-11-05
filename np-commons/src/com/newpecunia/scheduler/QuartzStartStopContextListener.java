@@ -7,28 +7,30 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.impl.StdSchedulerFactory;
 
-public class QuartzContextListener implements ServletContextListener{
+import com.google.inject.Injector;
+import com.newpecunia.ioc.InjectorHolder;
 
-	private static final Logger logger = LogManager.getLogger(QuartzContextListener.class);	
-	
-	private Scheduler scheduler = null;
+public class QuartzStartStopContextListener implements ServletContextListener{
+
+	private static final Logger logger = LogManager.getLogger(QuartzStartStopContextListener.class);	
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		try {
-			scheduler = StdSchedulerFactory.getDefaultScheduler();
+			Injector injector = InjectorHolder.getinjector();
+			Scheduler scheduler = injector.getInstance(Scheduler.class);
+			scheduler.setJobFactory(injector.getInstance(GuiceAwareJobFactory.class)); 
 			scheduler.start();
 		} catch (SchedulerException e) {
-			String msg = "Could not start Quartz scheduler";
-			logger.error(msg, e);
-			throw new RuntimeException(msg, e);
+			logger.error("Error occurred while starting Quartz Scheduler.");
 		}
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
+		Injector injector = InjectorHolder.getinjector();
+		Scheduler scheduler = injector.getInstance(Scheduler.class);
 		if (scheduler != null) {
 			try {
 				scheduler.shutdown(true); //wait for jobs to complete

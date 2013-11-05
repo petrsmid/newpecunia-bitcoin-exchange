@@ -8,9 +8,15 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.quartz.DisallowConcurrentExecution;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -19,8 +25,10 @@ import com.newpecunia.email.EmailSender;
 import com.newpecunia.persistence.entities.ForeignPaymentOrder;
 import com.newpecunia.persistence.entities.ForeignPaymentOrder.PaymentStatus;
 
-public class PaymentStatusReportingJob implements Runnable {
+@DisallowConcurrentExecution
+public class PaymentStatusReportingJob implements Job {
 
+	private static final Logger logger = LogManager.getLogger(PaymentStatusReportingJob.class);	
 	
 	private Provider<EntityManager> emProvider;
 	private EmailSender emailSender;
@@ -36,7 +44,9 @@ public class PaymentStatusReportingJob implements Runnable {
 	}
 	
 	@Override
-	public void run() {
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		logger.info("Starting job "+PaymentStatusReportingJob.class.getSimpleName());
+		
 		List<ForeignPaymentOrder> pendingOrErrorOrders = loadPendingOrErrorPayments(emProvider.get().unwrap(Session.class));
 		
 		List<ForeignPaymentOrder> errorOrders = filterByStatus(pendingOrErrorOrders, 
@@ -70,7 +80,10 @@ public class PaymentStatusReportingJob implements Runnable {
 			reportOrders(waitingForBankOrders, sb);
 		}		
 		
+		logger.info("Sending e-mail with daily report.");
 		emailSender.sendEmail(configuration.getReportingEmailAddress(), "Daily report of payments states", sb.toString());
+		
+		logger.info("Finished job "+PaymentStatusReportingJob.class.getSimpleName());
 	}
 
 	private void reportOrders(List<ForeignPaymentOrder> orders, StringBuilder sb) {

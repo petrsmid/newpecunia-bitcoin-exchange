@@ -5,6 +5,8 @@ import com.newpecunia.unicredit.service.BalanceService;
 import com.newpecunia.unicredit.service.PaymentService;
 import com.newpecunia.unicredit.service.impl.BalanceServiceImpl;
 import com.newpecunia.unicredit.service.impl.PaymentServiceImpl;
+import com.newpecunia.unicredit.service.impl.processor.PaymentProcessorJobsSetuper;
+import com.newpecunia.unicredit.service.impl.processor.PaymentProcessorJobsSetuper;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
 import com.newpecunia.unicredit.webdav.impl.GpgFileSigner;
 import com.newpecunia.unicredit.webdav.impl.GpgFileSignerImpl;

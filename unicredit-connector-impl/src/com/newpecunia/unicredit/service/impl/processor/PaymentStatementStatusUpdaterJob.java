@@ -11,6 +11,10 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.quartz.DisallowConcurrentExecution;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -19,7 +23,8 @@ import com.newpecunia.persistence.entities.ForeignPaymentOrder.PaymentStatus;
 import com.newpecunia.time.TimeProvider;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
 
-public class PaymentStatementStatusUpdaterJob implements Runnable {
+@DisallowConcurrentExecution
+public class PaymentStatementStatusUpdaterJob implements Job {
 
 	private static final Logger logger = LogManager.getLogger(PaymentStatementStatusUpdaterJob.class);	
 	
@@ -35,7 +40,8 @@ public class PaymentStatementStatusUpdaterJob implements Runnable {
 	}
 	
 	@Override
-	public void run() {
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		logger.info("Starting job "+PaymentStatementStatusUpdaterJob.class.getSimpleName());
 		Session session = enitityManagerProvider.get().unwrap(Session.class);
 		Transaction tx = session.beginTransaction();
 		
@@ -43,7 +49,8 @@ public class PaymentStatementStatusUpdaterJob implements Runnable {
 		
 		session.flush();
 		tx.commit();
-		enitityManagerProvider.get().close();		
+		enitityManagerProvider.get().close();
+		logger.info("Finished job "+PaymentStatementStatusUpdaterJob.class.getSimpleName());
 	}
 
 	private void updateStatusOfPaymentsAccordingToStatus(Session session) {

@@ -7,7 +7,10 @@
 		<listener-class>com.newpecunia.guice.BootstrapContextListener</listener-class>		
 	</listener>
     <listener>
-		<listener-class>com.newpecunia.scheduler.QuartzStarter</listener-class>		
+		<listener-class>com.newpecunia.unicredit.service.impl.processor.QuartzJobSetupContextListener</listener-class>		
+	</listener>
+    <listener>
+		<listener-class>com.newpecunia.scheduler.QuartzStartStopContextListener</listener-class>		
 	</listener>
 	
 </web-app>

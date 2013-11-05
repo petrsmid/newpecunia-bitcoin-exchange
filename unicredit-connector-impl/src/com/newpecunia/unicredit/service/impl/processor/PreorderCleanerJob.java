@@ -12,6 +12,10 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.quartz.DisallowConcurrentExecution;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -21,7 +25,8 @@ import com.newpecunia.persistence.entities.ForeignPaymentOrder;
 import com.newpecunia.persistence.entities.ForeignPaymentOrder.PaymentStatus;
 import com.newpecunia.time.TimeProvider;
 
-public class PreorderCleanerJob implements Runnable {
+@DisallowConcurrentExecution
+public class PreorderCleanerJob implements Job {
 
 	private static final Logger logger = LogManager.getLogger(PreorderCleanerJob.class);	
 	
@@ -40,9 +45,11 @@ public class PreorderCleanerJob implements Runnable {
 	}
 	
 	@Override
-	public void run() {
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		logger.info("Starting job "+PreorderCleanerJob.class.getSimpleName());
 		cleanPreorders();
 		enitityManagerProvider.get().close();
+		logger.info("Finished job "+PreorderCleanerJob.class.getSimpleName());
 	}
 
 	private void cleanPreorders() {

@@ -10,6 +10,7 @@ import com.newpecunia.bitcoind.BitcoindConnectorModule;
 import com.newpecunia.bitcoind.service.impl.BitcoindReceivedPaymentCallbackServlet;
 import com.newpecunia.bitstamp.BitstampConnectorModule;
 import com.newpecunia.common.CommonModule;
+import com.newpecunia.ioc.InjectorHolder;
 import com.newpecunia.persistence.PersistenceModule;
 import com.newpecunia.test.TestServlet;
 import com.newpecunia.trader.TraderModule;
@@ -19,7 +20,7 @@ import com.newpecunia.unicredit.UnicreditConnectorModule;
 public class BootstrapContextListener extends GuiceServletContextListener {
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(
+    	Injector injector = Guice.createInjector(
         		new BitcoindConnectorModule(),
         		new BitstampConnectorModule(),
         		new CommonModule(),
@@ -36,6 +37,9 @@ public class BootstrapContextListener extends GuiceServletContextListener {
 					}
         		}
         	);
+    	
+    	InjectorHolder.setInjector(injector);
+    	return InjectorHolder.getinjector();
     }
     
 }	

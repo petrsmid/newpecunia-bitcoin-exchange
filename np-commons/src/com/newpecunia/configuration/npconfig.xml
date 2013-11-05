@@ -33,7 +33,7 @@
 			</statements>
 			<statusfolder>upload/status/</statusfolder>
 			<upload>
-				<foreignfolder>upload/foreign/MultiCash format/UTF-8/</foreignfolder> <!-- !! Always use folder for uploading files in UTF-8. -->
+				<foreignfolder>upload/foreign/MultiCash%20format/UTF-8/</foreignfolder> <!-- !! Always use folder for uploading files in UTF-8. -->
 			</upload>
 		</webdav>
 	</unicredit>
