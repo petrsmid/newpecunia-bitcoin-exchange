@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Guice;
@@ -49,19 +50,22 @@ public class BitstampServiceLiveTest {
 		assertNotNull(ticker.getAsk());
 	}
 	
-//	@Test
+	@Test
+	@Ignore
 	public void testLiveBuyLimitOrder() throws Exception {
 		//CAUTION: the following live test will perform REAL transaction with REAL money!
 		bitstampService.buyLimitOrder(new BigDecimal("0.1"), new BigDecimal("10"));
 	}
 	
-//	@Test
+	@Test
+	@Ignore
 	public void testLiveSellLimitOrder() throws Exception {
 		//CAUTION: the following live test will perform REAL transaction with REAL money!
 		bitstampService.sellLimitOrder(new BigDecimal("10000"), new BigDecimal("1"));
 	}	
 	
-//	@Test
+	@Test
+	@Ignore
 	public void testLiveCancelOrder() throws Exception {
 		//CAUTION: the following live test will perform REAL transaction with REAL money!
 		bitstampService.cancelOrder("123"); //TODO set here your order ID
@@ -186,7 +190,8 @@ public class BitstampServiceLiveTest {
 		assertEquals(0, ordersAfterCancel.size());
 	}
 	
-//	@Test
+	@Test
+	@Ignore
 	public void testBuyForRealPrice() throws Exception {
 		//CAUTION: the following live test will perform REAL transactions - it will buy BTC for real price		
 		BigDecimal wantToBuy = new BigDecimal("0.1");
@@ -225,7 +230,8 @@ public class BitstampServiceLiveTest {
 	 * This test sends money to my Bitcoin address in Electum wallet
 	 * @throws Exception
 	 */
-//	@Test
+	@Test
+	@Ignore
 	public void testBitcoinWithdrawal() throws Exception {
 		//CAUTION: the following live test will perform REAL operation with REAL money (BTC).
 		Boolean status = bitstampService.bitcoinWithdrawal(new BigDecimal("0.00006"), "1wGjmUwFLqfL2C15BVUACCDosVRFNbfcR"); //in my Electrum wallet
@@ -237,7 +243,8 @@ public class BitstampServiceLiveTest {
 		return bitstampService.getOpenOrders();		
 	}
 	
-//	@Test
+	@Test
+	@Ignore
 	public void cancelAllOpenedOrders() throws Exception {
 		//CAUTION: NEVER run this test with PRODUCTION account! You would DELETE ALL opened transactions! 
 		//  run it ONLY if you want to clean up all orders of your TEST account
