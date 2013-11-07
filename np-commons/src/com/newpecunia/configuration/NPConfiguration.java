@@ -114,4 +114,12 @@ public class NPConfiguration {
 		return config.getInt("maxTimeToWaitForBtcInSeconds");
 	}
 
+	public long getBtcPriceActualisationPeriodInSecs() {
+		return config.getLong("trader.btcPriceActualisationPeriodInSecs");
+	}
+
+	public int getNbrOfBtcsForPriceCalculation() {
+		return config.getInt("trader.nbrOfBtcsForPriceCalculation");
+	}
+
 }

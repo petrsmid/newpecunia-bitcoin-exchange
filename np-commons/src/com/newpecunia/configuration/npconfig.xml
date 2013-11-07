@@ -45,4 +45,9 @@
 	    <port>8332</port>
 	</bitcoind>
 	
+	<trader>
+	    <btcPriceActualisationPeriodInSecs>15</btcPriceActualisationPeriodInSecs>
+	    <nbrOfBtcsForPriceCalculation>100</nbrOfBtcsForPriceCalculation>
+	</trader>
+	
 </configuration>
