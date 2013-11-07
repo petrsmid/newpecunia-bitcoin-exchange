@@ -48,8 +48,8 @@ public class CachedBuySellPriceCalculator {
 		} catch (BitstampServiceException e) {
 			throw new NPException("Could not actualise order book of Bitstamp.", e);
 		}
-		BigDecimal avgAsk = calculateAvgPrice(orderBook.getAsks(), configuration.getNbrOfBtcsForPriceCalculation());
-		BigDecimal avgBid = calculateAvgPrice(orderBook.getBids(), configuration.getNbrOfBtcsForPriceCalculation());
+		BigDecimal avgAsk = calculateAvgPrice(orderBook.getAsks(), configuration.getNbrOfBtcsForPriceCalculation() /*TODO instead of a hardcoded value consider volume of sales*/);
+		BigDecimal avgBid = calculateAvgPrice(orderBook.getBids(), configuration.getNbrOfBtcsForPriceCalculation() /*TODO instead of a hardcoded value consider volume of sales*/);
 		
 		lastBuyPrice = avgAsk;
 		lastSellPrice = avgBid;
