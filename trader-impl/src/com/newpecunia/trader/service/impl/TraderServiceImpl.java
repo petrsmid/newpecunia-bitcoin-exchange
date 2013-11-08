@@ -1,13 +1,20 @@
 package com.newpecunia.trader.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
+
+import javax.persistence.EntityManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.newpecunia.bitcoind.service.BitcoindService;
+import com.google.inject.persist.Transactional;
+import com.newpecunia.persistence.entities.BtcPaymentOrder;
+import com.newpecunia.persistence.entities.BtcPaymentOrder.BtcOrderStatus;
+import com.newpecunia.time.TimeProvider;
 import com.newpecunia.trader.service.TraderService;
 import com.newpecunia.unicredit.service.PaymentService;
 
@@ -16,15 +23,23 @@ public class TraderServiceImpl implements TraderService {
 
 	private static final Logger logger = LogManager.getLogger(TraderServiceImpl.class);	
 	
-	private BitcoindService bitcoindService;
 	private PaymentService paymentService;
 	private CachedBuySellPriceCalculator cachedBuySellPriceCalc;
+	private TimeProvider timeProvider;
+	private Provider<EntityManager> emProvider;
+
 	
 	@Inject
-	TraderServiceImpl(BitcoindService bitcoindService, PaymentService paymentService, CachedBuySellPriceCalculator cachedBuySellPriceCalc) {
-		this.bitcoindService = bitcoindService;
+	TraderServiceImpl(
+			PaymentService paymentService, 
+			CachedBuySellPriceCalculator cachedBuySellPriceCalc,
+			TimeProvider timeProvider,
+			Provider<EntityManager> emProvider) {
+		
 		this.paymentService = paymentService;
 		this.cachedBuySellPriceCalc = cachedBuySellPriceCalc;
+		this.timeProvider = timeProvider;
+		this.emProvider = emProvider;
 	}
 	
 	@Override
@@ -44,8 +59,16 @@ public class TraderServiceImpl implements TraderService {
 	}
 	
 	@Override
+	@Transactional
 	public void sendBTCsForPayment(String receiverBtcAddress, BigDecimal amount) {
-		bitcoindService.sendMoney(receiverBtcAddress, amount, "" /*comment for sender*/, "New Pecunia" /*comment for receiver*/);
+		BtcPaymentOrder btcOrder = new BtcPaymentOrder();
+		btcOrder.setAddress(receiverBtcAddress);
+		btcOrder.setAmount(amount);
+		btcOrder.setStatus(BtcOrderStatus.UNPROCESSED);
+		Calendar now = timeProvider.nowCalendar();
+		btcOrder.setCreateTimestamp(now);
+		btcOrder.setUpdateTimestamp(now);
+		emProvider.get().persist(btcOrder);
 	}
 
 }

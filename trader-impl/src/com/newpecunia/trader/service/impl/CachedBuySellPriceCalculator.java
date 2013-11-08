@@ -1,8 +1,6 @@
 package com.newpecunia.trader.service.impl;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
 import java.util.concurrent.locks.Lock;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +12,6 @@ import com.newpecunia.NPException;
 import com.newpecunia.bitstamp.service.BitstampService;
 import com.newpecunia.bitstamp.service.BitstampServiceException;
 import com.newpecunia.bitstamp.service.OrderBook;
-import com.newpecunia.bitstamp.service.PriceAndAmount;
 import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.synchronization.LockProvider;
 import com.newpecunia.time.TimeProvider;
@@ -48,8 +45,8 @@ public class CachedBuySellPriceCalculator {
 		} catch (BitstampServiceException e) {
 			throw new NPException("Could not actualise order book of Bitstamp.", e);
 		}
-		BigDecimal avgAsk = calculateAvgPrice(orderBook.getAsks(), configuration.getNbrOfBtcsForPriceCalculation() /*TODO instead of a hardcoded value consider volume of sales*/);
-		BigDecimal avgBid = calculateAvgPrice(orderBook.getBids(), configuration.getNbrOfBtcsForPriceCalculation() /*TODO instead of a hardcoded value consider volume of sales*/);
+		BigDecimal avgAsk = AvgPriceCalculator.calculateAvgPrice(orderBook.getAsks(), configuration.getNbrOfBtcsForPriceCalculation() /*TODO instead of a hardcoded value consider volume of sales*/);
+		BigDecimal avgBid = AvgPriceCalculator.calculateAvgPrice(orderBook.getBids(), configuration.getNbrOfBtcsForPriceCalculation() /*TODO instead of a hardcoded value consider volume of sales*/);
 		
 		lastBuyPrice = avgAsk;
 		lastSellPrice = avgBid;
@@ -66,22 +63,6 @@ public class CachedBuySellPriceCalculator {
 		} finally {
 			lock.unlock();
 		}
-	}
-	
-	private BigDecimal calculateAvgPrice(List<PriceAndAmount> orders, int forMaxBtcs) {
-		BigDecimal sumAmount = BigDecimal.ZERO;
-		BigDecimal sumPrice = BigDecimal.ZERO;
-		int i = 0;
-		for (PriceAndAmount order : orders) {
-			logger.debug("Considering order number "+ ++i +" for price");
-			sumAmount = sumAmount.add(order.getAmount());
-			sumPrice = sumPrice.add(order.getPrice().multiply(order.getAmount()));
-			if (sumAmount.compareTo(new BigDecimal(forMaxBtcs)) >= 0) {
-				break;
-			}
-		}
-		BigDecimal avgPrice = sumPrice.divide(sumAmount, 2, RoundingMode.HALF_UP);
-		return avgPrice;
 	}
 	
 	public BigDecimal getBtcBuyPriceInUSD() {

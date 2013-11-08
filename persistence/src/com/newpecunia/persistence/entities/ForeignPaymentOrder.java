@@ -18,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com.newpecunia.unicredit.service.ForeignPayment.PayeeType;
 
 @Entity
-@Table(name = "PAYMENTS")
+@Table(name = "PAYMENT_ORDERS")
 public class ForeignPaymentOrder {
 	
 	public static enum PaymentStatus {

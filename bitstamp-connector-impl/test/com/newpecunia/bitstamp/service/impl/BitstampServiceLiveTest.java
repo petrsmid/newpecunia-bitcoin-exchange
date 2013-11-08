@@ -200,7 +200,7 @@ public class BitstampServiceLiveTest {
 		
 		OrderBook orderBook = bitstampService.getOrderBook();
 		List<PriceAndAmount> asks = orderBook.getAsks();
-		BigDecimal amountRest = wantToBuy.multiply(BigDecimal.ONE);
+		BigDecimal amountRest = wantToBuy.multiply(BigDecimal.ONE); //clone
 		for (PriceAndAmount ask : asks) {
 			BigDecimal askPrice = ask.getPrice();
 			BigDecimal askAmount = ask.getAmount();

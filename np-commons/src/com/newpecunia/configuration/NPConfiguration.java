@@ -94,7 +94,7 @@ public class NPConfiguration {
 		return config.getBigDecimal("unicredit.paymentFee");
 	}
 
-	public String getBitcoindServerAddress() {
+	public String getBitcoindServerWalletAddress() {
 		return config.getString("bitcoind.address");
 	}
 
@@ -118,8 +118,24 @@ public class NPConfiguration {
 		return config.getLong("trader.btcPriceActualisationPeriodInSecs");
 	}
 
-	public int getNbrOfBtcsForPriceCalculation() {
-		return config.getInt("trader.nbrOfBtcsForPriceCalculation");
+	public BigDecimal getNbrOfBtcsForPriceCalculation() {
+		return config.getBigDecimal("trader.nbrOfBtcsForPriceCalculation");
+	}
+
+	public BigDecimal getBitcoindTransactionFee() {
+		return config.getBigDecimal("bitcoind.transactionFee");
+	}
+	
+	public BigDecimal getOptimalBtcWalletBalance() {
+		return config.getBigDecimal("trader.optimalBtcWalletBalance");
+	}
+
+	public BigDecimal getBitstampMinBtcReserve() {
+		return config.getBigDecimal("trader.bitstampMinBtcReserve");
+	}
+
+	public BigDecimal getBitstampMinimalOrder() {
+		return config.getBigDecimal("trader.bitstampMinimalOrder");
 	}
 
 }

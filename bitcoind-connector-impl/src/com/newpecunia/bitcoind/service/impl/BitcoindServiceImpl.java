@@ -46,7 +46,7 @@ public class BitcoindServiceImpl implements BitcoindService {
 		bitcoindLock = lockProvider.getLock();
 		acquireAddressLock = lockProvider.getLock();
 		
-		btcClient = new BitcoinClient(configuration.getBitcoindServerAddress(), credentials.getBitcoindRpcUser(), credentials.getBitcoindRpcPassword(), configuration.getBitcoindServerPort());
+		btcClient = new BitcoinClient(configuration.getBitcoindServerWalletAddress(), credentials.getBitcoindRpcUser(), credentials.getBitcoindRpcPassword(), configuration.getBitcoindServerPort());
 	}
 
 	@Override

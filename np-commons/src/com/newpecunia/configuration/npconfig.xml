@@ -41,6 +41,7 @@
 	<reportingEmail>petr.smid@pekat.cz</reportingEmail>
 	
 	<bitcoind>
+	    <transactionFee>0.0005</transactionFee>
 	    <address>127.0.0.1</address>
 	    <port>8332</port>
 	</bitcoind>
@@ -48,6 +49,9 @@
 	<trader>
 	    <btcPriceActualisationPeriodInSecs>15</btcPriceActualisationPeriodInSecs>
 	    <nbrOfBtcsForPriceCalculation>100</nbrOfBtcsForPriceCalculation>
+	    <optimalBtcWalletBalance>8</optimalBtcWalletBalance>
+	    <bitstampMinBtcReserve>0.5</bitstampMinBtcReserve>
+	    <bitstampMinimalOrder>0.05</bitstampMinimalOrder>
 	</trader>
 	
 </configuration>
