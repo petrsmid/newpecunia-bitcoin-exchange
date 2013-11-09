@@ -1,0 +1,2 @@
+It is not possible to commit an empty directory.
+Delete this file when you add some tests.

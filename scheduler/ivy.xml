@@ -1,0 +1,23 @@
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+       xmlns:m="http://ant.apache.org/ivy/maven">
+       
+    <info organisation="com.newpecunia" module="scheduler" status="integration"/>
+    
+    <configurations>
+	    <conf name="compile" visibility="public" />
+	    <conf name="test" visibility="private" />
+	</configurations>
+	<publications>
+	    <artifact name="scheduler" type="jar"  conf="compile" ext="jar"/>
+	</publications>    
+    
+    <dependencies>
+        <!-- To add a library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
+        <dependency name="np-commons" rev="latest.integration" conf="compile"/>
+        <dependency name="unicredit-connector-impl" rev="latest.integration" conf="compile"/>
+        <!-- TEST dependencies -->
+        <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
+        
+    </dependencies>
+</ivy-module>

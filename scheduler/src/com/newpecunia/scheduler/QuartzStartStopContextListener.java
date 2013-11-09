@@ -21,6 +21,11 @@ public class QuartzStartStopContextListener implements ServletContextListener{
 			Injector injector = InjectorHolder.getinjector();
 			Scheduler scheduler = injector.getInstance(Scheduler.class);
 			scheduler.setJobFactory(injector.getInstance(GuiceAwareJobFactory.class)); 
+			
+			//setup jobs
+			JobsSetuper jobsSetuper = injector.getInstance(JobsSetuper.class);
+			jobsSetuper.setupJobs();
+			
 			scheduler.start();
 		} catch (SchedulerException e) {
 			logger.error("Error occurred while starting Quartz Scheduler.");

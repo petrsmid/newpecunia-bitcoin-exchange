@@ -1,4 +1,4 @@
-package com.newpecunia.unicredit.service.impl.processor;
+package com.newpecunia.scheduler;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,16 +14,21 @@ import org.quartz.TriggerBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.newpecunia.unicredit.service.impl.processor.PaymentPackageStatusUpdaterJob;
+import com.newpecunia.unicredit.service.impl.processor.PaymentPackageUploaderJob;
+import com.newpecunia.unicredit.service.impl.processor.PaymentStatementStatusUpdaterJob;
+import com.newpecunia.unicredit.service.impl.processor.PaymentStatusReportingJob;
+import com.newpecunia.unicredit.service.impl.processor.PreorderCleanerJob;
 
 @Singleton
-public class PaymentProcessorJobsSetuper {
+public class JobsSetuper {
 	
-	private static final Logger logger = LogManager.getLogger(PaymentProcessorJobsSetuper.class);	
+	private static final Logger logger = LogManager.getLogger(JobsSetuper.class);	
 	
 	private Scheduler scheduler;
 
 	@Inject
-	PaymentProcessorJobsSetuper(Scheduler scheduler) {
+	JobsSetuper(Scheduler scheduler) {
 		this.scheduler = scheduler;
 	}
 	

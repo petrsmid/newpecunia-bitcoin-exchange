@@ -12,6 +12,7 @@ import com.newpecunia.bitstamp.BitstampConnectorModule;
 import com.newpecunia.common.CommonModule;
 import com.newpecunia.ioc.InjectorHolder;
 import com.newpecunia.persistence.PersistenceModule;
+import com.newpecunia.scheduler.SchedulerModule;
 import com.newpecunia.test.TestServlet;
 import com.newpecunia.trader.TraderModule;
 import com.newpecunia.unicredit.UnicreditConnectorModule;
@@ -27,7 +28,8 @@ public class BootstrapContextListener extends GuiceServletContextListener {
         		new PersistenceModule(),
         		new TraderModule(),
         		new UnicreditConnectorModule(),        		
-        		new JpaPersistModule("productionJpaUnit"),        		
+        		new JpaPersistModule("productionJpaUnit"), 
+        		new SchedulerModule(),
         		new ServletModule() {
 					@Override
 					protected void configureServlets() {
