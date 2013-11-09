@@ -138,4 +138,8 @@ public class NPConfiguration {
 		return config.getBigDecimal("trader.bitstampMinimalOrder");
 	}
 
+	public long getAgeOfBtcOrderToReportInSec() {
+		return config.getLong("trader.ageOfBtcOrderToReportInSec");
+	}
+
 }

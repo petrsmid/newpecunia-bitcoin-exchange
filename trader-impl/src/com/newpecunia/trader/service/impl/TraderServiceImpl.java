@@ -60,10 +60,12 @@ public class TraderServiceImpl implements TraderService {
 	
 	@Override
 	@Transactional
-	public void sendBTCsForPayment(String receiverBtcAddress, BigDecimal amount) {
+	public void sendBTCsForPayment(String receiverBtcAddress, BigDecimal amount, String email) {
+		logger.info("Creating BTC order - "+amount.toPlainString()+" BTC  - "+receiverBtcAddress+"  - "+ email);
 		BtcPaymentOrder btcOrder = new BtcPaymentOrder();
 		btcOrder.setAddress(receiverBtcAddress);
 		btcOrder.setAmount(amount);
+		btcOrder.setEmail(email);
 		btcOrder.setStatus(BtcOrderStatus.UNPROCESSED);
 		Calendar now = timeProvider.nowCalendar();
 		btcOrder.setCreateTimestamp(now);

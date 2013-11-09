@@ -8,6 +8,6 @@ public interface TraderService {
 	BigDecimal getNPBtcBuyPriceInUSD(BigDecimal amountBtc);
 	BigDecimal getNPBtcSellPriceInUSD(BigDecimal amountBtc);
 	void payForReceivedBTCs(String receivingBtcAddress, BigDecimal btcAmount);
-	void sendBTCsForPayment(String receiverBtcAddress, BigDecimal amount);
+	void sendBTCsForPayment(String receiverBtcAddress, BigDecimal amount, String email);
 
 }

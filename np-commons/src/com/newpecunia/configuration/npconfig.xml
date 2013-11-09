@@ -52,6 +52,7 @@
 	    <optimalBtcWalletBalance>8</optimalBtcWalletBalance>
 	    <bitstampMinBtcReserve>0.5</bitstampMinBtcReserve>
 	    <bitstampMinimalOrder>0.05</bitstampMinimalOrder>
+	    <ageOfBtcOrderToReportInSec>120</ageOfBtcOrderToReportInSec>
 	</trader>
 	
 </configuration>

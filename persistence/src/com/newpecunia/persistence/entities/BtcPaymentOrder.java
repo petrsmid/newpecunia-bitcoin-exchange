@@ -38,6 +38,9 @@ public class BtcPaymentOrder {
 	
 	@Column(name="ADDRESS")
 	private String address;
+	
+	@Column(name="EMAIL")
+	private String email;
 
 	@Column(name="STATUS")
 	@Enumerated(EnumType.STRING)
@@ -76,6 +79,14 @@ public class BtcPaymentOrder {
 		this.address = address;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public BtcOrderStatus getStatus() {
 		return status;
 	}
@@ -99,6 +110,7 @@ public class BtcPaymentOrder {
 	public void setUpdateTimestamp(Calendar updateTimestamp) {
 		this.updateTimestamp = updateTimestamp;
 	}
+	
 	
 	
 	

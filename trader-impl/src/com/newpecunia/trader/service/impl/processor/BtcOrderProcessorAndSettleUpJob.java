@@ -109,6 +109,7 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 				} else {
 					logger.info("Not enough BTC in wallet to send "+order.getAmount().toPlainString()
 							+" BTC to address "+order.getAddress()+". Waiting until corresponding amount will be bought on Bitstamp.");
+					checkStarvingOrder(order);
 					stillUnprocessedAmount = stillUnprocessedAmount.add(order.getAmount());
 				}
 			}
@@ -121,6 +122,17 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 	
 	
 	
+
+	private void checkStarvingOrder(BtcPaymentOrder order) {
+		long now = timeProvider.now();
+		long orderCreateTime = order.getCreateTimestamp().getTimeInMillis();
+		if ((now - orderCreateTime) > (configuration.getAgeOfBtcOrderToReportInSec()*1000)) {
+			logger.error("BTC Order "+order.getId()+" is too old and starving!");
+		}
+		
+	}
+
+
 	private void sellOnBitstamp(OrderBook orderBook, BigDecimal amountToSell) throws BitstampServiceException {
 		if (amountToSell.compareTo(configuration.getBitstampMinimalOrder()) < 0) {
 			return; //do nothing
