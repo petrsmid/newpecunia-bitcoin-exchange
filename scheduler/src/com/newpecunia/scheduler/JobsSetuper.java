@@ -14,6 +14,7 @@ import org.quartz.TriggerBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.newpecunia.trader.service.impl.processor.BtcOrderProcessorAndSettleUpJob;
 import com.newpecunia.unicredit.service.impl.processor.PaymentPackageStatusUpdaterJob;
 import com.newpecunia.unicredit.service.impl.processor.PaymentPackageUploaderJob;
 import com.newpecunia.unicredit.service.impl.processor.PaymentStatementStatusUpdaterJob;
@@ -39,12 +40,19 @@ public class JobsSetuper {
 		preparePaymentPackageStatusUpdaterJob();
 		preparePaymentStatementStatusUpdaterJob();
 		preparePaymentStatusReportingJob();
+		
+		prepareBtcOrderProcessorAndSettleUpJob();
 	}
 
 	
 	// Quartz syntax:  Seconds  Minutes  Hours  Day-of-Month  Month  Day-of-Week  Year(optional) 
 	
 	
+	private void prepareBtcOrderProcessorAndSettleUpJob() {
+		setupJobAndTrigger(BtcOrderProcessorAndSettleUpJob.class, 
+				CronScheduleBuilder.cronSchedule("0/11 * * * * ?")); //every 11 seconds
+	}
+
 	private void preparePreorderCleanerJob() {
 		setupJobAndTrigger(PreorderCleanerJob.class, 
 				CronScheduleBuilder.cronSchedule("0 2/3 * * * ?")); //every 3 minutes starting after 2 minutes
