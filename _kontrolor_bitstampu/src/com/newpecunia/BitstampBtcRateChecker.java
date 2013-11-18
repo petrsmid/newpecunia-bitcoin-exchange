@@ -22,7 +22,13 @@ import com.newpecunia.email.EmailSender;
 public class BitstampBtcRateChecker {
 
 	private static final BigDecimal LOSS_TRESHOLD_EMAIL = new BigDecimal("0.1"); //10%
-	private static final String EMAIL_RECEIVERS = "petr.justin.smid@gmail.com, katalin.smid@gmail.com";
+	private static final String EMAIL_RECEIVERS = 
+			"petr.justin.smid@gmail.com, " +
+			"petrsmidsms@seznam.cz, " + //forward to mobile phone
+			"katalin.smid@gmail.com, " +
+			"z.smid@atlas.cz, " +
+			"egon.swoboda@chello.at";
+	
 	private static final String ERROR_EMAIL_RECEIVERS = "petr.justin.smid@gmail.com";
 	
 	private static final long CHECK_PERIOD_IN_MS = 1*60*1000; //1 minute in ms
@@ -66,7 +72,7 @@ public class BitstampBtcRateChecker {
 		if (lossRatio.compareTo(LOSS_TRESHOLD_EMAIL) >= 0) {
 			//FUCK - BTC is falling
 			
-			String subject = String.format("POZOR! Bitcoin pada %s USD -> %s USD  (%s %%)", 
+			String subject = String.format("POZOR! Bitcoin pada! BE CARFEUL! Bitcoin is falling down! %s USD -> %s USD  (%s %%).", 
 					maximum.toPlainString(), 
 					last.toPlainString(), 
 					lossRatio.multiply(new BigDecimal(100)).toPlainString());
@@ -94,13 +100,9 @@ public class BitstampBtcRateChecker {
 	private void checkPeriodically() {
 		while (true) {
 			try {
-				if (true) {
-					throw new IOException("nejaka chyba");
-				}
 				performCheck();
 				lastAccessToBitstamp = System.currentTimeMillis();
-				Thread.sleep(CHECK_PERIOD_IN_MS);
-			} catch (BitstampServiceException | IOException | InterruptedException e) {
+			} catch (BitstampServiceException | IOException e) {
 				log("Error ocurred while checking Bitstamp.", e);
 				long now = System.currentTimeMillis();
 				if ((now - lastAccessToBitstamp)>TIME_TO_TOLERATE_BITSTAMP_ERROR) {
@@ -109,6 +111,12 @@ public class BitstampBtcRateChecker {
 							"Chyba: " + e.getMessage());
 					
 					lastAccessToBitstamp = now; //prevent sending multiple emails - reset counter
+				}
+			} finally {
+				try {
+					Thread.sleep(CHECK_PERIOD_IN_MS);
+				} catch (InterruptedException e) {
+					log("Error while sleeping.", e);
 				}
 			}
 		}
