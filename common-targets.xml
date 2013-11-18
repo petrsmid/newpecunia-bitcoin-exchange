@@ -17,6 +17,10 @@
 		</path>
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac srcdir="${src}" destdir="${build}" classpathref="classpath" includeantruntime="false"/>
+		<!-- Copy resources from ${src} to ${build} -->
+		<copy todir="${build}">
+			<fileset dir="${src}" excludes="**/*.java"/>
+		</copy>		
 	</target>
 
 	<target name="dist" depends="compile" description="generate the distribution">
