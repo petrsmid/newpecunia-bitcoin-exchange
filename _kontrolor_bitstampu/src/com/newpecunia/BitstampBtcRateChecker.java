@@ -24,22 +24,23 @@ public class BitstampBtcRateChecker {
 	private static final BigDecimal LOSS_TRESHOLD_EMAIL = new BigDecimal("0.1"); //10%
 	private static final String EMAIL_RECEIVERS = 
 			"petr.justin.smid@gmail.com, " +
-			"petrsmidsms@seznam.cz, " + //forward to mobile phone
-			"katalin.smid@gmail.com, " +
-			"z.smid@atlas.cz, " +
-			"egon.swoboda@chello.at";
+			"petrsmidsms@seznam.cz, "; //forward to mobile phone
+//			"katalin.smid@gmail.com, " +
+//			"z.smid@atlas.cz, " +
+//			"egon.swoboda@chello.at";
 	
 	private static final String ERROR_EMAIL_RECEIVERS = "petr.justin.smid@gmail.com";
 	
-	private static final long CHECK_PERIOD_IN_MS = 1*60*1000; //1 minute in ms
+	private static final long CHECK_PERIOD_IN_MS = 11*1000; //11 seconds
 	private static final long MIN_TIME_BETWEEN_TWO_EMAILS_IN_MS = 5*60*1000; //5 minutes in ms
-	private static final String FILE_LOCATION = "/home/pi/BitstampMaximum.txt";
+	private static final String FILE_LOCATION = "/home/petr/BitstampMaximum.txt";
 	private static final long TIME_TO_TOLERATE_BITSTAMP_ERROR = 10*60*1000; //10 minutes in ms 
 	
 	private BitstampService bitstampService;
 	private EmailSender emailSender;
 	
 	private BigDecimal maximum;
+	private BigDecimal minimum;
 	private long lastAccessToBitstamp = 0l;
 	private long lastEmailTimestamp = 0l;
 
@@ -49,6 +50,7 @@ public class BitstampBtcRateChecker {
 		this.emailSender = emailSender;
 		
 		maximum = loadMaximum();
+		minimum = new BigDecimal(10000);
 		
 	}
 	
@@ -63,11 +65,15 @@ public class BitstampBtcRateChecker {
 			saveMaximum(maximum);
 		}
 		
+		if (minimum.compareTo(last) > 0) {
+			minimum = last;
+		}
+		
 		BigDecimal delta = maximum.subtract(last);
 		BigDecimal lossRatio = delta.divide(maximum, 8, RoundingMode.HALF_UP);
 		
-		log(String.format("Bitcoin rate: %s. Maximum: %s. Loss: %s %%",
-				last.toPlainString(), maximum.toPlainString(), lossRatio.multiply(new BigDecimal(100)).toPlainString()), null);
+		log(String.format("Bitcoin rate: %s. Maximum: %s. Loss: %s %%. Minimum: %s",
+				last.toPlainString(), maximum.toPlainString(), lossRatio.multiply(new BigDecimal(100)).toPlainString(), minimum), null);
 		
 		if (lossRatio.compareTo(LOSS_TRESHOLD_EMAIL) >= 0) {
 			//FUCK - BTC is falling
