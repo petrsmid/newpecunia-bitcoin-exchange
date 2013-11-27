@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Statement {
 	private BigDecimal balance;
-	private List<String> foundPaymentReferences;
-	
+	private List<String> foundNonBitstampPaymentReferences;
+	private int bitstampReferencesCount = 0;
 	
 	public BigDecimal getBalance() {
 		return balance;
@@ -14,11 +14,19 @@ public class Statement {
 	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
-	public List<String> getFoundPaymentReferences() {
-		return foundPaymentReferences;
+	public List<String> getFoundNonBitstampPaymentReferences() {
+		return foundNonBitstampPaymentReferences;
 	}
-	public void setFoundPaymentReferences(List<String> foundPaymentReferences) {
-		this.foundPaymentReferences = foundPaymentReferences;
+	public void setFoundNonBitstampPaymentReferences(List<String> foundNonBitstampPaymentReferences) {
+		this.foundNonBitstampPaymentReferences = foundNonBitstampPaymentReferences;
 	}
+	public int getBitstampReferencesCount() {
+		return bitstampReferencesCount;
+	}
+	public void setBitstampReferencesCount(int bitstampReferencesCount) {
+		this.bitstampReferencesCount = bitstampReferencesCount;
+	}
+	
+	
 
 }

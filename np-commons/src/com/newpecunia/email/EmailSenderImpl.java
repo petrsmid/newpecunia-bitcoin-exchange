@@ -34,7 +34,7 @@ public class EmailSenderImpl implements EmailSender {
 	}
 	
 	@Override
-	public void sendEmail(String recipientAddress, String subject, String messageBody) {
+	public void sendEmail(String recipientAddressList, String subject, String messageBody) {
 		final String username = configuration.getGmailAddress();
 		final String password = credentials.getEmailPassword();
  
@@ -55,12 +55,12 @@ public class EmailSenderImpl implements EmailSender {
 		try {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(configuration.getGmailAddress()));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientAddress));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientAddressList));
 			message.setSubject(subject);
 			message.setText(messageBody);
 			Transport.send(message);
 		} catch (MessagingException e) {
-			logger.error(String.format("Could not send e-mail to address %s.\nThe message: %s\n%s", recipientAddress, subject, messageBody), e);
+			logger.error(String.format("Could not send e-mail to address %s.\nThe message: %s\n%s", recipientAddressList, subject, messageBody), e);
 		}
 	}
 }

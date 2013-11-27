@@ -1,9 +1,14 @@
 package com.newpecunia.countries;
 
-public class Country {
+public final class Country {
 	private String isoCode; //two letter code - e.g.: US, AT, CZ, ...
 	private String englishName; //e.g. Austria, Czech Republic, ...
 	
+	
+	/**
+	 * Do not call the constructor manually. Always use country database.
+	 * It is however public for usage in tests
+	 */
 	public Country(String isoCode, String englishName) {
 		super();
 		this.isoCode = isoCode;

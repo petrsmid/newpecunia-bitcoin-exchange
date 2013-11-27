@@ -36,7 +36,7 @@ public class UnicreditWebdavServiceMock implements UnicreditWebdavService {
 	}
 
 	@Override
-	public List<String> findOutgoingPaymentRefsInLastStatement()
+	public List<String> findOutgoingNonBitstampPaymentRefsInLastStatement()
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -46,6 +46,12 @@ public class UnicreditWebdavServiceMock implements UnicreditWebdavService {
 	public BigDecimal getLastBalance() throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int getOutgoingPaymentsToBitstampCount() throws IOException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

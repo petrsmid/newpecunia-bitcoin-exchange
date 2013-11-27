@@ -1,6 +1,7 @@
 package com.newpecunia.unicredit.service.impl.processor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -21,6 +22,7 @@ import com.google.inject.Provider;
 import com.newpecunia.persistence.entities.ForeignPaymentOrder;
 import com.newpecunia.persistence.entities.ForeignPaymentOrder.PaymentStatus;
 import com.newpecunia.time.TimeProvider;
+import com.newpecunia.unicredit.service.ForeignPayment.PayeeType;
 import com.newpecunia.unicredit.webdav.UnicreditWebdavService;
 
 @DisallowConcurrentExecution
@@ -57,13 +59,16 @@ public class PaymentStatementStatusUpdaterJob implements Job {
 	private void updateStatusOfPaymentsAccordingToStatus(Session session) {
 		List<ForeignPaymentOrder> payments = loadPaymentsSentToWebdav(session);
 		List<String> outgoingRefs;
+		int paymentsToBitstampCount = 0;
 		try {
-			outgoingRefs = webdavService.findOutgoingPaymentRefsInLastStatement();
+			outgoingRefs = webdavService.findOutgoingNonBitstampPaymentRefsInLastStatement();
+			paymentsToBitstampCount = webdavService.getOutgoingPaymentsToBitstampCount();
 		} catch (IOException e) {
 			logger.error("Cannot connect to webdav.", e);
 			return;
 		}
-		
+
+		//set status of payments with found reference to PROCESSED
 		for (ForeignPaymentOrder payment : payments) {
 			String ref = payment.getShortUnicreditReference();
 			if (outgoingRefs.contains(ref)) {
@@ -72,9 +77,29 @@ public class PaymentStatementStatusUpdaterJob implements Job {
 			}
 		}
 		
+		//set status of first N payments to Bitstamp to PROCESSED (we do not know the reference but we know the order of them in time)
+		List<ForeignPaymentOrder> paymentsToBitstamp = getPaymentsToBitstamp(payments);
+		for (int i = 0; i < paymentsToBitstamp.size(); i++) {
+			if (i < paymentsToBitstampCount) {
+				ForeignPaymentOrder paymentToBitstamp = paymentsToBitstamp.get(i);
+				paymentToBitstamp.setStatus(PaymentStatus.PROCESSED);
+				paymentToBitstamp.setUpdateTimestamp(timeProvider.nowCalendar());
+			}
+		}
+		
 		
 	}
 	
+
+	private List<ForeignPaymentOrder> getPaymentsToBitstamp(List<ForeignPaymentOrder> payments) {
+		List<ForeignPaymentOrder> paymentsToBitstamp = new ArrayList<>();
+		for (ForeignPaymentOrder payment : payments) {
+			if (PayeeType.BITSTAMP.equals(payment.getPayeeType())) {
+				paymentsToBitstamp.add(payment);
+			}
+		}
+		return paymentsToBitstamp;
+	}
 
 	@SuppressWarnings("unchecked")
 	private List<ForeignPaymentOrder> loadPaymentsSentToWebdav(Session session) {

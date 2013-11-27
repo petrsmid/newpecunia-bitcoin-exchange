@@ -38,6 +38,53 @@
 		</webdav>
 	</unicredit>
 	
+	<bitstamp>
+	    <minimalBtcOrder>0.05</minimalBtcOrder>
+	    <minimalUsdWithdraw>10</minimalUsdWithdraw>
+	    
+	    <btcAddress>1EwZnCciSpyGSKditT3MuCamvNMKmRoG2q</btcAddress>
+	    <deposit>
+	        <name>Petr</name>
+	        <surname>Smid</surname>
+	        <minimumAmount>50</minimumAmount>
+	        <accountInfo>
+	            <currency>USD</currency>
+	            <name>Bitstamp LIMITED</name>
+	            <address>5 J. House, Calleva Park, Aldermaston</address>
+	            <city>Reading, Berkshire RG7 8NN</city>
+	            <postalCode></postalCode>
+	            <country>UK</country>
+	            <bankIban>SI56290000170073837</bankIban>
+	            <bankSwift>BACXSI22</bankSwift>
+	            <bankName>Unicredit banka Slovenija d.d.</bankName>
+	            <bankAddress>Smartinska 140</bankAddress>
+	            <bankCity>Ljubljana</bankCity>
+	            <bankPostalCode>1000</bankPostalCode>
+	            <bankCountry>SI</bankCountry>
+	            <transactionText>40345114053</transactionText>
+	        </accountInfo>
+	    </deposit>	    
+	    <withdrawAccountInfo>
+	        <currency>USD</currency>
+	        <name>PEKAT</name>
+	        <address>Svatopluka Cecha 57</address>
+	        <city>Brno</city>
+	        <postalCode>612 00</postalCode>
+	        <country>CZ</country>
+	        
+	        <iban>SK9511110000001222977022</iban>
+	        <bic>UNCRSKBX</bic>
+	        <bankName>UniCredit Bank Slovakia a. s.</bankName>
+	        <bankAddress>Sancova 1/A </bankAddress>
+	        <bankCity>Bratislava</bankCity>
+	        <bankPostalCode>813 33</bankPostalCode>
+	        <bankCountry>SK</bankCountry>
+	        
+	        <comment></comment>
+	        
+	    </withdrawAccountInfo>
+	</bitstamp>
+	
 	<reportingEmail>petr.smid@pekat.cz</reportingEmail>
 	
 	<bitcoind>
@@ -51,7 +98,6 @@
 	    <nbrOfBtcsForPriceCalculation>100</nbrOfBtcsForPriceCalculation>
 	    <optimalBtcWalletBalance>8</optimalBtcWalletBalance>
 	    <bitstampMinBtcReserve>0.5</bitstampMinBtcReserve>
-	    <bitstampMinimalOrder>0.05</bitstampMinimalOrder>
 	    <ageOfBtcOrderToReportInSec>120</ageOfBtcOrderToReportInSec>
 	</trader>
 	

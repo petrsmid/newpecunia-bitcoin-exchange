@@ -134,12 +134,141 @@ public class NPConfiguration {
 		return config.getBigDecimal("trader.bitstampMinBtcReserve");
 	}
 
-	public BigDecimal getBitstampMinimalOrder() {
-		return config.getBigDecimal("trader.bitstampMinimalOrder");
+	public BigDecimal getBitstampMinimalBtcOrder() {
+		return config.getBigDecimal("bitstamp.minimalBtcOrder");
+	}
+	
+	public BigDecimal getBitstampMinimalUsdWithdraw() {
+		return config.getBigDecimal("bitstamp.minimalUsdWithdraw");
 	}
 
 	public long getAgeOfBtcOrderToReportInSec() {
 		return config.getLong("trader.ageOfBtcOrderToReportInSec");
 	}
 
+	public String getBitstampWithdrawAccountCurrency() {
+		return config.getString("bitstamp.withdrawAccountInfo.currency");
+	}
+
+	public String getBitstampWithdrawAccountName() {
+		return config.getString("bitstamp.withdrawAccountInfo.name");
+	}
+
+	public String getBitstampWithdrawAccountAddress() {
+		return config.getString("bitstamp.withdrawAccountInfo.address");
+	}
+
+	public String getBitstampWithdrawAccountCity() {
+		return config.getString("bitstamp.withdrawAccountInfo.city");
+	}
+
+	public String getBitstampWithdrawAccountPostalCode() {
+		return config.getString("bitstamp.withdrawAccountInfo.postalCode");
+	}
+
+	public String getBitstampWithdrawAccountCountry() {
+		return config.getString("bitstamp.withdrawAccountInfo.country");
+	}
+
+	public String getBitstampWithdrawAccountBankName() {
+		return config.getString("bitstamp.withdrawAccountInfo.bankName");
+	}
+
+	public String getBitstampWithdrawAccountBankAddress() {
+		return config.getString("bitstamp.withdrawAccountInfo.bankAddress");
+	}
+
+	public String getBitstampWithdrawAccountBankCity() {
+		return config.getString("bitstamp.withdrawAccountInfo.bankCity");
+	}
+
+	public String getBitstampWithdrawAccountBankPostalCode() {
+		return config.getString("bitstamp.withdrawAccountInfo.bankPostalCode");
+	}
+
+	public String getBitstampWithdrawAccountBankCountry() {
+		return config.getString("bitstamp.withdrawAccountInfo.bankCountry");
+	}
+
+	public String getBitstampWithdrawAccountIban() {
+		return config.getString("bitstamp.withdrawAccountInfo.iban");
+	}
+
+	public String getBitstampWithdrawAccountBic() {
+		return config.getString("bitstamp.withdrawAccountInfo.bic");
+	}
+
+	public String getBitstampWithdrawAccountComment() {
+		return config.getString("bitstamp.withdrawAccountInfo.comment");
+	}
+	
+	public String getBitstampBtcAddress() {
+		return config.getString("bitstamp.btcAddress");
+	}
+	
+	public String getBitstampDepositName() {
+		return config.getString("bitstamp.deposit.name");
+	}
+
+	public String getBitstampDepositSurname() {
+		return config.getString("bitstamp.deposit.surname");
+	}
+
+	public String getBitstampDepositAccountCurrency() {
+		return config.getString("bitstamp.deposit.accountInfo.currency");
+	}
+
+	public String getBitstampDepositAccountName() {
+		return config.getString("bitstamp.deposit.accountInfo.name");
+	}
+
+	public String getBitstampDepositAddress() {
+		return config.getString("bitstamp.deposit.accountInfo.address");
+	}
+
+	public String getBitstampDepositCity() {
+		return config.getString("bitstamp.deposit.accountInfo.city");
+	}
+
+	public String getBitstampDepositPostalCode() {
+		return config.getString("bitstamp.deposit.accountInfo.postalCode");
+	}
+
+	public String getBitstampDepositCountry() {
+		return config.getString("bitstamp.deposit.accountInfo.country");
+	}
+
+	public String getBitstampDepositBankIban() {
+		return config.getString("bitstamp.deposit.accountInfo.bankIban");
+	}
+
+	public String getBitstampDepositBankSwift() {
+		return config.getString("bitstamp.deposit.accountInfo.bankSwift");
+	}
+
+	public String getBitstampDepositBankName() {
+		return config.getString("bitstamp.deposit.accountInfo.bankName");
+	}
+
+	public String getBitstampDepositBankAddress() {
+		return config.getString("bitstamp.deposit.accountInfo.bankAddress");
+	}
+
+	public String getBitstampDepositBankCity() {
+		return config.getString("bitstamp.deposit.accountInfo.bankCity");
+	}
+
+	public String getBitstampDepositBankPostalCode() {
+		return config.getString("bitstamp.deposit.accountInfo.bankPostalCode");
+	}
+
+	public String getBitstampDepositBankCountry() {
+		return config.getString("bitstamp.deposit.accountInfo.bankCountry");
+	}
+	
+	public String getBitstampDepositTransactionText() {
+		return config.getString("bitstamp.deposit.accountInfo.transactionText");
+	}
+	
+	
 }

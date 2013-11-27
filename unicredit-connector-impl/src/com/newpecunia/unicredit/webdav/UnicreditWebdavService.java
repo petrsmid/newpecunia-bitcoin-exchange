@@ -36,13 +36,19 @@ public interface UnicreditWebdavService {
 	 * @return list of found references
 	 * @throws IOException 
 	 */
-	List<String> findOutgoingPaymentRefsInLastStatement() throws IOException;
+	List<String> findOutgoingNonBitstampPaymentRefsInLastStatement() throws IOException;
 
 	/**
 	 * Returns balance found in last statement file
 	 * @throws IOException 
 	 */
 	BigDecimal getLastBalance() throws IOException;
+
+	/**
+	 * Returns count of found references indicating that the payment was sent to Bitstamp  (The Bitstamp uses its own reference therefore we do not have reference for each payment. We only know count of outgoing payments.) 
+	 * @throws IOException
+	 */
+	int getOutgoingPaymentsToBitstampCount() throws IOException;
 
 
 

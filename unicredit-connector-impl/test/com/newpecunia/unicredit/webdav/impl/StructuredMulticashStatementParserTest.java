@@ -6,6 +6,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.newpecunia.configuration.NPConfiguration;
+
 public class StructuredMulticashStatementParserTest {
 	
 	private String testFile = 
@@ -26,16 +28,16 @@ public class StructuredMulticashStatementParserTest {
 	
 	@Test
 	public void testBalance() {
-		StructuredMulticashStatementParser parser = new StructuredMulticashStatementParser();
+		StructuredMulticashStatementParser parser = new StructuredMulticashStatementParser(new NPConfiguration());
 		Statement stats = parser.parseStatements(testFile);
 		Assert.assertTrue(stats.getBalance().compareTo(new BigDecimal("55.37")) == 0);
 	}
 	
 	@Test
 	public void testFindPaymentReferences() {
-		StructuredMulticashStatementParser parser = new StructuredMulticashStatementParser();
+		StructuredMulticashStatementParser parser = new StructuredMulticashStatementParser(new NPConfiguration());
 		Statement stats = parser.parseStatements(testFile);
-		List<String> foundRefs = stats.getFoundPaymentReferences();
+		List<String> foundRefs = stats.getFoundNonBitstampPaymentReferences();
 		Assert.assertNotNull(foundRefs);
 		Assert.assertEquals(1, foundRefs.size());
 		Assert.assertEquals("1KJVDUJI", foundRefs.get(0));

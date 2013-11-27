@@ -18,7 +18,6 @@ import com.newpecunia.unicredit.service.ForeignPayment.PayeeType;
 public class MulticashForeignPaymentPackage {
 
 	//Transaction texts are used to match the performed payments. The format must correspond with StructuredMulticashStatementParser.PAYMENT_REFERENCE_PATTERN
-	private static final String TRANSACTION_TEXT_FORMAT_FOR_BITSTAMP = "2BS Pecunia X%sX"; //must correspond with StructuredMulticashStatementParser.PAYMENT_REFERENCE_PATTERN
 	private static final String TRANSACTION_TEXT_FORMAT_FOR_CUSTOMER = "New Pecunia X%sX"; //must correspond with StructuredMulticashStatementParser.PAYMENT_REFERENCE_PATTERN
 
 	private static final Logger logger = LogManager.getLogger(MulticashForeignPaymentPackage.class);	
@@ -194,7 +193,7 @@ public class MulticashForeignPaymentPackage {
 		if (PayeeType.CUSTOMER.equals(payment.getPayeeType())) {
 			appendVariable(builder, 35, formatField(String.format(TRANSACTION_TEXT_FORMAT_FOR_CUSTOMER, shortPaymentReference)));
 		} else if (PayeeType.BITSTAMP.equals(payment.getPayeeType())) {
-			appendVariable(builder, 35, formatField(String.format(TRANSACTION_TEXT_FORMAT_FOR_BITSTAMP, shortPaymentReference)));
+			appendVariable(builder, 35, formatField(configuration.getBitstampDepositTransactionText()));
 		} else {
 			logger.warn("Payee type not known -> no payment detail set.");
 		}

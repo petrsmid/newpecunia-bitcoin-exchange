@@ -168,12 +168,22 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	}
 	
 	@Override
-	public List<String> findOutgoingPaymentRefsInLastStatement() throws IOException {
+	public List<String> findOutgoingNonBitstampPaymentRefsInLastStatement() throws IOException {
 		Statement lastStatement = getLastStatement();
 		if (lastStatement == null) {
 			return new ArrayList<>();
 		} else {
-			return lastStatement.getFoundPaymentReferences();
+			return lastStatement.getFoundNonBitstampPaymentReferences();
+		}
+	}
+	
+	@Override
+	public int getOutgoingPaymentsToBitstampCount() throws IOException {
+		Statement lastStatement = getLastStatement();
+		if (lastStatement == null) {
+			return 0;
+		} else {
+			return lastStatement.getBitstampReferencesCount();
 		}
 	}
 

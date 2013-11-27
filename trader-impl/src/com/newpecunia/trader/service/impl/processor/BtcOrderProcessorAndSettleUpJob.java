@@ -19,14 +19,11 @@ import org.quartz.JobExecutionException;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.newpecunia.bitcoind.service.BitcoindService;
-import com.newpecunia.bitstamp.service.BitstampService;
 import com.newpecunia.bitstamp.service.BitstampServiceException;
-import com.newpecunia.bitstamp.service.OrderBook;
 import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.persistence.entities.BtcPaymentOrder;
 import com.newpecunia.persistence.entities.BtcPaymentOrder.BtcOrderStatus;
 import com.newpecunia.time.TimeProvider;
-import com.newpecunia.trader.service.impl.AvgPriceCalculator;
 
 @DisallowConcurrentExecution
 public class BtcOrderProcessorAndSettleUpJob implements Job {
@@ -34,22 +31,19 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 	private static final Logger logger = LogManager.getLogger(BtcOrderProcessorAndSettleUpJob.class);	
 	
 	private BitcoindService bitcoindService;
-	private BitstampService bitstampService;
 	private Provider<EntityManager> emProvider;
 	private TimeProvider timeProvider;
 	private NPConfiguration configuration;
-
+	private BitstampAutoTrader bitstampAutoTrader; //TODO init
 	
 	@Inject
 	BtcOrderProcessorAndSettleUpJob(Provider<EntityManager> emProvider, 
 			TimeProvider timeProvider, 
 			BitcoindService bitcoindService,
-			BitstampService bitstampService,
 			NPConfiguration configuration) {
 		this.emProvider = emProvider;
 		this.timeProvider = timeProvider;
 		this.bitcoindService = bitcoindService;
-		this.bitstampService = bitstampService;
 		this.configuration = configuration;
 	}
 	
@@ -65,11 +59,10 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 	private void settleUpTheBalances(BigDecimal neededAdditionalAmount) {
 		try {
 			BigDecimal actualBalance = bitcoindService.getBalance();
-			OrderBook orderBook = bitstampService.getOrderBook();
 			if (actualBalance.compareTo(configuration.getOptimalBtcWalletBalance()) < 0) {
-				buyOnBitstampAndSendToWallet(orderBook, configuration.getOptimalBtcWalletBalance().add(neededAdditionalAmount).subtract(actualBalance));
+				transferFromBitstampToWallet(configuration.getOptimalBtcWalletBalance().add(neededAdditionalAmount).subtract(actualBalance));
 			} else if (actualBalance.compareTo(configuration.getOptimalBtcWalletBalance()) > 0) {
-				sellOnBitstamp(orderBook, actualBalance.subtract(configuration.getOptimalBtcWalletBalance()));
+				transferToBitstamp(actualBalance.subtract(configuration.getOptimalBtcWalletBalance()));
 			}
 		} catch (BitstampServiceException e) {
 			logger.error("Unable to settle up the balances. Problems with Bitstamp.", e);
@@ -133,38 +126,21 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 	}
 
 
-	private void sellOnBitstamp(OrderBook orderBook, BigDecimal amountToSell) throws BitstampServiceException {
-		if (amountToSell.compareTo(configuration.getBitstampMinimalOrder()) < 0) {
+	private void transferToBitstamp(BigDecimal amount) throws BitstampServiceException {
+		if (amount.compareTo(configuration.getBitstampMinimalBtcOrder()) < 0) {
 			return; //do nothing
 		}
 
-		logger.info("Selling "+amountToSell.toPlainString()+" BTC on Bitstamp.");
-		
-		String bitstampAddress = bitstampService.getBitcoinDepositAddress();
-		bitcoindService.sendMoney(bitstampAddress, amountToSell, "to Bitstamp", "");
-		
-		BigDecimal sellPrice = AvgPriceCalculator.calculateAvgPrice(orderBook.getBids(), amountToSell.multiply(new BigDecimal("1.3"))); //1.3 - better be on the safe side so the order really immediately processes
-		bitstampService.sellLimitOrder(sellPrice, amountToSell);
+		bitstampAutoTrader.sendBtcFromWalletToBitstamp(amount);
 	}
 
 
-	private void buyOnBitstampAndSendToWallet(OrderBook orderBook, BigDecimal howMuchToBuy) throws BitstampServiceException {
-		if (howMuchToBuy.compareTo(configuration.getBitstampMinimalOrder()) < 0) {
-			howMuchToBuy = configuration.getBitstampMinimalOrder();
+	private void transferFromBitstampToWallet(BigDecimal amount) throws BitstampServiceException {
+		if (amount.compareTo(configuration.getBitstampMinimalBtcOrder()) < 0) {
+			amount = configuration.getBitstampMinimalBtcOrder();
 		}
-
-		logger.info("Buying "+howMuchToBuy.toPlainString()+" BTC on Bitstamp.");
 		
-		BigDecimal buyPrice = AvgPriceCalculator.calculateAvgPrice(orderBook.getAsks(), howMuchToBuy.multiply(new BigDecimal("1.3"))); //1.3 - better be on the safe side so the order really immediately processes
-		bitstampService.buyLimitOrder(buyPrice, howMuchToBuy);
-		try {
-			Thread.sleep(1000); //wait to process the order
-		} catch (InterruptedException e) {
-			logger.error("Sleep interrupted.", e);
-		}
-		BigDecimal btcBalance = bitstampService.getAccountBalance().getBtcBalance();
-		bitstampService.bitcoinWithdrawal(btcBalance.subtract(configuration.getBitstampMinBtcReserve()),
-				configuration.getBitcoindServerWalletAddress());
+		bitstampAutoTrader.sendBtcFromBitstampToWallet(amount);
 	}
 
 

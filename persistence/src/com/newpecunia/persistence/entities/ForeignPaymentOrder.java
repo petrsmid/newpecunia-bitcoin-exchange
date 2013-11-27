@@ -89,6 +89,9 @@ public class ForeignPaymentOrder {
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus status;
 	
+	@Column(name="ASKED_FOR_MONEY_ON_EXCHANGE")
+	private boolean askedForMoneyOnStock = false; //indicates that to process the order we need to get money from Bitstamp exchange and we performed the withdrawal.
+	
 	@Column(name="CREATE_TIME", updatable=false)
 	@Temporal(TemporalType.TIMESTAMP)	
 	private Calendar createTimestamp;
@@ -213,6 +216,12 @@ public class ForeignPaymentOrder {
 	}
 	public void setStatus(PaymentStatus status) {
 		this.status = status;
+	}
+	public boolean isAskedForMoneyOnStock() {
+		return askedForMoneyOnStock;
+	}
+	public void setAskedForMoneyOnStock(boolean askedForMoneyOnStock) {
+		this.askedForMoneyOnStock = askedForMoneyOnStock;
 	}
 	public Calendar getCreateTimestamp() {
 		return createTimestamp;
