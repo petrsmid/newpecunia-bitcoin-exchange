@@ -131,7 +131,7 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 			return; //do nothing
 		}
 
-		bitstampAutoTrader.sendBtcFromWalletToBitstamp(amount);
+		bitcoindService.sendMoney(configuration.getBitstampBtcAddress(), amount, "To Bitstamp", "");
 	}
 
 

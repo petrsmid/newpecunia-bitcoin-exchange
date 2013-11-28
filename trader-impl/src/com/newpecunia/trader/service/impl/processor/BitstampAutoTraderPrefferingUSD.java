@@ -11,12 +11,10 @@ import com.newpecunia.trader.service.impl.CachedBuySellPriceCalculator;
 
 
 @Singleton
-public class BitstampAutoTraderPrefferingUSD extends AbstractBitstampAutoTrader {
+public class BitstampAutoTraderPrefferingUSD implements BitstampAutoTrader {
 
 	@Inject
-	BitstampAutoTraderPrefferingUSD(BitstampService bitstampService,
-			CachedBuySellPriceCalculator cachedBuySellPriceCalculator) {
-		super(bitstampService, cachedBuySellPriceCalculator);
+	BitstampAutoTraderPrefferingUSD() {
 	}
 
 	@Override
@@ -27,12 +25,6 @@ public class BitstampAutoTraderPrefferingUSD extends AbstractBitstampAutoTrader 
 
 	@Override
 	public void sendBtcFromBitstampToWallet(BigDecimal amount) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void sendBtcFromWalletToBitstamp(BigDecimal amount) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -3,23 +3,24 @@ package com.newpecunia.trader.service.impl.processor;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import com.google.inject.Inject;
 import com.newpecunia.NPException;
 import com.newpecunia.bitstamp.service.AccountBalance;
 import com.newpecunia.bitstamp.service.BitstampService;
 import com.newpecunia.bitstamp.service.BitstampServiceException;
 import com.newpecunia.trader.service.impl.CachedBuySellPriceCalculator;
 
-public abstract class AbstractBitstampAutoTrader implements BitstampAutoTrader {
+public class BitstampBalance {
+	
+	private BitstampService bitstampService;
+	private CachedBuySellPriceCalculator cachedBuySellPriceCalculator;
 
-	protected BitstampService bitstampService;
-	protected CachedBuySellPriceCalculator cachedBuySellPriceCalculator;
-
-	AbstractBitstampAutoTrader(BitstampService bitstampService, CachedBuySellPriceCalculator cachedBuySellPriceCalculator) {
+	@Inject
+	BitstampBalance(BitstampService bitstampService, CachedBuySellPriceCalculator cachedBuySellPriceCalculator) {
 		this.bitstampService = bitstampService;
 		this.cachedBuySellPriceCalculator = cachedBuySellPriceCalculator;
 	}
 	
-	@Override
 	public BigDecimal getBalanceInBTC() {
 		AccountBalance balance;
 		try {
@@ -37,7 +38,6 @@ public abstract class AbstractBitstampAutoTrader implements BitstampAutoTrader {
 		return btcs.add(usdsInBtcs);
 	}
 	
-	@Override
 	public BigDecimal getBalanceInUSD() {
 		AccountBalance balance;
 		try {
@@ -56,7 +56,5 @@ public abstract class AbstractBitstampAutoTrader implements BitstampAutoTrader {
 	}
 	
 	
-	
-	
-	
+
 }

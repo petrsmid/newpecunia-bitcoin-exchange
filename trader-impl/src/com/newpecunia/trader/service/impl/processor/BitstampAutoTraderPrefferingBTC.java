@@ -21,22 +21,24 @@ import com.newpecunia.trader.service.impl.CachedBuySellPriceCalculator;
 //TODO reimplement me
 
 @Singleton
-public class BitstampAutoTraderPrefferingBTC extends AbstractBitstampAutoTrader {
+public class BitstampAutoTraderPrefferingBTC implements BitstampAutoTrader {
 
 	private NPConfiguration configuration;
 	private BitstampWebdriver bitstampWebdriver;
-	private BitcoindService bitcoindService;
+	private BitstampService bitstampService;
+	private BitstampBalance bitstampBalance;
 
 	@Inject
 	BitstampAutoTraderPrefferingBTC(BitstampService bitstampService,
 			BitstampWebdriver bitstampWebdriver,
 			BitcoindService bitcoindService,
 			CachedBuySellPriceCalculator cachedBuySellPriceCalculator,
+			BitstampBalance bitstampBalance,
 			NPConfiguration configuration) {
 		
-		super(bitstampService, cachedBuySellPriceCalculator);
+		this.bitstampService = bitstampService;
 		this.bitstampWebdriver = bitstampWebdriver;
-		this.bitcoindService = bitcoindService;
+		this.bitstampBalance = bitstampBalance;
 		this.configuration = configuration;
 	}
 
@@ -80,7 +82,7 @@ public class BitstampAutoTraderPrefferingBTC extends AbstractBitstampAutoTrader 
 
 	@Override
 	public void sendBtcFromBitstampToWallet(BigDecimal amount) {
-		if (getBalanceInBTC().compareTo(amount) < 0) {
+		if (bitstampBalance.getBalanceInBTC().compareTo(amount) < 0) {
 			throw new NotEnoughBtcException();
 		}
 		
@@ -91,17 +93,4 @@ public class BitstampAutoTraderPrefferingBTC extends AbstractBitstampAutoTrader 
 		}
 	}
 
-	@Override
-	public void sendBtcFromWalletToBitstamp(BigDecimal amount) {
-		String depositAddress = configuration.getBitstampBtcAddress();
-		
-//		try {
-//			depositAddress = bitstampService.getBitcoinDepositAddress();
-//		} catch (BitstampServiceException e) {
-//			throw new NPException("Could not get Bitstamp deposit BTC address.", e);
-//		}
-		
-		bitcoindService.sendMoney(depositAddress, amount, "To Bitstamp", "");
-	}
-	
 }
