@@ -34,16 +34,18 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 	private Provider<EntityManager> emProvider;
 	private TimeProvider timeProvider;
 	private NPConfiguration configuration;
-	private BitstampAutoTrader bitstampAutoTrader; //TODO init
+	private BitstampWithdrawOrderManager bitstampWithdrawManager;
 	
 	@Inject
 	BtcOrderProcessorAndSettleUpJob(Provider<EntityManager> emProvider, 
 			TimeProvider timeProvider, 
 			BitcoindService bitcoindService,
+			BitstampWithdrawOrderManager bitstampWithdrawManager,
 			NPConfiguration configuration) {
 		this.emProvider = emProvider;
 		this.timeProvider = timeProvider;
 		this.bitcoindService = bitcoindService;
+		this.bitstampWithdrawManager = bitstampWithdrawManager;
 		this.configuration = configuration;
 	}
 	
@@ -61,7 +63,8 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 			BigDecimal actualBalance = bitcoindService.getBalance();
 			if (actualBalance.compareTo(configuration.getOptimalBtcWalletBalance()) < 0) {
 				transferFromBitstampToWallet(configuration.getOptimalBtcWalletBalance().add(neededAdditionalAmount).subtract(actualBalance));
-			} else if (actualBalance.compareTo(configuration.getOptimalBtcWalletBalance()) > 0) {
+			} else if ((neededAdditionalAmount.compareTo(BigDecimal.ZERO)==0) &&
+					(actualBalance.compareTo(configuration.getOptimalBtcWalletBalance()) > 0)) {
 				transferToBitstamp(actualBalance.subtract(configuration.getOptimalBtcWalletBalance()));
 			}
 		} catch (BitstampServiceException e) {
@@ -76,6 +79,7 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 		@SuppressWarnings("unchecked")
 		List<BtcPaymentOrder> unprocessedOrders = session.createCriteria(BtcPaymentOrder.class)
 			.add(Restrictions.eq("status", BtcOrderStatus.UNPROCESSED))
+			.add(Restrictions.eq("askedForBtcOnStock", false))
 			.addOrder(Order.asc("createTimestamp"))		
 			.list();
 		
@@ -86,6 +90,7 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 		BigDecimal stillUnprocessedAmount = BigDecimal.ZERO;
 		try {
 			for (BtcPaymentOrder order : unprocessedOrders) {
+				order.setAskedForBtcOnStock(true);
 				BigDecimal balance = bitcoindService.getBalance();
 				if (balance.compareTo(order.getAmount().add(configuration.getBitcoindTransactionFee())) >= 0) {
 					try {
@@ -140,7 +145,7 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 			amount = configuration.getBitstampMinimalBtcOrder();
 		}
 		
-		bitstampAutoTrader.sendBtcFromBitstampToWallet(amount);
+		bitstampWithdrawManager.orderWithdrawBtcFromBitstampToWallet(amount);
 	}
 
 

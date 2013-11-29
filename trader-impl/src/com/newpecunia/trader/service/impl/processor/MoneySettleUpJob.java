@@ -42,7 +42,7 @@ public class MoneySettleUpJob implements Job {
 	private BalanceService balanceService;
 	private PaymentService paymentService;
 	private BitstampWebdriver bitstampWebdriver;
-	private BitstampAutoTrader bitstampAutoTrader;
+	private BitstampWithdrawOrderManager bitstampWithdrawManager;
 	private TimeProvider timeProvider;
 	private SKBusinessDayPlanner businessDayPlanner;
 	private Provider<EntityManager> emProvider;
@@ -55,7 +55,7 @@ public class MoneySettleUpJob implements Job {
 			BalanceService balanceService,
 			PaymentService paymentService,
 			BitstampWebdriver bitstampWebdriver,
-			BitstampAutoTrader bitstampAutoTrader, 
+			BitstampWithdrawOrderManager bitstampWithdrawManager, 
 			TimeProvider timeProvider,
 			SKBusinessDayPlanner businessDayPlanner,
 			CountryDatabase countryDb,			
@@ -68,7 +68,7 @@ public class MoneySettleUpJob implements Job {
 		this.timeProvider = timeProvider;
 		this.businessDayPlanner = businessDayPlanner;
 		this.emProvider = emProvider;
-		this.bitstampAutoTrader = bitstampAutoTrader;
+		this.bitstampWithdrawManager = bitstampWithdrawManager;
 		this.countryDb = countryDb;
 	}	
 	
@@ -162,7 +162,7 @@ public class MoneySettleUpJob implements Job {
 		if (amountUSD.compareTo(configuration.getBitstampMinimalUsdWithdraw()) < 0) {
 			amountUSD = configuration.getBitstampMinimalUsdWithdraw();
 		}
-		bitstampAutoTrader.sendUsdToUnicredit(amountUSD);
+		bitstampWithdrawManager.orderWithdrawUsdToUnicredit(amountUSD);
 	}
 
 	private BigDecimal sumAmount(List<ForeignPaymentOrder> oldPendingPayments) {

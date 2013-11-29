@@ -40,7 +40,9 @@
 	
 	<bitstamp>
 	    <minimalBtcOrder>0.05</minimalBtcOrder>
-	    <minimalUsdWithdraw>10</minimalUsdWithdraw>
+	    <minimalUsdWithdraw>50</minimalUsdWithdraw>
+	    <withdrawUsdFeePercent>0.09</withdrawUsdFeePercent>
+	    <minWithdrawUsdFee>15</minWithdrawUsdFee>
 	    
 	    <btcAddress>1EwZnCciSpyGSKditT3MuCamvNMKmRoG2q</btcAddress>
 	    <deposit>

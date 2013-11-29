@@ -54,6 +54,9 @@ public class BtcPaymentOrder {
 	@Temporal(TemporalType.TIMESTAMP)	
 	private Calendar updateTimestamp;	
 	
+	@Column(name="ASKED_FOR_BTC_ON_EXCHANGE")
+	private boolean askedForBtcOnStock = false;
+	
 	
 	public String getId() {
 		return id;
@@ -109,6 +112,14 @@ public class BtcPaymentOrder {
 
 	public void setUpdateTimestamp(Calendar updateTimestamp) {
 		this.updateTimestamp = updateTimestamp;
+	}
+
+	public boolean isAskedForBtcOnStock() {
+		return askedForBtcOnStock;
+	}
+
+	public void setAskedForBtcOnStock(boolean askedForBtcOnStock) {
+		this.askedForBtcOnStock = askedForBtcOnStock;
 	}
 	
 	

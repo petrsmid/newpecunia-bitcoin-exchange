@@ -1,96 +1,82 @@
 package com.newpecunia.trader.service.impl.processor;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.newpecunia.NPException;
-import com.newpecunia.bitcoind.service.BitcoindService;
+import com.newpecunia.bitstamp.service.AccountBalance;
 import com.newpecunia.bitstamp.service.BitstampService;
-import com.newpecunia.bitstamp.service.BitstampServiceException;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriver;
-import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
-import com.newpecunia.bitstamp.webdriver.InternationalWithdrawRequest;
 import com.newpecunia.configuration.NPConfiguration;
-import com.newpecunia.trader.NotEnoughBtcException;
-import com.newpecunia.trader.service.impl.AvgPriceCalculator;
-import com.newpecunia.trader.service.impl.CachedBuySellPriceCalculator;
-
-//TODO reimplement me
 
 @Singleton
-public class BitstampAutoTraderPrefferingBTC implements BitstampAutoTrader {
+public class BitstampAutoTraderPrefferingBTC extends AbstractBitstampAutoTrader implements BitstampAutoTrader {
 
-	private NPConfiguration configuration;
-	private BitstampWebdriver bitstampWebdriver;
+	private BitstampWithdrawOrderManager bitstampWithdrawManager;
 	private BitstampService bitstampService;
-	private BitstampBalance bitstampBalance;
+	private NPConfiguration configuration;
 
 	@Inject
 	BitstampAutoTraderPrefferingBTC(BitstampService bitstampService,
 			BitstampWebdriver bitstampWebdriver,
-			BitcoindService bitcoindService,
-			CachedBuySellPriceCalculator cachedBuySellPriceCalculator,
+			NPConfiguration configuration,
 			BitstampBalance bitstampBalance,
-			NPConfiguration configuration) {
+			BitstampWithdrawOrderManager bitstampWithdrawManager) {
 		
+		super(bitstampService, bitstampWebdriver, configuration);
+		
+		this.bitstampWithdrawManager = bitstampWithdrawManager;
 		this.bitstampService = bitstampService;
-		this.bitstampWebdriver = bitstampWebdriver;
-		this.bitstampBalance = bitstampBalance;
 		this.configuration = configuration;
 	}
 
 	@Override
-	public void sendUsdToUnicredit(BigDecimal amountUSD) {
-		try {
-			BigDecimal sellPrice = AvgPriceCalculator.calculateAvgBtcPriceForUSDs(bitstampService.getOrderBook().getBids(),
-					amountUSD.multiply(new BigDecimal("1.3"))); //multiply by 1.3 - be on the safe side to be sure that the sell request will be processed immediately
-			
-			BigDecimal amountBTC = amountUSD.divide(sellPrice, 8, RoundingMode.UP);
-			
-			bitstampService.sellLimitOrder(sellPrice, amountBTC);
-			
-			//wait 1 sec to process the order
-			Thread.sleep(1000);
-			
-			//withdraw the money to Unicredit
-			InternationalWithdrawRequest withdrawRequest = new InternationalWithdrawRequest();
-			withdrawRequest.setAmount(amountUSD);
-			withdrawRequest.setCurrency(configuration.getBitstampWithdrawAccountCurrency());
-			withdrawRequest.setName(configuration.getBitstampWithdrawAccountName());
-			withdrawRequest.setAddress(configuration.getBitstampWithdrawAccountAddress());
-			withdrawRequest.setCity(configuration.getBitstampWithdrawAccountCity());
-			withdrawRequest.setPostalCode(configuration.getBitstampWithdrawAccountPostalCode());
-			withdrawRequest.setCountry(configuration.getBitstampWithdrawAccountCountry());
-			withdrawRequest.setBankName(configuration.getBitstampWithdrawAccountBankName());
-			withdrawRequest.setBankAddress(configuration.getBitstampWithdrawAccountBankAddress());
-			withdrawRequest.setBankCity(configuration.getBitstampWithdrawAccountBankCity());
-			withdrawRequest.setBankPostalCode(configuration.getBitstampWithdrawAccountBankPostalCode());
-			withdrawRequest.setBankCountry(configuration.getBitstampWithdrawAccountBankCountry());
-			withdrawRequest.setIban(configuration.getBitstampWithdrawAccountIban());
-			withdrawRequest.setBic(configuration.getBitstampWithdrawAccountBic());
-			withdrawRequest.setComment(configuration.getBitstampWithdrawAccountComment());
-			
-			bitstampWebdriver.createInternationalWithdraw(withdrawRequest);
-			
-		} catch (BitstampServiceException | InterruptedException | IOException | BitstampWebdriverException e) {
-			throw new NPException("Could not withdraw USD.",e );
-		}
-	}
+	public void trade() throws Exception {
+		cancelPendingOrders();
+		
+		AccountBalance accountBalance = bitstampService.getAccountBalance();
 
-	@Override
-	public void sendBtcFromBitstampToWallet(BigDecimal amount) {
-		if (bitstampBalance.getBalanceInBTC().compareTo(amount) < 0) {
-			throw new NotEnoughBtcException();
+		//withdraw BTCs
+		BigDecimal btcToWithdraw = bitstampWithdrawManager.getBtcAmountToWithdraw();
+		BigDecimal btcAvailable = accountBalance.getBtcAvailable().subtract(configuration.getBitcoindTransactionFee());
+
+		BigDecimal btcToWithdrawNow = btcToWithdraw.min(btcAvailable);
+		this.withdrawBTC(btcToWithdrawNow);
+		
+		//withdraw USD if possible at once and trade USD
+		//TODO accumulate USD withdraw and send it once per day (start to collect 1 hour before daily withdrawal)
+		BigDecimal usdAvailable = accountBalance.getUsdAvailable();
+		BigDecimal usdToWithdraw = bitstampWithdrawManager.getUsdAmountToWithdraw();
+		BigDecimal usdToWithdrawWithFee = usdToWithdraw.add(calculateWithdrawalUsdFee(usdToWithdraw));
+		if (accountBalance.getUsdAvailable().compareTo(usdToWithdrawWithFee) >= 0) {
+			this.withdrawUSD(usdToWithdraw);
+			BigDecimal rest = usdAvailable.subtract(usdToWithdrawWithFee);
+			buyBtcForUsd(rest);
+		} else {
+			BigDecimal usdToBuy = usdToWithdrawWithFee.subtract(usdAvailable);
+			sellBtcToGetUsd(usdToBuy);
 		}
 		
-		try {
-			bitstampService.bitcoinWithdrawal(amount, configuration.getBitcoindServerWalletAddress());
-		} catch (BitstampServiceException e) {
-			throw new NPException("Could not withdraw BTC to wallet.", e);
-		}
+	}
+	
+	private void cancelPendingOrders() {
+		// TODO implement me
+		
+	}
+
+	private void sellBtcToGetUsd(BigDecimal usdToGet) {
+		// TODO implement me
+		
+	}
+
+	private void buyBtcForUsd(BigDecimal rest) {
+		// TODO implement me
+		
+	}
+
+	private BigDecimal calculateWithdrawalUsdFee(BigDecimal amount) {
+		BigDecimal percentFee = amount.multiply(configuration.getBitstampWithdrawUsdFeePercent().multiply(new BigDecimal("0.01")));
+		return percentFee.max(configuration.getBitstampMinWithdrawUsdFee());
 	}
 
 }

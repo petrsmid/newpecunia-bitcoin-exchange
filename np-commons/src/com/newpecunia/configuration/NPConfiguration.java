@@ -269,6 +269,14 @@ public class NPConfiguration {
 	public String getBitstampDepositTransactionText() {
 		return config.getString("bitstamp.deposit.accountInfo.transactionText");
 	}
+
+	public BigDecimal getBitstampWithdrawUsdFeePercent() {
+		return config.getBigDecimal("bitstamp.withdrawUsdFeePercent");
+	}
+
+	public BigDecimal getBitstampMinWithdrawUsdFee() {
+		return config.getBigDecimal("bitstamp.minWithdrawUsdFee");
+	}
 	
 	
 }

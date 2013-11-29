@@ -1,32 +1,34 @@
 package com.newpecunia.trader.service.impl.processor;
 
-import java.math.BigDecimal;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.newpecunia.bitstamp.service.BitstampService;
-import com.newpecunia.trader.service.impl.CachedBuySellPriceCalculator;
+import com.newpecunia.bitstamp.webdriver.BitstampWebdriver;
+import com.newpecunia.configuration.NPConfiguration;
 
-//TODO reimplement me
+//TODO implement me
 
 
 @Singleton
-public class BitstampAutoTraderPrefferingUSD implements BitstampAutoTrader {
+public class BitstampAutoTraderPrefferingUSD extends AbstractBitstampAutoTrader implements BitstampAutoTrader {
+
+	private BitstampWithdrawOrderManager bitstampWithdrawRequestor;
 
 	@Inject
-	BitstampAutoTraderPrefferingUSD() {
+	BitstampAutoTraderPrefferingUSD(BitstampService bitstampService,
+			BitstampWebdriver bitstampWebdriver,
+			NPConfiguration configuration,
+			BitstampWithdrawOrderManager bitstampWithdrawRequestor) {
+		super(bitstampService, bitstampWebdriver, configuration	);
+		
+		this.bitstampWithdrawRequestor = bitstampWithdrawRequestor;
 	}
 
 	@Override
-	public void sendUsdToUnicredit(BigDecimal amount) {
+	public void trade() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void sendBtcFromBitstampToWallet(BigDecimal amount) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

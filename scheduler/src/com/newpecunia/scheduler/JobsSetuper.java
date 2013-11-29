@@ -14,7 +14,9 @@ import org.quartz.TriggerBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.newpecunia.trader.service.impl.processor.BitstampAutoTraderJob;
 import com.newpecunia.trader.service.impl.processor.BtcOrderProcessorAndSettleUpJob;
+import com.newpecunia.trader.service.impl.processor.MoneySettleUpJob;
 import com.newpecunia.unicredit.service.impl.processor.PaymentPackageStatusUpdaterJob;
 import com.newpecunia.unicredit.service.impl.processor.PaymentPackageUploaderJob;
 import com.newpecunia.unicredit.service.impl.processor.PaymentStatementStatusUpdaterJob;
@@ -41,6 +43,8 @@ public class JobsSetuper {
 		preparePaymentStatementStatusUpdaterJob();
 		preparePaymentStatusReportingJob();
 		
+		prepareBitstampAutoTraderJob();
+		prepareMoneySettleUpJob();
 		prepareBtcOrderProcessorAndSettleUpJob();
 	}
 
@@ -48,9 +52,19 @@ public class JobsSetuper {
 	// Quartz syntax:  Seconds  Minutes  Hours  Day-of-Month  Month  Day-of-Week  Year(optional) 
 	
 	
+	private void prepareBitstampAutoTraderJob() {
+		setupJobAndTrigger(BitstampAutoTraderJob.class, 
+				CronScheduleBuilder.cronSchedule("0/21 * * * * ?")); //every 21 seconds
+	}
+
 	private void prepareBtcOrderProcessorAndSettleUpJob() {
 		setupJobAndTrigger(BtcOrderProcessorAndSettleUpJob.class, 
-				CronScheduleBuilder.cronSchedule("0/11 * * * * ?")); //every 11 seconds
+				CronScheduleBuilder.cronSchedule("11/21 * * * * ?")); //every 21 seconds starting after 11 seconds
+	}
+
+	private void prepareMoneySettleUpJob() {
+		setupJobAndTrigger(MoneySettleUpJob.class, 
+				CronScheduleBuilder.cronSchedule("0 0 9 * * ?")); //every day at 9:00
 	}
 
 	private void preparePreorderCleanerJob() {
