@@ -40,6 +40,7 @@
 	
 	<bitstamp>
 	    <minimalBtcOrder>0.05</minimalBtcOrder>
+	    
 	    <minimalUsdWithdraw>50</minimalUsdWithdraw>
 	    <withdrawUsdFeePercent>0.09</withdrawUsdFeePercent>
 	    <minWithdrawUsdFee>15</minWithdrawUsdFee>
@@ -90,7 +91,7 @@
 	<reportingEmail>petr.smid@pekat.cz</reportingEmail>
 	
 	<bitcoind>
-	    <transactionFee>0.0005</transactionFee>
+	    <transactionFee>0.0001</transactionFee>
 	    <address>127.0.0.1</address>
 	    <port>8332</port>
 	</bitcoind>

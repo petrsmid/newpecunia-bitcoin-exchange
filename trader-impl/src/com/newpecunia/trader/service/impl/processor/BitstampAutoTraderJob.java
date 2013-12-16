@@ -25,7 +25,7 @@ public class BitstampAutoTraderJob implements Job {
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		try {
-			autoTrader.trade();
+			autoTrader.withdrawAndTrade();
 		} catch (Exception e) {
 			logger.error("Error ocurred while trading", e);
 		}

@@ -277,6 +277,5 @@ public class NPConfiguration {
 	public BigDecimal getBitstampMinWithdrawUsdFee() {
 		return config.getBigDecimal("bitstamp.minWithdrawUsdFee");
 	}
-	
-	
+
 }

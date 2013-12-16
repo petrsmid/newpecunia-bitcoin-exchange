@@ -10,6 +10,8 @@ import com.newpecunia.bitstamp.webdriver.BitstampWebdriver;
 import com.newpecunia.configuration.NPConfiguration;
 
 @Singleton
+@Deprecated
+/** This class is not finally implemented. Implement when you want to prefer holding BTCs */
 public class BitstampAutoTraderPrefferingBTC extends AbstractBitstampAutoTrader implements BitstampAutoTrader {
 
 	private BitstampWithdrawOrderManager bitstampWithdrawManager;
@@ -31,7 +33,7 @@ public class BitstampAutoTraderPrefferingBTC extends AbstractBitstampAutoTrader 
 	}
 
 	@Override
-	public void trade() throws Exception {
+	public void withdrawAndTrade() throws Exception {
 		cancelPendingOrders();
 		
 		AccountBalance accountBalance = bitstampService.getAccountBalance();
@@ -59,11 +61,6 @@ public class BitstampAutoTraderPrefferingBTC extends AbstractBitstampAutoTrader 
 		
 	}
 	
-	private void cancelPendingOrders() {
-		// TODO implement me
-		
-	}
-
 	private void sellBtcToGetUsd(BigDecimal usdToGet) {
 		// TODO implement me
 		
@@ -74,9 +71,5 @@ public class BitstampAutoTraderPrefferingBTC extends AbstractBitstampAutoTrader 
 		
 	}
 
-	private BigDecimal calculateWithdrawalUsdFee(BigDecimal amount) {
-		BigDecimal percentFee = amount.multiply(configuration.getBitstampWithdrawUsdFeePercent().multiply(new BigDecimal("0.01")));
-		return percentFee.max(configuration.getBitstampMinWithdrawUsdFee());
-	}
 
 }
