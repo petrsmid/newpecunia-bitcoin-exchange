@@ -55,6 +55,10 @@ public class JobsSetuper {
 	private void prepareBitstampAutoTraderJob() {
 		setupJobAndTrigger(BitstampAutoTraderJob.class, 
 				CronScheduleBuilder.cronSchedule("0/21 * * * * ?")); //every 21 seconds
+							//Note: when using BitstampAutoTraderPrefferingUSD (default) the
+							//withdraw of USD happens every day at 8:00.
+							//If you want to change it please change the constant 
+							//BitstampAutoTraderPrefferingUSD.WITHDRAW_USD_HOUR
 	}
 
 	private void prepareBtcOrderProcessorAndSettleUpJob() {

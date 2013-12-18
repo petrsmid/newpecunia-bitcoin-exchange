@@ -2,6 +2,7 @@ package com.newpecunia.trader.service.impl.processor;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Calendar;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +16,7 @@ import com.newpecunia.bitstamp.service.OrderBook;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriver;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
 import com.newpecunia.configuration.NPConfiguration;
+import com.newpecunia.time.TimeProvider;
 
 
 @Singleton
@@ -22,24 +24,32 @@ public class BitstampAutoTraderPrefferingUSD extends AbstractBitstampAutoTrader 
 
 	private static final Logger logger = LogManager.getLogger(BitstampAutoTraderPrefferingUSD.class);	
 
+	private static final int WITHDRAW_USD_HOUR = 8; //withdraw USD at 8:00 every day
+	
 	private static final BigDecimal PERCENT_107 = new BigDecimal("1.07"); 
 	private static final BigDecimal PERCENT_93 = new BigDecimal("0.93");	
+	
+	//TODO - redistribute through cluster
+	private Calendar lastUsdWithdrawal = null;
 	
 	private BitstampWithdrawOrderManager bitstampWithdrawManager;
 	private BitstampService bitstampService;
 	private NPConfiguration configuration;
+	private TimeProvider timeProvider;
 
 
 	@Inject
 	BitstampAutoTraderPrefferingUSD(BitstampService bitstampService,
 			BitstampWebdriver bitstampWebdriver,
 			NPConfiguration configuration,
-			BitstampWithdrawOrderManager bitstampWithdrawOrderManager) {
+			BitstampWithdrawOrderManager bitstampWithdrawOrderManager,
+			TimeProvider timeProvider) {
 		super(bitstampService, bitstampWebdriver, configuration	);
 		
 		this.bitstampWithdrawManager = bitstampWithdrawOrderManager;
 		this.bitstampService = bitstampService;
 		this.configuration = configuration;
+		this.timeProvider = timeProvider;
 	}
 
 	@Override
@@ -57,11 +67,27 @@ public class BitstampAutoTraderPrefferingUSD extends AbstractBitstampAutoTrader 
 		BigDecimal usdBalanceAfterWithdrawing = usdBalance.subtract(usdToWithdraw);
 
 		//perform withdrawals of USDs and BTCs
-		withdrawUSDs(usdBalance, usdToWithdraw); //TODO - do it only once per day
+		if (performUsdWithdrawal()) {
+			withdrawUSDs(usdBalance, usdToWithdraw);
+			lastUsdWithdrawal = timeProvider.nowCalendar();
+		}
 		withdrawBTCs(btcBalance, btcToWithdraw);
 		
 		trade(btcBalanceAfterWithdrawing);
 		
+	}
+
+	/**
+	 * Perform withdrawal every day at 8:00
+	 */
+	private boolean performUsdWithdrawal() {
+		Calendar now = timeProvider.nowCalendar();
+		return ( ( (lastUsdWithdrawal == null) || 
+				    (now.get(Calendar.DAY_OF_MONTH) > lastUsdWithdrawal.get(Calendar.DAY_OF_MONTH))
+				  )  
+				  && 
+				  ( now.get(Calendar.HOUR_OF_DAY) >= WITHDRAW_USD_HOUR )
+				);
 	}
 
 	private void trade(BigDecimal btcAvailableAfterWithdrawing) throws BitstampServiceException {
