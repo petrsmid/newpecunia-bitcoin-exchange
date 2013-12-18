@@ -51,6 +51,7 @@ public class BalanceServiceImpl implements BalanceService {
 	@Override
 	@Transactional
 	public BigDecimal getApproximateBalance() {
+		logger.trace("Getting approximate balance.");
 		BigDecimal lastKnownBalance = null;
 		try {
 			lastKnownBalance = webdavService.getLastBalance();

@@ -30,6 +30,7 @@ public class ReceiveBTCCallback {
 		BigDecimal btcAmount = info.getAmount();
 		String receivingBtcAddress = info.getAddress();
 		
+		logger.info(String.format("Received %s BTC to address %s. Creating payment order for the BTC.", btcAmount.toPlainString(), receivingBtcAddress));
 		traderService.payForReceivedBTCs(receivingBtcAddress, btcAmount);
 	}
 	

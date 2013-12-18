@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -13,6 +16,8 @@ import com.newpecunia.persistence.entities.BitstampWithdrawalRests;
 
 @Singleton
 public class BitstampWithdrawOrderManagerImpl implements BitstampWithdrawOrderManager {
+
+	private static final Logger logger = LogManager.getLogger(BitstampWithdrawOrderManagerImpl.class);	
 
 	private Provider<EntityManager> emProvider;
 
@@ -48,6 +53,7 @@ public class BitstampWithdrawOrderManagerImpl implements BitstampWithdrawOrderMa
 	@Override
 	@Transactional
 	public BigDecimal getUsdAmountToWithdraw() {
+		logger.trace("Getting USD amount to withdraw.");
 		EntityManager entityManager = emProvider.get();
 		BitstampWithdrawalRests rests = entityManager.find(BitstampWithdrawalRests.class, BitstampWithdrawalRests.CONSTANT_ID, LockModeType.PESSIMISTIC_WRITE);
 		return rests.getUsdsToWithdraw();
@@ -56,6 +62,7 @@ public class BitstampWithdrawOrderManagerImpl implements BitstampWithdrawOrderMa
 	@Override
 	@Transactional
 	public BigDecimal getBtcAmountToWithdraw() {
+		logger.trace("Getting BTC amount to withdraw.");
 		EntityManager entityManager = emProvider.get();
 		BitstampWithdrawalRests rests = entityManager.find(BitstampWithdrawalRests.class, BitstampWithdrawalRests.CONSTANT_ID, LockModeType.PESSIMISTIC_WRITE);
 		return rests.getBtcsToWithdraw();
@@ -63,6 +70,7 @@ public class BitstampWithdrawOrderManagerImpl implements BitstampWithdrawOrderMa
 
 	
 	private void addBtc(BigDecimal amount) {
+		logger.trace("Adding BTC amount to withdraw.");
 		EntityManager entityManager = emProvider.get();
 		BitstampWithdrawalRests rests = entityManager.find(BitstampWithdrawalRests.class, BitstampWithdrawalRests.CONSTANT_ID, LockModeType.PESSIMISTIC_WRITE);
 		BigDecimal actualBtcsToWithdraw = rests.getBtcsToWithdraw();
@@ -72,6 +80,7 @@ public class BitstampWithdrawOrderManagerImpl implements BitstampWithdrawOrderMa
 	}
 
 	private void addUsd(BigDecimal amount) {
+		logger.trace("Adding USD amount to withdraw.");
 		EntityManager entityManager = emProvider.get();
 		BitstampWithdrawalRests rests = entityManager.find(BitstampWithdrawalRests.class, BitstampWithdrawalRests.CONSTANT_ID, LockModeType.PESSIMISTIC_WRITE);
 		BigDecimal actualUsdsToWithdraw = rests.getUsdsToWithdraw();

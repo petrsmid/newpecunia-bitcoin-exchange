@@ -7,6 +7,8 @@ import java.util.Calendar;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.codec.binary.Base32;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -24,6 +26,8 @@ import com.newpecunia.unicredit.service.impl.entity.ForeignPaymentMapper;
 
 @Singleton
 public class PaymentServiceImpl implements PaymentService {
+	
+	private static final Logger logger = LogManager.getLogger(PaymentServiceImpl.class);	
 	
 	private TimeProvider timeProvider;
 	private ForeignPaymentMapper mapper;
@@ -64,6 +68,8 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	@Transactional
 	public void createForeignPaymentOrder(ForeignPayment payment) {
+		logger.trace(String.format("Creating payment order: e-mail: %s,  %s %s to account %s bic %s", 
+				payment.getRequestorEmail(), payment.getAmount(), payment.getCurrency(), payment.getAccountNumber(), payment.getSwift()));
 		ForeignPaymentOrder paymentOrder = createOrderFromPayment(payment, ForeignPaymentOrder.PaymentStatus.NEW, null);
 		getEntityManager().persist(paymentOrder);
 	}
@@ -71,6 +77,8 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	@Transactional
 	public void createPreOrderWaitingForBTC(ForeignPayment preOrder, String acceptingBtcAddress) {
+		logger.trace(String.format("Creating payment order: e-mail: %s, receiving BTC address: %s, %s %s to account %s bic %s", 
+				preOrder.getRequestorEmail(), acceptingBtcAddress, preOrder.getAmount(), preOrder.getCurrency(), preOrder.getAccountNumber(), preOrder.getSwift()));
 		ForeignPaymentOrder paymentOrder = createOrderFromPayment(preOrder, ForeignPaymentOrder.PaymentStatus.WAITING_FOR_BTC, acceptingBtcAddress);
 		getEntityManager().persist(paymentOrder);
 	}
@@ -78,6 +86,7 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	@Transactional
 	public void createOrderFromPreOrder(String receivingBtcAddress, BigDecimal amount) {
+		logger.trace(String.format("Creating order from a pre-order. BTC address: %s, Amount: %s", receivingBtcAddress, amount.toPlainString()));
 		Session session = getEntityManager().unwrap(Session.class);
 		ForeignPaymentOrder preOrder = (ForeignPaymentOrder) session.createCriteria(ForeignPaymentOrder.class)
 			.add(Restrictions.eq("status", PaymentStatus.WAITING_FOR_BTC))

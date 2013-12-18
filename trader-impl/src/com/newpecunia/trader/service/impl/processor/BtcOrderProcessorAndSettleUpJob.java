@@ -52,9 +52,11 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 	
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
+		logger.info("Starting BTC settle up job.");
 		BigDecimal neededAdditionalAmount = processPendingBtcOrders();
 		
 		settleUpTheBalances(neededAdditionalAmount);
+		logger.info("BTC settle up job finished.");
 	}
 
 
@@ -132,6 +134,7 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 
 
 	private void transferToBitstamp(BigDecimal amount) throws BitstampServiceException {
+		logger.trace("Transferring BTC from wallet to Bitstamp.");
 		if (amount.compareTo(configuration.getBitstampMinimalBtcOrder()) < 0) {
 			return; //do nothing
 		}
@@ -141,6 +144,7 @@ public class BtcOrderProcessorAndSettleUpJob implements Job {
 
 
 	private void transferFromBitstampToWallet(BigDecimal amount) throws BitstampServiceException {
+		logger.trace("Transferring BTC from Bitstamp to wallet.");
 		if (amount.compareTo(configuration.getBitstampMinimalBtcOrder()) < 0) {
 			amount = configuration.getBitstampMinimalBtcOrder();
 		}

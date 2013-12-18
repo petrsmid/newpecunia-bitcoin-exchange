@@ -51,6 +51,7 @@ public class BitcoindServiceImpl implements BitcoindService {
 
 	@Override
 	public BigDecimal getBalance() {
+		logger.trace("Getting balance of wallet.");
 		bitcoindLock.lock();
 		try {
 			return btcClient.getBalance();
@@ -61,6 +62,7 @@ public class BitcoindServiceImpl implements BitcoindService {
 
 	@Override
 	public void sendMoney(String address, BigDecimal amount, String comment, String commentTo) {
+		logger.trace(String.format("Sending %s BTC to %s", amount.toPlainString(), address));
 		bitcoindLock.lock();
 		try {
 			btcClient.walletpassphrase(credentials.getBitcoindWalletPassword(), 10);   //unlock wallet
@@ -76,6 +78,7 @@ public class BitcoindServiceImpl implements BitcoindService {
 	
 	@Override
 	public TransactionInfo getTransactionInfo(String txId) {
+		logger.trace("Getting transaction info for tx: "+txId);
 		bitcoindLock.lock();
 		try {
 			return mapTransactionInfo(btcClient.getTransactionJSON(txId));
@@ -107,6 +110,7 @@ public class BitcoindServiceImpl implements BitcoindService {
 	@Override
 	@Transactional
 	public String acquireAddressForReceivingBTC() {
+		logger.trace("Acquiring address for receiving BTC.");
 		ReceivingBitcoinAddressStatus acquiredAddress = null;
 
 		EntityManager em = getEntityManager();
@@ -138,6 +142,7 @@ public class BitcoindServiceImpl implements BitcoindService {
 	@Override
 	@Transactional
 	public void releaseAddressForReceivingBTC(String address) {
+		logger.trace(String.format("Releasing address %s for receiving BTC.", address));
 		EntityManager em = getEntityManager();
 		
 		Session session = em.unwrap(Session.class);

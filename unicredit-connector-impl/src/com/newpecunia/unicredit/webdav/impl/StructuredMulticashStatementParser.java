@@ -6,12 +6,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.newpecunia.configuration.NPConfiguration;
 
 @Singleton
 public class StructuredMulticashStatementParser {
+	
+	private static final Logger logger = LogManager.getLogger(StructuredMulticashStatementParser.class);	
+	
 	
 	private static final String PAYMENT_REFERENCE_PATTERN = "Pecunia X(........)X"; //Must correspond with MulticashForeignPaymentPackage.TRANSACTION_TEXT_FORMAT_FOR_CUSTOMER
 	
@@ -24,6 +30,7 @@ public class StructuredMulticashStatementParser {
 	}
 	
 	public Statement parseStatements(String inputFile) {
+		logger.trace("Parsing statement file: "+inputFile);
 		Statement result = new Statement();
 		result.setFoundNonBitstampPaymentReferences(findNonBitstampPaymentReferences(inputFile));
 		result.setBitstampReferencesCount(getBitstampPaymentReferencesCount(inputFile));

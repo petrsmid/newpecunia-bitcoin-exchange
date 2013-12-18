@@ -47,6 +47,7 @@ public class MulticashForeignPaymentPackage {
 	 * Creates file content for the foreign multicash package file. Always use UTF-8 to encode the file. 
 	 */
 	public String toMultiCashFileContent() {
+		logger.trace("Creating Multicash package file content.");
 		BigDecimal roundedAmount = payment.getAmount().setScale(2, BigDecimal.ROUND_HALF_UP);
 		
 		DecimalFormat formatter = new DecimalFormat("0.00", DecimalFormatSymbols.getInstance(Locale.GERMAN)); //We don't want to use default locale. The German Locale is OK.
@@ -224,7 +225,9 @@ public class MulticashForeignPaymentPackage {
 		//footer
 		builder.append("-}");
 		
-		return builder.toString();
+		String multicashContent = builder.toString();
+		logger.trace("Package file content: "+multicashContent);
+		return multicashContent;
 	}
 			
 

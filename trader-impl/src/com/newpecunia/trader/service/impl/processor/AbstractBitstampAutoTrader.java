@@ -62,10 +62,12 @@ public abstract class AbstractBitstampAutoTrader implements BitstampAutoTrader {
 	}
 	
 	protected BigDecimal getWorstSellPrice(BigDecimal amount, OrderBook orderBook) {
+		logger.trace("Getting worst sell price for amount "+amount.toPlainString());
 		return getWorstPriceForAmount(amount, orderBook.getBids());
 	}
 	
 	protected BigDecimal getWorstBuyPrice(BigDecimal amount, OrderBook orderBook) {
+		logger.trace("Getting worst buy price for amount "+amount.toPlainString());
 		return getWorstPriceForAmount(amount, orderBook.getAsks());
 	}
 	
@@ -87,7 +89,8 @@ public abstract class AbstractBitstampAutoTrader implements BitstampAutoTrader {
 		return percentFee.max(configuration.getBitstampMinWithdrawUsdFee());
 	}
 	
-	protected void cancelPendingOrders() throws BitstampServiceException {		
+	protected void cancelPendingOrders() throws BitstampServiceException {
+		logger.trace("Checking unprocessed orders to cancel.");
 		List<Order> openedOrders = bitstampService.getOpenOrders();
 		if (!openedOrders.isEmpty()) {
 			logger.error("Some orders were not fullfilled by the Bitstamp. Canceling the orders. Check it - maybe the Bitstamp uses longer caching. Adapt this job.");

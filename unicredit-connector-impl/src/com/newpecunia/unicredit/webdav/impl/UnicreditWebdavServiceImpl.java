@@ -91,6 +91,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	 */
 	@Override
 	public List<String> listForeignUploadedPackages() throws IOException {
+		logger.trace("Listing uploaded packages.");
 		List<String> uploadedFileNames = listFolder(getUploadFolderPath());
 		List<String> ids = new ArrayList<>();
 		for (String fileName : uploadedFileNames) {
@@ -105,6 +106,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	 */
 	@Override	
 	public List<String> listPackagesWithStatus() throws IOException {
+		logger.trace("Listing status files.");
 		List<String> statusFileNames = listFolder(getStatusFolderPath());
 		List<String> ids = new ArrayList<>();
 		for (String fileName : statusFileNames) {
@@ -119,6 +121,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	 */
 	@Override
 	public String uploadForeignPaymentPackage(String reference, ForeignPayment foreignPayment) throws IOException {
+		logger.trace("Uploading package file. Reference: "+reference);
 		String multicashReference = checkReferenceLength(reference);
 		MulticashForeignPaymentPackage foreignPaymentPackage = new MulticashForeignPaymentPackage(multicashReference, foreignPayment, timeProvider, configuration); //one payment per package
 		
@@ -143,6 +146,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	 */
 	@Override
 	public Status getStatusOfPackage(String packageId) throws IOException {
+		logger.trace("Getting status of package "+packageId);
 		List<String> statusFilesNames = listFolder(getStatusFolderPath());
 		for (String statusFileName : statusFilesNames) {
 			String id = fileNameResolver.getIdFromStatusFile(statusFileName);
@@ -169,6 +173,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	
 	@Override
 	public List<String> findOutgoingNonBitstampPaymentRefsInLastStatement() throws IOException {
+		logger.trace("Searching for outgoing non-bitstamp payment references in last statement.");
 		Statement lastStatement = getLastStatement();
 		if (lastStatement == null) {
 			return new ArrayList<>();
@@ -179,6 +184,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 	
 	@Override
 	public int getOutgoingPaymentsToBitstampCount() throws IOException {
+		logger.trace("Getting count of payments to Bitstamp in last statement.");
 		Statement lastStatement = getLastStatement();
 		if (lastStatement == null) {
 			return 0;
@@ -189,6 +195,7 @@ public class UnicreditWebdavServiceImpl implements UnicreditWebdavService {
 
 	@Override
 	public BigDecimal getLastBalance() throws IOException {
+		logger.trace("Getting last balance.");
 		Statement lastStatement = getLastStatement();
 		if (lastStatement == null) {
 			return null;

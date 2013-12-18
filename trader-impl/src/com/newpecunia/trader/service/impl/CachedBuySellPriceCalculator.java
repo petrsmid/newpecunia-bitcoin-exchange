@@ -66,12 +66,14 @@ public class CachedBuySellPriceCalculator {
 	}
 	
 	public BigDecimal getBtcBuyPriceInUSD() {
+		logger.trace("Calculating buy price.");
 		actualiseOrderBookIfNeeded();
 		return lastBuyPrice;
 	}
 
 
 	public BigDecimal getBtcSellPriceInUSD() {
+		logger.trace("Calculating sell price.");
 		actualiseOrderBookIfNeeded();
 		return lastSellPrice;
 	}

@@ -68,6 +68,7 @@ public class BitstampAutoTraderPrefferingUSD extends AbstractBitstampAutoTrader 
 
 		//perform withdrawals of USDs and BTCs
 		if (performUsdWithdrawal()) {
+			logger.trace("Time to withdraw USD.");
 			withdrawUSDs(usdBalance, usdToWithdraw);
 			lastUsdWithdrawal = timeProvider.nowCalendar();
 		}

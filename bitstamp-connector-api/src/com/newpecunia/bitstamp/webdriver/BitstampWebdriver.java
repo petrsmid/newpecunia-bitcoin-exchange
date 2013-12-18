@@ -13,7 +13,6 @@ public interface BitstampWebdriver {
 
 	/**
 	 * Create international withdraw request.
-	 * !!! Important - e-mail confirmation is needed to perform otherwise the request would be canceled after one hour.
 	 * @return ID of the request - from withdraw overview table
 	 */
 	Long createInternationalWithdraw(InternationalWithdrawRequest request) throws IOException, BitstampWebdriverException;

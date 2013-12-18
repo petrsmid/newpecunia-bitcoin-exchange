@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -48,6 +50,8 @@ public class BitstampServiceImpl implements BitstampService {
 	private static final BigDecimal MIN_BTC_AMOUNT = new BigDecimal("0.00006"); //minimum wihtdraw BTC amount
 	private static final int MAX_BTC_SCALE = 8; //maximal BTC scale (e.g.: 0.00000001)
 	
+	private static final Logger logger = LogManager.getLogger(BitstampServiceImpl.class);	
+	
 	private NPCredentials credentials;
 	private HttpReader httpReader;
 	
@@ -59,6 +63,7 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public Ticker getTicker() throws BitstampServiceException {
+		logger.trace("Getting ticker.");
 		String url = BitstampServiceConstants.TICKER_URL;
 		try {
 			String output = httpReader.get(url);
@@ -72,6 +77,7 @@ public class BitstampServiceImpl implements BitstampService {
 
 	@Override
 	public OrderBook getOrderBook() throws BitstampServiceException {
+		logger.trace("Getting order book.");
 		String url = BitstampServiceConstants.ORDER_BOOK_URL;
 		try {
 			String output = httpReader.get(url);
@@ -85,6 +91,7 @@ public class BitstampServiceImpl implements BitstampService {
 
 	@Override
 	public Order buyLimitOrder(BigDecimal price, BigDecimal amount) throws BitstampServiceException {
+		logger.trace(String.format("Creating buy limit order: %s BTC for % USD.", amount.toPlainString(), price.toPlainString()));
 		validateOrder(price, amount);
 		
 		List<NameValuePair> requestParams = new ArrayList<>();
@@ -107,6 +114,7 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public Order sellLimitOrder(BigDecimal price, BigDecimal amount) throws BitstampServiceException {
+		logger.trace(String.format("Creating sell limit order: %s BTC for % USD.", amount.toPlainString(), price.toPlainString()));
 		validateOrder(price, amount);
 		
 		List<NameValuePair> requestParams = new ArrayList<>();
@@ -140,6 +148,7 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public Boolean cancelOrder(String orderId) throws BitstampServiceException {
+		logger.trace("Canceling order "+orderId);
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
@@ -158,6 +167,7 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public List<Order> getOpenOrders() throws BitstampServiceException {
+		logger.trace("Getting opened orders.");
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
@@ -179,6 +189,7 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public EurUsdRate getEurUsdConversionRate() throws BitstampServiceException {
+		logger.trace("Getting EUR / USD conversion rate.");
 		String url = BitstampServiceConstants.EUR_USD_RATE;
 		try {
 			String output = httpReader.get(url);
@@ -192,6 +203,7 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public AccountBalance getAccountBalance() throws BitstampServiceException {
+		logger.trace("Getting account balance.");
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
@@ -210,6 +222,7 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public Boolean bitcoinWithdrawal(BigDecimal amount, String address) throws BitstampServiceException {
+		logger.trace(String.format("Withdrawing %s BTC to address %s", amount.toPlainString(), address));
 		//validation
 		if (amount.compareTo(MIN_BTC_AMOUNT) < 0) {
 			throw new BitstampServiceException("Minimal BTC withdrawal is "+MIN_BTC_AMOUNT.toPlainString());
@@ -237,6 +250,7 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public String getBitcoinDepositAddress() throws BitstampServiceException {
+		logger.trace("Getting BTC deposit address");
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
@@ -259,6 +273,8 @@ public class BitstampServiceImpl implements BitstampService {
 
 	@Override
 	public List<UserTransaction> getUserTransactions(long offset, long limit) throws BitstampServiceException {
+		logger.trace(String.format("Getting user transactions. Offset: %s, Limit: %s"), offset, limit);
+		
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
@@ -287,6 +303,7 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public List<Transaction> getTransactions(long offset, long limit) throws BitstampServiceException {
+		logger.trace(String.format("Getting transactions. Offset: %s, Limit: %s"), offset, limit);
 		String url = BitstampServiceConstants.TRANSACTIONS;
 		try {
 			String output = httpReader.get(url+"?offset="+offset+"&limit="+limit);
@@ -304,6 +321,7 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public List<UnconfirmedBitcoinDeposit> getUnconfirmedBitcoinDeposits() throws BitstampServiceException {
+		logger.trace("Getting unconfirmed Bitcion deposits.");
 		List<NameValuePair> requestParams = new ArrayList<>();
 		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
 		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		

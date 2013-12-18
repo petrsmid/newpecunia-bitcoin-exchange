@@ -8,6 +8,8 @@ import java.security.Provider;
 import java.security.Security;
 import java.security.SignatureException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openpgp.PGPException;
 
@@ -20,6 +22,8 @@ import com.newpecunia.unicredit.webdav.impl.pgp.BouncyCastleSigner;
 
 @Singleton
 public class GpgFileSignerImpl implements GpgFileSigner {
+	
+	private static final Logger logger = LogManager.getLogger(GpgFileSignerImpl.class);	
 	
 	private NPCredentials credentials;
 	private Provider securityProvider;
@@ -35,7 +39,7 @@ public class GpgFileSignerImpl implements GpgFileSigner {
 	
 	@Override
 	public byte[] sign(byte[] content) {
-        
+		logger.trace("Signing package file");
         try {
 			return BouncyCastleSigner.signFile(content, "fakeFileName", new FileInputStream(credentials.getPrivateSignatureKeyFilePath()), 
 					credentials.getPrivateKeyPassword().toCharArray(), securityProvider, timeProvider);

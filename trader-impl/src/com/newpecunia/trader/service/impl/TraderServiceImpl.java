@@ -54,6 +54,7 @@ public class TraderServiceImpl implements TraderService {
 
 	@Override
 	public void payForReceivedBTCs(String receivingBtcAddress, BigDecimal btcAmount) {
+		logger.trace(String.format("Paying for received BTCs - receiving address: %s, amount %s BTC", receivingBtcAddress, btcAmount));
 		BigDecimal amountUSD = getNPBtcBuyPriceInUSD(btcAmount);
 		paymentService.createOrderFromPreOrder(receivingBtcAddress, amountUSD);
 	}
