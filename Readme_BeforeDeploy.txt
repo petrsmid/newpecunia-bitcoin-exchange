@@ -10,6 +10,7 @@ Steps before deploying the application to production
 	- change Quartz configuration to use clustered DB job store instead of RamJobStore
 	- reimplement Timer in trader and unicredit-connector
 	- store the variable BitstampAutoTraderPrefferingUSD.lastUsdWithdrawal to DB to be available and actual to all nodes
+	- redistribute variables in CachedBuySellPriceCalculator (through DB?)
 	 
 - create account on BitStamp
 	 - add some money to it
