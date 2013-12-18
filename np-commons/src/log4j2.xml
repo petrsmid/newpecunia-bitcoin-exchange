@@ -25,6 +25,10 @@
 <!-- 		    <appender-ref ref="Console" /> -->
 <!-- 		</logger> -->
 		
+		<!-- Trace logging of all NewPecunia code -->
+		<logger name="com.newpecunia" level="TRACE" additivity="false">
+		    <appender-ref ref="Console" />
+		</logger> 		
 		<root level="INFO">
 			<appender-ref ref="Console" />
 		</root>
