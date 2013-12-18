@@ -8,6 +8,8 @@ Steps before deploying the application to production
 - when deploying to a cluster
 	- always use multi-node cluster implementation for LockProvider
 	- change Quartz configuration to use clustered DB job store instead of RamJobStore
+	- reimplement Timer in trader and unicredit-connector
+	- store the variable BitstampAutoTraderPrefferingUSD.lastUsdWithdrawal to DB to be available and actual to all nodes
 	 
 - create account on BitStamp
 	 - add some money to it
@@ -15,7 +17,6 @@ Steps before deploying the application to production
 	 - disable sending confirming e-mails
 - setup SMS and e-mail for logging
 - configure correctly Unicredit connector
-- when deploying to a cluster reimplement Timer in trader and unicredit-connector
 - turn off recreating database schema. Turn off echoing SQL to log.
 - setup PostgreSQL 9.1 - do not forget to setup its memory, security and maybe another important things (easy documentation: https://help.ubuntu.com/community/PostgreSQL, create password for postgres linux user and start pgadmin3 as this user)
 
