@@ -29,7 +29,7 @@ public class BitstampAutoTraderPrefferingUSD extends AbstractBitstampAutoTrader 
 	private static final BigDecimal PERCENT_107 = new BigDecimal("1.07"); 
 	private static final BigDecimal PERCENT_93 = new BigDecimal("0.93");	
 	
-	//TODO - redistribute through cluster
+	//TODO - redistribute through cluster - probably store and read from/to DB
 	private Calendar lastUsdWithdrawal = null;
 	
 	private BitstampWithdrawOrderManager bitstampWithdrawManager;
