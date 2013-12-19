@@ -18,15 +18,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.newpecunia.bitstamp.service.impl.net.HttpReader;
+import com.newpecunia.bitstamp.service.impl.net.HttpReaderFactory;
+import com.newpecunia.bitstamp.service.impl.net.HttpReaderOutput;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
 import com.newpecunia.bitstamp.webdriver.InternationalWithdrawRequest;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine.WithdrawStatus;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine.WithdrawType;
 import com.newpecunia.configuration.NPCredentials;
-import com.newpecunia.net.HttpReader;
-import com.newpecunia.net.HttpReaderFactory;
-import com.newpecunia.net.HttpReaderOutput;
 import com.newpecunia.synchronization.LockProvider;
 
 public class BitstampSession {

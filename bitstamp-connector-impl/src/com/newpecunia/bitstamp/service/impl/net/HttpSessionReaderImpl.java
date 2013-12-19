@@ -1,4 +1,4 @@
-package com.newpecunia.net;
+package com.newpecunia.bitstamp.service.impl.net;
 
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;

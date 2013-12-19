@@ -1,4 +1,4 @@
-package com.newpecunia.net;
+package com.newpecunia.bitstamp.service.impl.net;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,16 +17,23 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class HttpSimpleReaderImpl implements HttpReader {
 
+	private static final Logger logger = LogManager.getLogger(HttpSimpleReaderImpl.class);	
+	
 	private RequestCountLimitVerifier requestCountLimitVerifier;
 
 	protected HttpClient getHttpClient() {
 		return new DefaultHttpClient();
 	}
 	
-	//package private constructor -> instantiate it always with Factory
+	HttpSimpleReaderImpl() {
+		this(null);
+	}
+	
 	HttpSimpleReaderImpl(RequestCountLimitVerifier requestCountLimitVerifier) {
 		this.requestCountLimitVerifier = requestCountLimitVerifier;
 	}

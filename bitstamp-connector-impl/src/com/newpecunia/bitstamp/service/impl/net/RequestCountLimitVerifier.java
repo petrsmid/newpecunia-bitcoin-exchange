@@ -1,4 +1,4 @@
-package com.newpecunia.net;
+package com.newpecunia.bitstamp.service.impl.net;
 
 public interface RequestCountLimitVerifier {
 

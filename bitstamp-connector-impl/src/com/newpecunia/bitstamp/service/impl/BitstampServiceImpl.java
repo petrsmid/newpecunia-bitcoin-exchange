@@ -35,9 +35,9 @@ import com.newpecunia.bitstamp.service.impl.dto.TransactionDTO;
 import com.newpecunia.bitstamp.service.impl.dto.TransactionMapper;
 import com.newpecunia.bitstamp.service.impl.dto.UserTransactionDTO;
 import com.newpecunia.bitstamp.service.impl.dto.UserTransactionMapper;
+import com.newpecunia.bitstamp.service.impl.net.HttpReader;
+import com.newpecunia.bitstamp.service.impl.net.HttpReaderFactory;
 import com.newpecunia.configuration.NPCredentials;
-import com.newpecunia.net.HttpReader;
-import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.net.JsonCodec;
 import com.newpecunia.net.JsonParsingException;
 

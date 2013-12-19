@@ -1,4 +1,4 @@
-package com.newpecunia.net;
+package com.newpecunia.bitstamp.service.impl.net;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

@@ -7,8 +7,8 @@ import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 
 import com.newpecunia.bitstamp.service.impl.BitstampServiceConstants;
-import com.newpecunia.net.HttpReader;
-import com.newpecunia.net.HttpReaderOutput;
+import com.newpecunia.bitstamp.service.impl.net.HttpReader;
+import com.newpecunia.bitstamp.service.impl.net.HttpReaderOutput;
 
 public class HttpReaderBitstampMock implements HttpReader {
 

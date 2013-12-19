@@ -1,4 +1,4 @@
-package com.newpecunia.net;
+package com.newpecunia.bitstamp.service.impl.net;
 
 
 import static org.junit.Assert.assertTrue;
@@ -9,6 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.newpecunia.bitstamp.service.impl.net.BitstampRequestCountLimitVerifier;
+import com.newpecunia.bitstamp.service.impl.net.HttpReader;
+import com.newpecunia.bitstamp.service.impl.net.HttpSimpleReaderImpl;
 import com.newpecunia.time.TimeProviderImpl;
 
 @RunWith(JUnit4.class)

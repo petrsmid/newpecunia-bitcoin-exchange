@@ -1,9 +1,7 @@
-package com.newpecunia.net;
+package com.newpecunia.bitstamp.service.impl.net;
 
 import org.junit.Test;
 
-import com.newpecunia.net.BitstampRequestCountLimitVerifier;
-import com.newpecunia.net.RequestCountLimitExceededException;
 import com.newpecunia.time.TimeProviderMock;
 
 public class BitstampRequestCountLimitVerifierTest {

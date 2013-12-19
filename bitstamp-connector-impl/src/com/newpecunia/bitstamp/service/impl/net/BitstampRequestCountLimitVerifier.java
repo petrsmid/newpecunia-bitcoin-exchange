@@ -1,4 +1,4 @@
-package com.newpecunia.net;
+package com.newpecunia.bitstamp.service.impl.net;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

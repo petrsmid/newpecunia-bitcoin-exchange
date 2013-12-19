@@ -8,12 +8,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.newpecunia.bitstamp.service.impl.net.HttpReaderFactory;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriver;
 import com.newpecunia.bitstamp.webdriver.BitstampWebdriverException;
 import com.newpecunia.bitstamp.webdriver.InternationalWithdrawRequest;
 import com.newpecunia.bitstamp.webdriver.WithdrawOverviewLine;
 import com.newpecunia.configuration.NPCredentials;
-import com.newpecunia.net.HttpReaderFactory;
 import com.newpecunia.synchronization.LockProvider;
 
 @Singleton

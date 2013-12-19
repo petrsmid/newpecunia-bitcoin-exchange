@@ -1,7 +1,7 @@
 package com.newpecunia.bitstamp.service.impl;
 
-import com.newpecunia.net.HttpReader;
-import com.newpecunia.net.HttpReaderFactory;
+import com.newpecunia.bitstamp.service.impl.net.HttpReader;
+import com.newpecunia.bitstamp.service.impl.net.HttpReaderFactory;
 
 public class HttpReaderBitstampMockFactory implements HttpReaderFactory {
 
