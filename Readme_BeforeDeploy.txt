@@ -17,6 +17,7 @@ Steps before deploying the application to production
 	 - get verified
 	 - disable sending confirming e-mails
 - setup SMS and e-mail for logging
+  - setup postfix/sendmail/ssmtp hearing on localhost port 25
 - configure correctly Unicredit connector
 - turn off recreating database schema. Turn off echoing SQL to log.
 - setup PostgreSQL 9.1 - do not forget to setup its memory, security and maybe another important things (easy documentation: https://help.ubuntu.com/community/PostgreSQL, create password for postgres linux user and start pgadmin3 as this user)
