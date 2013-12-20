@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 
 import com.newpecunia.countries.JavaCountryDatabaseTest;
 import com.newpecunia.email.EmailSenderTest;
+import com.newpecunia.logging.ThrottlingSMTPAppenderTest;
 import com.newpecunia.net.JsonCodecTest;
 import com.newpecunia.time.SKBusinessDayPlannerTest;
 
@@ -14,7 +15,8 @@ import com.newpecunia.time.SKBusinessDayPlannerTest;
 	JavaCountryDatabaseTest.class,
 	JsonCodecTest.class,
 	EmailSenderTest.class,
-	SKBusinessDayPlannerTest.class
+	SKBusinessDayPlannerTest.class,
+	ThrottlingSMTPAppenderTest.class
 })	
 public class CommonTestSuite {
 

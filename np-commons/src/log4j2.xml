@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration status="WARN">
+<configuration status="WARN" packages="com.newpecunia.logging">
 	<appenders>
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
+		<ThrottlingSMTPAppender
+		    name="SmtpAppender"
+		    smtpHost="127.0.0.1"
+		    smtpPort="25"
+		    from="error.log@newpecunia.com"
+		    to="petr.smid@pekat.cz"
+		    subject="ERROR ocurred in New Pecunia server"
+		    ignoreExceptions="false">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />		    
+		</ThrottlingSMTPAppender>			
+
 	</appenders>
 	<loggers>
 <!--  Uncomment to see what happens on the wire - Apache HttpClient 4  -->
@@ -27,10 +38,13 @@
 		
 		<!-- Trace logging of all NewPecunia code -->
 		<logger name="com.newpecunia" level="TRACE" additivity="false">
-		    <appender-ref ref="Console" />
-		</logger> 		
+		    <appender-ref ref="Console"/>
+		    <appender-ref ref="SmtpAppender" level="ERROR"/>
+		</logger> 	
 		<root level="INFO">
-			<appender-ref ref="Console" />
+		    <appender-ref ref="SmtpAppender" level="ERROR"/>
+		    <appender-ref ref="Console" level="INFO"/>
 		</root>
+
 	</loggers>
 </configuration>
