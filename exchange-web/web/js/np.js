@@ -17,6 +17,12 @@ $.validator.setDefaults({
     }
 });
 
+//validator of a Bitcoin address
 $.validator.addMethod("btcAddress", function(value, element) {
         return this.optional(element) || /^[a-zA-Z0-9]+$/.test(value);
-	}, "Please enter a valid Bitcoin address."); 
+	}, "Please enter a valid Bitcoin address.");
+	
+//fix for autofocus for IE < 10	
+$(function() {
+  $('[autofocus]:not(:focus)').eq(0).focus();
+});

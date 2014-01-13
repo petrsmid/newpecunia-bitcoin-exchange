@@ -1,9 +1,10 @@
-body {
-	  padding-top: 50px;
-	  /*background-image: url(stock.jpg);*/
-	  /*background-size: 100%;*/
+@media(min-width:768px){
+	body {
+		  padding-top: 50px;
+		  /*background-image: url(stock.jpg);*/
+		  /*background-size: 100%;*/
+	}
 }
-
 h1 {
 	font-weight: 700;
 }

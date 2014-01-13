@@ -63,64 +63,73 @@
 		</div>
 		<!-- end of header -->
 
-		<!-- header visible for small devices -->
-		<div class="container visible-xs">
-			<p >Buy price: <b>$432.00</b></p>			
-			<p >Sell price: <b>$123.00</b></p>			
-		</div>
-
 		<div class="container" style="padding-bottom: 30px; box-shadow: 6px 6px 50px -5px #999, -6px 6px 50px -5px #999;">
+			<!-- header visible only for small devices -->
+			<!-- <div class="visible-xs">
+			<h3><span class="label label-default">Buy price: <b>$432.00</b></span></h3>
+			<h3><span class="label label-default">Sell price: <b>$123.00</b></span></h3>
+			</div> -->
+
 			<!-- navigation -->
 			<div class="row">
-				<div class="col-sm-6 hidden-xs">
-					<h1>Buy Bitcoin</h1>
+				<!-- navigation for bigger displays -->
+				<div class="hidden-xs">
+					<div class="col-sm-6">
+						<h1>Sell Bitcoin</h1>
+					</div>
+					<div class="col-sm-6" style="margin: 20px 0 20px 0">
+						<ul class="nav nav-pills pull-right">
+							<li>
+								<a href="buy.html">Buy Bitcoin</a>
+							</li>
+							<li class="active">
+								<a href="#">Sell Bitcoin</a>
+							</li>
+						</ul>
+					</div>
 				</div>
-				<div class="hidden-xs col-sm-6" style="margin: 20px 0 20px 0">
-					<ul class="nav nav-pills pull-right">
-						<li class="active">
-							<a href="#">Buy Bitcoin</a>
-						</li>
-						<li>
-							<a href="#">Sell Bitcoin</a>
-						</li>
-					</ul>
+				<!-- END of navigation for bigger displays -->
+
+				<!-- navigation for small displays -->
+				<div class="visible-xs">
+					<div class="col-sm-6" style="margin-top: 20px;">
+						<ul class="nav nav-pills">
+							<li>
+								<a href="buy.html">Buy Bitcoin</a>
+							</li>
+							<li class="active">
+								<a href="#">Sell Bitcoin</a>
+							</li>
+						</ul>
+					</div>
+					<div class="col-sm-12">
+						<h1>Sell Bitcoin</h1>
+						<p class="visible-xs  text-info">
+							<a href="http://bitcoin.org/" target="_blank">What is Bitcoin?</a>
+						</p>
+					</div>
 				</div>
-				<div class="visible-xs col-sm-6" style="margin-top: 20px;">
-					<ul class="nav nav-pills">
-						<li class="active">
-							<a href="#">Buy Bitcoin</a>
-						</li>
-						<li>
-							<a href="#">Sell Bitcoin</a>
-						</li>
-					</ul>
-				</div>
-				<div class="visible-xs col-sm-12">
-					<h1>Buy Bitcoin</h1>
-					<p class="visible-xs  text-info">
-						<a href="http://bitcoin.org/" target="_blank">What is Bitcoin?</a>
-					</p>
-				</div>
+				<!-- END of navigation for small displays -->
 
 			</div>
 
 			<form>
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-sm-6">
 						<div class="well">
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<label for="inputAmount">Amount of Bitcoins to buy</label>
+										<label for="inputAmount">Amount of Bitcoins you sell</label>
 										<div class="input-group">
 											<span class="input-group-addon"><b>BTC</b></span>
-											<input type="text" class="form-control" style="text-align: left" name="inputAmount" value="0.5" required >
+											<input type="text" class="form-control" name="inputAmount" value="0.5" autofocus="autofocus" required>
 										</div>
 									</div>
 								</div>
 								<div class="col-sm-6">
 									<div class="form-group">
-										<label for="labelPrice">Price to pay</label>
+										<label for="labelPrice">Amount of USD you will receive</label>
 										<div class="input-group">
 											<span class="input-group-addon"><strong>$</strong></span>
 											<p class="form-control">
@@ -134,63 +143,85 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group">
-								<label for="inputBtcAddress">Withdraw to address</label>
-								<input type="text" class="form-control" name="inputBtcAddress" placeholder="e.g. 1PeNCTPCWDRq52a8uB33Mpi6idoX5ZoNjm" required>
-								<p class="text-info">
-									<a href="http://bitcoin.org/en/choose-your-wallet" target="_blank">Don't have any address? Download a Bitcoin wallet.</a>
-								</p>
-							</div>
-							<div class="form-group">
-								<div class="form-group">
-									<label for="inputEmail">E-mail <small>(optional)</small></label>
-									<input type="email" class="form-control" name="inputEmail" placeholder="we would only contact you in case of a problem with payment">
-								</div>
-							</div>
-
 						</div>
 					</div>
-
-					<div class="col-md-6">
+				</div>
+				<div class="row">
+					<div class="col-sm-6">
 						<div class="well">
+							<!-- <div class="panel panel-primary"> -->
+							<!-- <div class="panel-heading">
+							<h3 class="panel-title">Beneficiary details</h3>
+							</div> -->
+							<!-- <div class="panel-body"> -->
+
 							<div class="form-group">
-								<label for="inputNameOnCard">Name on card</label>
-								<input type="text" class="form-control" name="inputNameOnCard" required />
+								<label for="inputName">Name</label>
+								<input type="text" class="form-control" name="inputName" required>
 							</div>
 							<div class="form-group">
-								<label for="inputCardNumber">Credit card number</label>
-								<input type="text" pattern="[0-9]*" class="form-control" name="inputCardNumber" placeholder="1234 5678 9012 3456" required>
+								<label for="inputStreet">Street</label>
+								<input type="text" class="form-control" name="inputStreet" required>
 							</div>
 							<div class="form-group">
-								<div class="row">
-									<div class="col-xs-8">
-										<label for="inputExpityMonth">Expiration date</label>
-										<div class="row">
-											<div class="col-xs-5 form-group">
-												<input type="text" pattern="[0-9]*" class="form-control" name="inputExpityMonth" placeholder="MM" required />
-											</div>
-											<div class="col-xs-6 form-group">
-												<input type="text" pattern="[0-9]*" class="form-control" name="inputExpityYear" placeholder="YYYY" required />
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-4">
-										<label for="inputCVC">CVC</label>
-										<div class="row">
-											<div class="col-xs-12 form-group">
-												<input type="text" pattern="[0-9]*" class="form-control" name="inputCVC" placeholder="e.g. 311" required/>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-12">
-										<div align="center">
-											<img src="creditCardLogos.png" class="img-responsive" alt="credit card logos">
-										</div>								
-									</div>
-								</div>
+								<label for="inputCity">City</label>
+								<input type="text" class="form-control" name="inputCity" required>
 							</div>
+							<div class="form-group">
+								<label for="inputPostalCode">Postal code</label>
+								<input type="text" class="form-control" name="inputPostalCode" required>
+							</div>
+							<div class="form-group">
+								<label for="inputCountry">Country</label>
+								<input type="text" class="form-control" name="inputCountry" required>
+							</div>
+							<div class="form-group">
+								<label for="inputEmail">E-mail</label>
+								<input type="text" class="form-control" name="inputEmail" required>
+							</div>
+
+							<!-- </div> -->
+						</div>
+					</div>
+					<div class="col-sm-6">
+
+						<div class="well">
+							<!-- <div class="panel panel-primary"> -->
+							<!-- <div class="panel-heading">
+							<h3 class="panel-title">Bank details</h3>
+							</div> -->
+							<!-- <div class="panel-body"> -->
+
+							<div class="form-group">
+								<label for="inputIBAN">IBAN</label>
+								<input type="text" class="form-control" name="inputIBAN" required>
+							</div>
+							<div class="form-group">
+								<label for="inputSWIFT">SWIFT / BIC code</label>
+								<input type="text" class="form-control" name="inputSWIFT" required>
+							</div>
+							<div class="form-group">
+								<label for="inputBankName">Bank Name</label>
+								<input type="text" class="form-control" name="inputBankName" required>
+							</div>
+							<div class="form-group">
+								<label for="inputBankStreet">Bank Street</label>
+								<input type="text" class="form-control" name="inputBankStreet" required>
+							</div>
+							<div class="form-group">
+								<label for="inputBankCity">Bank City</label>
+								<input type="text" class="form-control" name="inputBankCity" required>
+							</div>
+							<div class="form-group">
+								<label for="inputBankPostalCode">Bank Postal Code</label>
+								<input type="text" class="form-control" name="inputBankPostalCode" required>
+							</div>
+							<div class="form-group">
+								<label for="inputBankCountry">Bank Country</label>
+								<input type="text" class="form-control" name="inputBankCountry" required>
+							</div>
+
+							<!-- </div> -->
 						</div>
 					</div>
 				</div>
@@ -199,21 +230,17 @@
 					<div class="col-sm-4"> </div>
 
 					<div class="col-sm-4">
-						<div class="panel panel-default">
-							<div style="text-align: center">
-								<h4>Total: <b>$654</b> </h4>
-							</div>
-						</div>
-
 						<button type="submit" class="btn btn-primary btn-lg btn-block">
-							Buy
+							Proceed to sending Bitcoin >>
 						</button>
 					</div>
 
 					<div class="col-sm-4"> </div>
-
 				</div>
 			</form>
+			
+			<br>
+
 		</div><!-- /.container -->
 
 		<!-- Bootstrap, jQuery and jQuery Validator frameworks
@@ -222,36 +249,13 @@
 		<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 		<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
-		<script src="js/defaultFormValidation.js"></script>
+		<script src="js/np.js"></script>
 
 		<!-- Rules for validation of the form -->
 		<script>
 			$('form').validate({
 				rules : {
-					inputAmount : {
-						required : true,
-						number : true,
-						min : 0.0001
-					},
-					inputBtcAddress : {
-						btcAddress : true
-					},
-					inputCardNumber : {
-						creditcard : true
-					},
-					inputExpityMonth : {
-						digits : true,
-						min : 1,
-						max : 12
-					},
-					inputExpityYear : {
-						digits : true,
-						min : 2014,
-						max : 2999
-					},
-					inputCVC : {
-						digits : true
-					}
+
 				}
 			});
 		</script>
