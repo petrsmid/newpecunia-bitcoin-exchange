@@ -3,6 +3,9 @@ var sellPrice = undefined;
 
 var fee = 15;
 
+var btcAddress = undefined;
+var total = undefined;
+
 var roundToTwo = function(num) {    
     return +(Math.round(num + "e+2")  + "e-2");
 };
@@ -15,11 +18,14 @@ var updateCalculatedPrice = function() {
 		var roundedPrice = roundToTwo(calculatedPrice);
 		$("#calculatedPrice").text(roundedPrice);
 		$("#calculatedPrice2").text("$"+roundedPrice);
-		$("#totalPrice").text("$"+(roundedPrice-fee));
+		total = roundedPrice-fee;
+		$("#totalPrice").text("$"+(total));
+		
 	} else {
 		$("#calculatedPrice").text("");
 		$("#calculatedPrice2").text("");
 		$("#totalPrice").text("");
+		total = undefined;
 	}
 };
 
@@ -45,6 +51,61 @@ var fixDecimalComma = function(input) {
 		input.val(fixedValue);
 	} 
 };
+
+var openBtcReceiveDialog = function() {
+	var btcAddress = "someBtcAddress";
+	$('#btcAddress').text(btcAddress);
+	var btcSellAmount = $("#sellAmount").val();
+	$('#btcAmountToSend').text(btcSellAmount);
+	var qrCodeUrl = "http://qrickit.com/api/qr?d=bitcoin:" + btcAddress + "?amount=" + btcSellAmount + "&qrsize=480";
+	$('#qrCode').attr("src", qrCodeUrl);
+	$("#btcNotReceived").attr("style", "display: none;");
+	$("#btcReceived").attr("style", "display: none;");
+	startCountDown();
+	$('#waitForBtcModal').modal('show');	
+};
+
+//////////////// Progress bar ////////////////////////////
+var maxTime = 5*60*100; //5 minutes
+var start = undefined;
+var oneStepTimeout = 3*1000; //every 3 sec
+var btcReceived = false;
+
+var startCountDown = function () {
+	start = new Date();
+	doOneStep();
+};
+
+var checkBtcReceived = function() {
+	//TODO - ask server whether BTC received
+	btcReceived = false;
+};
+
+function updateProgressBar(percentage) {
+	var perc = 100-percentage;
+	var style = "width: "+perc+"%";
+	$('#progressBar').attr("style", style);
+	$('#progressBar').attr("aria-valuenow", perc);
+}
+
+function doOneStep() {
+	var now = new Date();
+	var timeDiff = now.getTime() - start.getTime();
+	var perc = Math.round((timeDiff/maxTime)*100);
+	if (!btcReceived && perc < 100) {
+		checkBtcReceived();
+		updateProgressBar(perc);
+		setTimeout(doOneStep, oneStepTimeout);
+	} else {
+		if (btcReceived) {
+			$("#btcReceived").attr("style", "");
+		} else {
+			$("#btcNotReceived").attr("style", "");
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////
 
 window.onload = function() {
 	
