@@ -31,23 +31,14 @@
 		<!-- header -->
 		<div class="navbar navbar-inverse navbar-fixed-top  hidden-xs" role="navigation">
 			<div class="container">
-				<div class="navbar-header">
-					<!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="sr-only">Navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					</button> -->
-					<!-- <a class="navbar-brand" href="#">New Pecunia</a> -->
-				</div>
-				<!-- <div class="collapse navbar-collapse"> -->
+				<div class="navbar-header"></div>
 				<div>
 					<ul class="nav navbar-nav">
 						<li>
-							<span class="navbar-text">Buy price: <span style="color: white"><b>$432.00</b></span></span>
+							<span class="navbar-text">Buy price: <b><span id="buyPrice" style="color: white">NA</span></b></span>
 						</li>
 						<li>
-							<span class="navbar-text">Sell price: <span style="color: white"><b>$123.00</b></span></span>
+							<span class="navbar-text">Sell price: <b><span id="sellPrice" style="color: white">NA</span></b></span>
 						</li>
 						<li>
 							<a href="http://bitcoin.org/" target="_blank">What is <span style="color: white"><b>Bitcoin</b></span>?</a>
@@ -64,13 +55,6 @@
 		<!-- end of header -->
 
 		<div class="container" style="padding-bottom: 30px; box-shadow: 6px 6px 50px -5px #999, -6px 6px 50px -5px #999;">
-			<!-- header visible only for small devices -->
-			<!-- <div class="visible-xs">
-				<h3><span class="label label-default">Buy price: <b>$432.00</b></span></h3>
-				<h3><span class="label label-default">Sell price: <b>$123.00</b></span></h3>	
-			</div> -->
-
-
 			<!-- navigation -->
 			<div class="row">
 				<!-- navigation for bigger displays -->
@@ -124,7 +108,7 @@
 										<label for="inputAmount">Amount of Bitcoins to buy</label>
 										<div class="input-group">
 											<span class="input-group-addon"><b>BTC</b></span>
-											<input type="text" class="form-control" name="inputAmount" value="0.5" autofocus="autofocus" required>
+											<input id="buyAmount" type="text" class="form-control" name="inputAmount" value="0.5" autofocus="autofocus" required>
 										</div>
 									</div>
 								</div>
@@ -133,8 +117,8 @@
 										<label for="labelPrice">Price to pay</label>
 										<div class="input-group">
 											<span class="input-group-addon"><strong>$</strong></span>
-											<p class="form-control">
-												<strong>654</strong>
+											<p id="labelPrice" class="form-control">
+												<strong id="calculatedPrice"></strong>
 											</p>
 											<!-- <div class="input-group"> -->
 											<!-- <span class="input-group-addon">$</span>
@@ -174,13 +158,39 @@
 							<div class="form-group">
 								<div class="row">
 									<div class="col-xs-8">
-										<label for="inputExpityMonth">Expiration date</label>
+										<label for="inputExpireMonth">Expiration date</label>
 										<div class="row">
 											<div class="col-xs-5 form-group">
-												<input type="text" pattern="[0-9]*" class="form-control" name="inputExpityMonth" placeholder="MM" required />
+												<select name="inputExpireMonth" class="form-control" required>
+													<option value="01">01</option>
+													<option value="02">02</option>
+													<option value="03">03</option>
+													<option value="04">04</option>
+													<option value="05">05</option>
+													<option value="06">06</option>
+													<option value="07">07</option>
+													<option value="08">08</option>
+													<option value="09">09</option>
+													<option value="10">10</option>
+													<option value="11">11</option>
+													<option value="12">12</option>
+												</select>												
 											</div>
 											<div class="col-xs-6 form-group">
-												<input type="text" pattern="[0-9]*" class="form-control" name="inputExpityYear" placeholder="YYYY" required />
+												<select name="inputExpireYear" class="form-control" required>
+													<option value="2014">2014</option>
+													<option value="2015">2015</option>
+													<option value="2016">2016</option>
+													<option value="2017">2017</option>
+													<option value="2018">2018</option>
+													<option value="2019">2019</option>
+													<option value="2020">2020</option>
+													<option value="2021">2021</option>
+													<option value="2022">2022</option>
+													<option value="2023">2023</option>
+													<option value="2024">2024</option>
+													<option value="2025">2025</option>
+												</select>												
 											</div>
 										</div>
 									</div>
@@ -211,13 +221,11 @@
 					<div class="col-sm-4">
 						<div class="panel panel-default">
 							<div style="text-align: center">
-								<h4><span>Total: </span><strong><span>$654</span></strong></h4>
+								<h4><span>Total: </span><strong><span id="totalPrice"> </span></strong></h4>
 							</div>
 						</div>
 
-						<button type="submit" class="btn btn-primary btn-lg btn-block">
-							Buy
-						</button>
+						<button type="submit" class="btn btn-primary btn-lg btn-block">Buy</button>
 					</div>
 
 					<div class="col-sm-4"> </div>
@@ -233,6 +241,7 @@
 		<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
 		<script src="js/np.js"></script>
+		<script src="js/buy.js"></script>
 
 		<!-- Rules for validation of the form -->
 		<script>
@@ -248,16 +257,6 @@
 					},
 					inputCardNumber : {
 						creditcard : true
-					},
-					inputExpityMonth : {
-						digits : true,
-						min : 1,
-						max : 12
-					},
-					inputExpityYear : {
-						digits : true,
-						min : 2014,
-						max : 2999
 					},
 					inputCVC : {
 						digits : true
