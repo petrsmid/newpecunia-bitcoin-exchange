@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="a simple Bitcoin exchange">
+		<meta name="author" content="New Pecunia">
+		<link rel="shortcut icon" href="../favicon.png">
+
+		<title>New Pecunia - buy and sell Bitcoin instantly</title>
+
+		<!-- Bootstrap compiled and minified CSS -->
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="../css/bootstrap-theme.min.css">
+
+		<!-- Custom styles for this template -->
+		<link href="../css/np.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<!-- header -->
+		<div class="navbar navbar-inverse navbar-fixed-top  hidden-xs" role="navigation">
+			<div class="container">
+				<div class="navbar-header"></div>
+				<div>
+					<ul class="nav navbar-nav">
+						<li>
+							<span class="navbar-text">Buy price: <b><span id="buyPrice" style="color: white">NA</span></b></span>
+						</li>
+						<li>
+							<span class="navbar-text">Sell price: <b><span id="sellPrice" style="color: white">NA</span></b></span>
+						</li>
+						<li>
+							<a href="http://bitcoin.org/" target="_blank">What is <span style="color: white"><b>Bitcoin</b></span>?</a>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<a href="#about">About</a>
+						</li>
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div>
+		</div>
+		<!-- end of header -->
+
+		<div class="container" style="padding-bottom: 30px; box-shadow: 6px 6px 50px -5px #999, -6px 6px 50px -5px #999;">
+			<!-- navigation -->
+			<div class="row">
+				<!-- navigation for bigger displays -->
+				<div class="hidden-xs">
+					<div class="col-sm-6">
+						<h1>Buy Bitcoin</h1>
+					</div>
+					<div class="col-sm-6" style="margin: 20px 0 20px 0">
+						<ul class="nav nav-pills pull-right">
+							<li class="active">
+								<a href="#">Buy Bitcoin</a>
+							</li>
+							<li>
+								<a href="../sell/sell.html">Sell Bitcoin</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!-- END of navigation for bigger displays -->
+
+				<!-- navigation for small displays -->
+				<div class="visible-xs">
+					<div class="col-sm-6" style="margin-top: 20px;">
+						<ul class="nav nav-pills">
+							<li class="active">
+								<a href="#">Buy Bitcoin</a>
+							</li>
+							<li>
+								<a href="../sell/sell.html">Sell Bitcoin</a>
+							</li>
+						</ul>
+					</div>
+					<div class="col-sm-12">
+						<h1>Buy Bitcoin</h1>
+						<p class="visible-xs  text-info">
+							<a href="http://bitcoin.org/" target="_blank">What is Bitcoin?</a>
+						</p>
+					</div>
+				</div>
+				<!-- END of navigation for small displays -->
+
+			</div>
+
+			<form>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="well">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="inputAmount">Amount of Bitcoins to buy</label>
+										<div class="input-group">
+											<span class="input-group-addon"><b>BTC</b></span>
+											<input id="buyAmount" type="text" class="form-control" name="inputAmount" value="0.5" autofocus="autofocus" required>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="labelPrice">Price to pay</label>
+										<div class="input-group">
+											<span class="input-group-addon"><strong>$</strong></span>
+											<p id="labelPrice" class="form-control">
+												<strong id="calculatedPrice"></strong>
+											</p>
+											<!-- <div class="input-group"> -->
+											<!-- <span class="input-group-addon">$</span>
+											<input type="text" id="labelPrice" class="form-control" value="123" readonly=""> -->
+											<!-- </div> -->
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputBtcAddress">Withdraw to address</label>
+								<input type="text" class="form-control" name="inputBtcAddress" placeholder="e.g. 1PeNCTPCWDRq52a8uB33Mpi6idoX5ZoNjm" required>
+								<p class="text-info">
+									<a href="http://bitcoin.org/en/choose-your-wallet" target="_blank">Don't have any address? Download a Bitcoin wallet.</a>
+								</p>
+							</div>
+							<div class="form-group">
+								<div class="form-group">
+									<label for="inputEmail">E-mail <small>(optional)</small></label>
+									<input type="email" class="form-control" name="inputEmail" placeholder="we would only contact you in case of a problem with payment">
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="well">
+							<div class="form-group">
+								<label for="inputNameOnCard">Name on card</label>
+								<input type="text" class="form-control" name="inputNameOnCard" required />
+							</div>
+							<div class="form-group">
+								<label for="inputCardNumber">Credit card number</label>
+								<input type="text" pattern="[0-9]*" class="form-control" name="inputCardNumber" placeholder="1234 5678 9012 3456" required>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<div class="col-xs-8">
+										<label for="inputExpireMonth">Expiration date</label>
+										<div class="row">
+											<div class="col-xs-5 form-group">
+												<select name="inputExpireMonth" class="form-control" required>
+													<option value="01">01</option>
+													<option value="02">02</option>
+													<option value="03">03</option>
+													<option value="04">04</option>
+													<option value="05">05</option>
+													<option value="06">06</option>
+													<option value="07">07</option>
+													<option value="08">08</option>
+													<option value="09">09</option>
+													<option value="10">10</option>
+													<option value="11">11</option>
+													<option value="12">12</option>
+												</select>
+											</div>
+											<div class="col-xs-6 form-group">
+												<select name="inputExpireYear" class="form-control" required>
+													<option value="2014">2014</option>
+													<option value="2015">2015</option>
+													<option value="2016">2016</option>
+													<option value="2017">2017</option>
+													<option value="2018">2018</option>
+													<option value="2019">2019</option>
+													<option value="2020">2020</option>
+													<option value="2021">2021</option>
+													<option value="2022">2022</option>
+													<option value="2023">2023</option>
+													<option value="2024">2024</option>
+													<option value="2025">2025</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-4">
+										<label for="inputCVC">CVC</label>
+										<div class="row">
+											<div class="col-xs-12 form-group">
+												<input type="text" pattern="[0-9]*" class="form-control" name="inputCVC" placeholder="e.g. 311" required/>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-12">
+										<div align="center">
+											<img src="creditCardLogos.png" class="img-responsive" alt="credit card logos">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-4"></div>
+
+					<div class="col-sm-4">
+						<div class="panel panel-default">
+							<div style="text-align: center">
+								<h4><span>Total: </span><strong><span id="totalPrice"> </span></strong></h4>
+							</div>
+						</div>
+
+						<button type="submit" class="btn btn-primary btn-lg btn-block">
+							Buy
+						</button>
+					</div>
+
+					<div class="col-sm-4"></div>
+
+				</div>
+			</form>
+		</div><!-- /.container -->
+
+		<!-- Dialog. The content of the dialog is filled by the server. -->
+		<div id="dialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title">Thank you</h4>
+						<h4 class="modal-title">Error</h4>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-success">
+							<p>
+								<strong>Thank you for your payment.</strong>
+							</p>
+							<p>
+								You should receive your Bitcoins in a short while.
+							</p>
+						</div>
+						
+						<div class="alert alert-danger">
+							<p>
+								<strong>An error ocurred.</strong>
+							</p>
+							<p>
+								Please try again later.
+							</p>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">
+							Close
+						</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- Bootstrap, jQuery and jQuery Validator frameworks
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/np.js"></script>
+		<script src="buy.js"></script>
+
+		<!-- Rules for validation of the form -->
+		<script>
+			$('form').validate({
+				rules : {
+					inputAmount : {
+						required : true,
+						number : true,
+						min : 0.0001
+					},
+					inputBtcAddress : {
+						btcAddress : true
+					},
+					inputCardNumber : {
+						creditcard : true
+					},
+					inputCVC : {
+						digits : true
+					}
+				}
+			});
+
+			// $('#dialog').modal('show');
+		</script>
+	</body>
+</html>

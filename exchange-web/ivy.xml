@@ -23,7 +23,8 @@
 
         <!-- To add a library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
 		<dependency org="com.google.inject.extensions" name="guice-servlet" rev="3.0"/>
-		
+		<dependency org="org.thymeleaf" name="thymeleaf" rev="2.1.2.RELEASE" />
+				
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
     </dependencies>

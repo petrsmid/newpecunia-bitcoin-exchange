@@ -1,13 +1,17 @@
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-	version="3.0" >
-	
+	version="3.0">
+
 	<listener>
-		<listener-class>com.newpecunia.guice.BootstrapContextListener</listener-class>		
+		<listener-class>com.newpecunia.guice.BootstrapContextListener</listener-class>
 	</listener>
-    <listener>
-		<listener-class>com.newpecunia.scheduler.QuartzStartStopContextListener</listener-class>		
+	<listener>
+		<listener-class>com.newpecunia.scheduler.QuartzStartStopContextListener</listener-class>
 	</listener>
+
 	
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error/404.jsp</location>
+	</error-page>
 </web-app>
