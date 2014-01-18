@@ -736,7 +736,7 @@
 							<div style="text-align: center">
 								<h4>Price: <span id="calculatedPrice2"> </span></h4>
 								<h4><span>Fee: $15</span></h4>
-								<h4><span>Total: </span><strong><span id="totalPrice"> </span></strong></h4>
+								<h4><span>You will receive: </span><strong><span id="totalPrice"> </span></strong></h4>
 							</div>
 						</div>
 						<button type="submit" class="btn btn-primary btn-lg btn-block">
@@ -781,19 +781,29 @@
 											</div>
 											<div class="panel panel-default">
 												<div class="panel-body">
-													<label for="progressBar">Waiting for your bitcoins</label>
-													<div class="progress progress-striped active">
-														<div id="progressBar" name="progressBar" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-															<span class="sr-only">Waiting 5 minutes for your Bitcoins.</span>
+													<div id="progressBarWithLabel">
+														<label for="progressBar">Waiting for your bitcoins</label>
+														<div class="progress progress-striped active">
+															<div id="progressBar" name="progressBar" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+																<span class="sr-only">Waiting 5 minutes for your Bitcoins.</span>
+															</div>
 														</div>
 													</div>
 													<div id="btcNotReceived" class="alert alert-warning" style="display: none;">
-														<p><strong>We did not receive the Bitcoins from you yet.</strong></p>
-														<p>This can be caused by setting too low transaction fee. You can close this window - our server will wait for your Bitcoins for the next hour.</p>
+														<p>
+															<strong>We did not receive the Bitcoins from you yet.</strong>
+														</p>
+														<p>
+															This can be caused by setting too low transaction fee. You can close this window - our server will wait for your Bitcoins for the next hour.
+														</p>
 													</div>
 													<div id="btcReceived" class="alert alert-success" style="display: none;">
-														<p><strong>We just received the Bitcoins from you. Thank you!</strong></p>
-														<p>You will receive your money on your bank account in couple of days depending mainly on the speed of banks.</p>
+														<p>
+															<strong>We just received the Bitcoins from you. Thank you!</strong>
+														</p>
+														<p>
+															You will receive your money on your bank account in couple of days depending mainly on the speed of banks.
+														</p>
 													</div>
 												</div>
 											</div>

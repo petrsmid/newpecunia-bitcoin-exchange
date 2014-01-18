@@ -61,6 +61,7 @@ var openBtcReceiveDialog = function() {
 	$('#qrCode').attr("src", qrCodeUrl);
 	$("#btcNotReceived").attr("style", "display: none;");
 	$("#btcReceived").attr("style", "display: none;");
+	$("#progressBarWithLabel").attr("style", "");
 	startCountDown();
 	$('#waitForBtcModal').modal('show');	
 };
@@ -97,11 +98,13 @@ function doOneStep() {
 		updateProgressBar(perc);
 		setTimeout(doOneStep, oneStepTimeout);
 	} else {
+		updateProgressBar(100);
 		if (btcReceived) {
 			$("#btcReceived").attr("style", "");
 		} else {
 			$("#btcNotReceived").attr("style", "");
 		}
+		$("#progressBarWithLabel").attr("style", "display: none;");
 	}
 }
 
