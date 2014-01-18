@@ -33,7 +33,7 @@ public abstract class AbstractThymeleafServlet extends HttpServlet {
 	private void initTemplateEnging() {
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
         templateResolver.setTemplateMode("LEGACYHTML5");
-        templateResolver.setCacheable(true);
+        templateResolver.setCacheable(false);
         templateResolver.setCharacterEncoding("utf-8");
         
         templateEngine = new TemplateEngine();
