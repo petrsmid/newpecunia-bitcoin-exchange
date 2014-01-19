@@ -43,19 +43,19 @@ public class TraderServiceImpl implements TraderService {
 	}
 	
 	@Override
-	public BigDecimal getNPBtcBuyPriceInUSD(BigDecimal amountBtc) {
+	public BigDecimal getCustomerBtcBuyPriceInUSD(BigDecimal amountBtc) {
 		return cachedBuySellPriceCalc.getBtcBuyPriceInUSD();
 	}
 
 	@Override
-	public BigDecimal getNPBtcSellPriceInUSD(BigDecimal amountBtc) {
+	public BigDecimal getCustomerBtcSellPriceInUSD(BigDecimal amountBtc) {
 		return cachedBuySellPriceCalc.getBtcSellPriceInUSD();
 	}
 
 	@Override
 	public void payForReceivedBTCs(String receivingBtcAddress, BigDecimal btcAmount) {
 		logger.trace(String.format("Paying for received BTCs - receiving address: %s, amount %s BTC", receivingBtcAddress, btcAmount));
-		BigDecimal amountUSD = getNPBtcBuyPriceInUSD(btcAmount);
+		BigDecimal amountUSD = getCustomerBtcSellPriceInUSD(btcAmount);
 		paymentService.createOrderFromPreOrder(receivingBtcAddress, amountUSD);
 	}
 	

@@ -93,6 +93,8 @@ public class HttpSession {
         if (client == null) {
             client = new HttpClient();
             client.getParams().setContentCharset(ENCODING);
+            client.getParams().setConnectionManagerTimeout(30000);
+            client.getParams().setSoTimeout(30000);
             client.getState().setCredentials(AuthScope.ANY, credentials);
         }
 

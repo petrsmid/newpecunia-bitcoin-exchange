@@ -40,7 +40,7 @@ public class BuyController implements ThymeleafController {
 	private void initExpirationYears(Map<String, Object> variables) {
 		List<String> years = new ArrayList<>();
 		int actualYear = timeProvider.nowDateTime().getYear();
-		for (int i = actualYear; i < actualYear + 12; i++) {
+		for (int i = actualYear; i <= actualYear + 20; i++) {
 			years.add(""+i);
 		}
 		variables.put("years", years);

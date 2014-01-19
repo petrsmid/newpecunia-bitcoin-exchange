@@ -26,12 +26,13 @@ var showUpdatedPrices = function() {
 
 
 var updatePrices = function() {
-	//mock
-	buyPrice = roundToTwo(700 + Math.random() * 100);
-	sellPrice = roundToTwo(buyPrice + 50);
-	
-	showUpdatedPrices();
-	updateCalculatedPrice();
+	$.getJSON("../customerBuySellPrice", function(prices) {
+		buyPrice = prices.buyPrice;
+		sellPrice = prices.sellPrice;
+
+		showUpdatedPrices();
+		updateCalculatedPrice();
+	});
 };
 
 var fixDecimalComma = function(input) {

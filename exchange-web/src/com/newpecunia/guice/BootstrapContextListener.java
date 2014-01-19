@@ -10,10 +10,10 @@ import com.newpecunia.bitcoind.BitcoindConnectorModule;
 import com.newpecunia.bitcoind.service.impl.BitcoindReceivedPaymentCallbackServlet;
 import com.newpecunia.bitstamp.BitstampConnectorModule;
 import com.newpecunia.common.CommonModule;
+import com.newpecunia.exchangeweb.serviceservlets.CustomerBuySellPriceServlet;
 import com.newpecunia.ioc.InjectorHolder;
 import com.newpecunia.persistence.PersistenceModule;
 import com.newpecunia.scheduler.SchedulerModule;
-import com.newpecunia.test.TestServlet;
 import com.newpecunia.thymeleaf.DisableHtmlServlet;
 import com.newpecunia.thymeleaf.ThymeleafServlet;
 import com.newpecunia.trader.TraderModule;
@@ -37,8 +37,13 @@ public class BootstrapContextListener extends GuiceServletContextListener {
 					protected void configureServlets() {
 					    filter("/*").through(PersistFilter.class);
 						serve("/bitcoindReceivedPaymentCallback_dgqac0akerd1c4e7asiy5d8zqjdg68652u").with(BitcoindReceivedPaymentCallbackServlet.class); //the address has non-guesable postfix to prevent calling it by some attacker
-						serve("/test").with(TestServlet.class); //TODO remove before going into production!
+//						serve("/test").with(TestServlet.class); //TODO remove before going into production!
 						
+						//Services
+						serve("/customerBuySellPrice").with(CustomerBuySellPriceServlet.class);
+						
+						
+						//Thymeleaf templating
 						serve("/buy/", "/sell/").with(ThymeleafServlet.class);
 						serve("*.html").with(DisableHtmlServlet.class);
 					}

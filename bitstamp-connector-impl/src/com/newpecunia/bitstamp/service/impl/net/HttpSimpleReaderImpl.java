@@ -17,6 +17,9 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,7 +30,12 @@ public class HttpSimpleReaderImpl implements HttpReader {
 	private RequestCountLimitVerifier requestCountLimitVerifier;
 
 	protected HttpClient getHttpClient() {
-		return new DefaultHttpClient();
+		 // set the connection timeout value to 30 seconds (30000 milliseconds)
+	    final HttpParams httpParams = new BasicHttpParams();
+	    HttpConnectionParams.setConnectionTimeout(httpParams, 30000);
+	    HttpConnectionParams.setSoTimeout(httpParams, 30000);
+	    
+		return new DefaultHttpClient(httpParams);
 	}
 	
 	HttpSimpleReaderImpl() {

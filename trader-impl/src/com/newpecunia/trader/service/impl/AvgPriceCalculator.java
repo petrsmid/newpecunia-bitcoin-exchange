@@ -18,7 +18,7 @@ public class AvgPriceCalculator {
 		BigDecimal sumPrice = BigDecimal.ZERO;
 		int i = 0;
 		for (PriceAndAmount order : orders) {
-			logger.debug("Considering order number "+ ++i +" for price");
+//			logger.trace("Considering order number "+ ++i +" for price");
 			sumAmount = sumAmount.add(order.getAmount());
 			sumPrice = sumPrice.add(order.getPrice().multiply(order.getAmount()));
 			if (sumAmount.compareTo(forMaxBtcs) >= 0) {
@@ -34,7 +34,7 @@ public class AvgPriceCalculator {
 		BigDecimal sumPrice = BigDecimal.ZERO;
 		int i = 0;
 		for (PriceAndAmount order : orders) {
-			logger.debug("Considering order number "+ ++i +" for price");
+//			logger.trace("Considering order number "+ ++i +" for price");
 			sumAmount = sumAmount.add(order.getAmount());
 			sumPrice = sumPrice.add(order.getPrice().multiply(order.getAmount()));
 			if (sumPrice.compareTo(forMaxUsds) >= 0) {

@@ -39,6 +39,7 @@ public class CachedBuySellPriceCalculator {
 	}
 
 	private void actualiseOrderBookAndPrices() {
+		logger.trace("Actualising buy and sell prices.");
 		OrderBook orderBook;
 		try {
 			orderBook = bitstampService.getOrderBook();
@@ -66,14 +67,14 @@ public class CachedBuySellPriceCalculator {
 	}
 	
 	public BigDecimal getBtcBuyPriceInUSD() {
-		logger.trace("Calculating buy price.");
+		logger.trace("Getting buy price.");
 		actualiseOrderBookIfNeeded();
 		return lastBuyPrice;
 	}
 
 
 	public BigDecimal getBtcSellPriceInUSD() {
-		logger.trace("Calculating sell price.");
+		logger.trace("Getting sell price.");
 		actualiseOrderBookIfNeeded();
 		return lastSellPrice;
 	}

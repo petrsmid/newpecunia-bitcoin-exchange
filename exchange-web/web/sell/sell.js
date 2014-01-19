@@ -13,7 +13,7 @@ var roundToTwo = function(num) {
 var updateCalculatedPrice = function() {
 	var sellAmount = $("#sellAmount").val();
 	 
-	var calculatedPrice = buyPrice * sellAmount;
+	var calculatedPrice = sellPrice * sellAmount;
 	if (!isNaN(calculatedPrice) && calculatedPrice >= 0) {
 		var roundedPrice = roundToTwo(calculatedPrice);
 		$("#calculatedPrice").text(roundedPrice);
@@ -36,14 +36,14 @@ var showUpdatedPrices = function() {
 
 
 var updatePrices = function() {
-	//mock
-	buyPrice = roundToTwo(700 + Math.random() * 100);
-	sellPrice = roundToTwo(buyPrice + 50);
-	
-	showUpdatedPrices();
-	updateCalculatedPrice();
-};
+	$.getJSON("../customerBuySellPrice", function(prices) {
+		buyPrice = prices.buyPrice;
+		sellPrice = prices.sellPrice;
 
+		showUpdatedPrices();
+		updateCalculatedPrice();
+	});
+};
 var fixDecimalComma = function(input) {
 	var origValue = input.val();
 	var fixedValue = origValue.replace(/,/g,".");

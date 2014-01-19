@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 
 public interface TraderService {
 	
-	BigDecimal getNPBtcBuyPriceInUSD(BigDecimal amountBtc);
-	BigDecimal getNPBtcSellPriceInUSD(BigDecimal amountBtc);
+	BigDecimal getCustomerBtcBuyPriceInUSD(BigDecimal amountBtc);
+	BigDecimal getCustomerBtcSellPriceInUSD(BigDecimal amountBtc);
 	void payForReceivedBTCs(String receivingBtcAddress, BigDecimal btcAmount);
 	void sendBTCsForPayment(String receiverBtcAddress, BigDecimal amount, String email);
 
