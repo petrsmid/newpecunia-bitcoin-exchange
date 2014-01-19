@@ -189,6 +189,15 @@ public class BitstampServiceLiveTest {
 		List<Order> ordersAfterCancel = waitAndGetOpenOrders();
 		assertEquals(0, ordersAfterCancel.size());
 	}
+
+	@Test
+	public void testGetOrderBook() throws Exception {
+		OrderBook orderBook = bitstampService.getOrderBook();
+		assertNotNull(orderBook);
+		assertNotNull(orderBook.getAsks());
+		assertNotNull(orderBook.getBids());
+		assertNotNull(orderBook.getTimestamp());
+	}
 	
 	@Test
 	@Ignore
