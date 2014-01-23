@@ -13,15 +13,18 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import com.google.inject.Inject;
+import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.time.TimeProvider;
 
 public class BuyController implements ThymeleafController {
 
 	private TimeProvider timeProvider;
+	private NPConfiguration configuration;
 
 	@Inject
-	BuyController(TimeProvider timeProvider) {
+	BuyController(TimeProvider timeProvider, NPConfiguration configuration) {
 		this.timeProvider = timeProvider;
+		this.configuration = configuration;
 	}
 	
 	@Override
@@ -31,10 +34,15 @@ public class BuyController implements ThymeleafController {
 
         Map<String, Object> variables = new HashMap<>();
         
+        initCardProcessingUrl(variables);
         initExpirationYears(variables);
         
 		WebContext ctx = new WebContext(request, response, servletContext, request.getLocale(), variables);
         return templateEngine.process("/buy/buy.html", ctx);
+	}
+
+	private void initCardProcessingUrl(Map<String, Object> variables) {
+		variables.put("cardProcessingUrl", configuration.getCardProcessingUrl());
 	}
 
 	private void initExpirationYears(Map<String, Object> variables) {

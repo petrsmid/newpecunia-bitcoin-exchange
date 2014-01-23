@@ -16,7 +16,7 @@ public class CreditCardAcquiringUnicreditServiceImpl implements CreditCardAcquir
 	@Override
 	public String startCardPaymentTransaction(BigDecimal amount) {
 		// TODO implement me
-		return null;
+		return "123456789";
 	}
 
 	@Override

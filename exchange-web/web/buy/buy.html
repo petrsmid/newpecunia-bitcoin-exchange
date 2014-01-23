@@ -98,17 +98,17 @@
 
 			</div>
 
-			<form>
+			<form id="buyForm">
 				<div class="row">
 					<div class="col-md-6">
 						<div class="well">
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<label for="inputAmount">Amount of Bitcoins to buy</label>
+										<label for="inputBuyAmount">Amount of Bitcoins to buy</label>
 										<div class="input-group">
 											<span class="input-group-addon"><b>BTC</b></span>
-											<input id="buyAmount" type="text" class="form-control" name="inputAmount" value="0.5" autofocus="autofocus" required>
+											<input id="inputBuyAmount" type="text" class="form-control" name="inputBuyAmount" value="0.5" autofocus="autofocus" required>
 										</div>
 									</div>
 								</div>
@@ -130,7 +130,7 @@
 							</div>
 							<div class="form-group">
 								<label for="inputBtcAddress">Withdraw to address</label>
-								<input type="text" class="form-control" name="inputBtcAddress" placeholder="e.g. 1PeNCTPCWDRq52a8uB33Mpi6idoX5ZoNjm" required>
+								<input type="text" class="form-control" id="inputBtcAddress" name="inputBtcAddress" placeholder="e.g. 1PeNCTPCWDRq52a8uB33Mpi6idoX5ZoNjm" required>
 								<p class="text-info">
 									<a href="http://bitcoin.org/en/choose-your-wallet" target="_blank">Don't have any address? Download a Bitcoin wallet.</a>
 								</p>
@@ -138,7 +138,7 @@
 							<div class="form-group">
 								<div class="form-group">
 									<label for="inputEmail">E-mail <small>(optional)</small></label>
-									<input type="email" class="form-control" name="inputEmail" placeholder="we would only contact you in case of a problem with payment">
+									<input id="inputEmail" type="email" class="form-control" name="inputEmail" placeholder="we would only contact you in case of a problem with payment">
 								</div>
 							</div>
 
@@ -265,7 +265,14 @@
 		</div>
 		<!-- /.modal -->
 
-		<!-- Bootstrap, jQuery and jQuery Validator frameworks
+
+	<form id="goToCardPaymentForm" name="goToCardPaymentForm" th:attr="action=${cardProcessingUrl}" action="url" method="POST">
+		<input type="hidden" id="trans_id" name="trans_id" value="%%trans_id%%"> <!-- The attribut must be really named "trans_id" !!! -->
+	</form>
+
+
+
+	<!-- Bootstrap, jQuery and jQuery Validator frameworks
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
 		<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -276,12 +283,13 @@
 
 		<!-- Rules for validation of the form -->
 		<script>
-			$('form').validate({
+			$('#buyForm').validate({
 				rules : {
-					inputAmount : {
+					inputBuyAmount : {
 						required : true,
 						number : true,
-						min : 0.0001
+						min : 0.01,
+						max : 10000
 					},
 					inputBtcAddress : {
 						btcAddress : true
@@ -292,7 +300,10 @@
 					inputCVC : {
 						digits : true
 					}
-				}
+				},
+				submitHandler : function(f) {
+					submitBuy();
+				}				
 			});
 
 			// $('#dialog').modal('show');

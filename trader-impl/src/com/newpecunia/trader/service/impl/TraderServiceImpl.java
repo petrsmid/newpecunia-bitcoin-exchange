@@ -41,6 +41,16 @@ public class TraderServiceImpl implements TraderService {
 		this.timeProvider = timeProvider;
 		this.emProvider = emProvider;
 	}
+
+	@Override
+	public BigDecimal getCustomerBtcBuyPriceInUSD() {
+		return getCustomerBtcBuyPriceInUSD(new BigDecimal(100));
+	}
+
+	@Override
+	public BigDecimal getCustomerBtcSellPriceInUSD() {
+		return getCustomerBtcSellPriceInUSD(new BigDecimal(100));
+	}
 	
 	@Override
 	public BigDecimal getCustomerBtcBuyPriceInUSD(BigDecimal amountBtc) {

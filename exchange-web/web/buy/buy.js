@@ -6,7 +6,7 @@ var roundToTwo = function(num) {
 };
 
 var updateCalculatedPrice = function() {
-	var buyAmount = $("#buyAmount").val();
+	var buyAmount = $("#inputBuyAmount").val();
 	 
 	var calculatedPrice = buyPrice * buyAmount;
 	if (!isNaN(calculatedPrice) && calculatedPrice >= 0) {
@@ -43,9 +43,19 @@ var fixDecimalComma = function(input) {
 	} 
 };
 
+var submitBuy = function() {
+	var buyFormData = $("#buyForm").serialize();	
+	$.post("../buyService", buyFormData, function(response, status) {
+			var responseObject = jQuery.parseJSON( response );
+			var txId = responseObject.transactionId;
+			$('#trans_id').val(txId);
+			$("#goToCardPaymentForm").submit();
+		});	
+};
+
 window.onload = function() {
 	
-	$("#buyAmount").on("input", function(){
+	$("#inputBuyAmount").on("input", function(){
 		fixDecimalComma($(this));
 		updateCalculatedPrice();
 	});

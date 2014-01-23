@@ -35,8 +35,8 @@ public class CustomerBuySellPriceServlet extends AbstractServiceServlet {
 	
 	@Override
 	protected void serveGet(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		BigDecimal buyPrice = traderService.getCustomerBtcBuyPriceInUSD(new BigDecimal(100));
-		BigDecimal sellPrice = traderService.getCustomerBtcSellPriceInUSD(new BigDecimal(100));
+		BigDecimal buyPrice = traderService.getCustomerBtcBuyPriceInUSD();
+		BigDecimal sellPrice = traderService.getCustomerBtcSellPriceInUSD();
 		
 		Response response = new Response(buyPrice, sellPrice);
 		String strResponse = JsonCodec.INSTANCE.toJson(response);

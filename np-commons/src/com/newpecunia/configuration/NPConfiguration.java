@@ -277,5 +277,12 @@ public class NPConfiguration {
 	public BigDecimal getBitstampMinWithdrawUsdFee() {
 		return config.getBigDecimal("bitstamp.minWithdrawUsdFee");
 	}
+	
+	public String getCardProcessingUrl() {
+		return config.getString("cardPayment.processingUrl");
+	}
+
+	
+	
 
 }

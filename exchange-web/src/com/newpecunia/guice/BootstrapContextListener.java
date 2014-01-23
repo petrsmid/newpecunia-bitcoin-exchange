@@ -11,6 +11,7 @@ import com.newpecunia.bitcoind.service.impl.BitcoindReceivedPaymentCallbackServl
 import com.newpecunia.bitstamp.BitstampConnectorModule;
 import com.newpecunia.common.CommonModule;
 import com.newpecunia.creditcard.CreditCardConnectorModule;
+import com.newpecunia.exchangeweb.serviceservlets.BuyServlet;
 import com.newpecunia.exchangeweb.serviceservlets.CustomerBuySellPriceServlet;
 import com.newpecunia.ioc.InjectorHolder;
 import com.newpecunia.persistence.PersistenceModule;
@@ -43,6 +44,7 @@ public class BootstrapContextListener extends GuiceServletContextListener {
 						
 						//Services
 						serve("/customerBuySellPrice").with(CustomerBuySellPriceServlet.class);
+						serve("/buyService").with(BuyServlet.class);
 						
 						
 						//Thymeleaf templating
