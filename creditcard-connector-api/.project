@@ -1,27 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>exchange-web</name>
+	<name>creditcard-connector-api</name>
 	<comment></comment>
 	<projects>
-		<project>np-commons</project>
-		<project>persistence</project>
-		<project>bitcoind-connector-impl</project>
-		<project>trader-impl</project>
-		<project>unicredit-connector-impl</project>
-		<project>bitstamp-connector-impl</project>
-		<project>unicredit-connector-api</project>
-		<project>trader-api</project>
-		<project>bitstamp-connector-api</project>
-		<project>bitcoind-connector-api</project>
-		<project>creditcard-connector-impl</project>
-		<project>creditcard-connector-api</project>
 	</projects>
 	<buildSpec>
-		<buildCommand>
-			<name>org.eclipse.wst.jsdt.core.javascriptValidator</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.wst.common.project.facet.core.builder</name>
 			<arguments>
@@ -44,6 +27,5 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.apache.ivyde.eclipse.ivynature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
-		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
 	</natures>
 </projectDescription>

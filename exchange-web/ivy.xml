@@ -18,6 +18,7 @@
         <dependency name="persistence" rev="latest.integration" conf="compile"/>
         <dependency name="bitcoind-connector-impl" rev="latest.integration" conf="compile"/>
         <dependency name="bitstamp-connector-impl" rev="latest.integration" conf="compile"/>
+        <dependency name="creditcard-connector-impl" rev="latest.integration" conf="compile"/>
         <dependency name="trader-impl" rev="latest.integration" conf="compile"/>
         <dependency name="unicredit-connector-impl" rev="latest.integration" conf="compile"/>
 
