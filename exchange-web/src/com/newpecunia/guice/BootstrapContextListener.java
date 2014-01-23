@@ -10,6 +10,7 @@ import com.newpecunia.bitcoind.BitcoindConnectorModule;
 import com.newpecunia.bitcoind.service.impl.BitcoindReceivedPaymentCallbackServlet;
 import com.newpecunia.bitstamp.BitstampConnectorModule;
 import com.newpecunia.common.CommonModule;
+import com.newpecunia.creditcard.CreditCardConnectorModule;
 import com.newpecunia.exchangeweb.serviceservlets.CustomerBuySellPriceServlet;
 import com.newpecunia.ioc.InjectorHolder;
 import com.newpecunia.persistence.PersistenceModule;
@@ -26,6 +27,7 @@ public class BootstrapContextListener extends GuiceServletContextListener {
     	Injector injector = Guice.createInjector(
         		new BitcoindConnectorModule(),
         		new BitstampConnectorModule(),
+        		new CreditCardConnectorModule(),
         		new CommonModule(),
         		new PersistenceModule(),
         		new TraderModule(),
