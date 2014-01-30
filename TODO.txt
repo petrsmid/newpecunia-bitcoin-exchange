@@ -1,0 +1,38 @@
+- odstranit entity manager provider - misto toho opuzivat sessionfactory. Pri jobech necleanovat session, ale vzdy vyrobit novou
+- pridat projekt na prijimani karty
+- unicredit connector: 
+	- testy
+- bitciond-connector: pridat job na kontrolu poctu volnych BTC adres - kdyz uz jich je malo poslat email
+    - PaymentStatusReportingJob - reportuje vsechny pending paymenty. Mely by se reportovat jen ty, ktere jsou pending napr vic nez jeden den. Ale az to bude vse odzkousene
+- commons: udelat lepsi country database - nacitani zvenku - ted je pouze zahardcodovane v Jave
+- persistence: if in huge load, reimplement ShortCyclicIdGenerator
+- test suity
+- trader:
+  - misto hardcodovane hodnoty kolik BTC se pouzije na prumernou cenu by bylo lepsi pocitat s aktualni velikosti prodeje/nakupu (CachedBuySellPriceCalculator)
+- Predelat kalkulaci ceny - CachedBuySellPriceCalculator / AvgPriceCalculator - aby to bralo podle toho, kolik uzivatel chce koupit/prodat
+- Poslat e-mail s potvrzenim platby
+- Google Analytics
+
+
+
+
+UI
+Dekovani za platby, upozorneni na chyby
+About, 404
+Buy: napsat, ze se jedna o platbu kartou a ze uzivatel dostane BTC okamzite
+Buy: vysvetlit, co je CVC
+Sell: upozornit, aby uzivatel pouzil fee u paymentu, jinak to muze dlouho trvat a payment muze byt ztraceny
+Sell: upozornit, aby uzivatel nikdy opakovane neposilal na stejnou adresu
+Sell: zastavit aktualizaci ceny, jakmile uzivatel klikne na proceed
+Sell: pouzit vlastni QR code generator
+Vsude umoznit zadavat nejen mnozstvi BTC, ale i USD
+Zmenit barvy
+Nastavit favicon a ikonu pro Apple
+Pridat logo
+Otestovat v ruznych prohlizecich, na mobilech a tabletech
+Otestovat na nekolika dalsich BFU i zkusenych uzivatelech
+Vsechny resourcy mit vlastni - zadne tahani z jinych stranek
+Nechat zkontrolovat anglictinu Parv
+
+Prelozit do nekolika jazyku
+Pridat podporu socialnich siti
