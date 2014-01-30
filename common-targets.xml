@@ -47,6 +47,10 @@
 		<!-- resolve IVY dependencies -->
 		<ivy:resolve />
 		<ivy:retrieve /> <!-- automatically copies them to ./lib -->
+		<delete>
+			<fileset dir="${lib}" includes="**/*sources.jar"/> <!-- remove jars with sources -->
+			<fileset dir="${lib}" includes="**/*javadoc.jar"/> <!-- remove jars with javadoc -->
+		</delete>
 	</target>
 
 	<target name="report" depends="resolve">
