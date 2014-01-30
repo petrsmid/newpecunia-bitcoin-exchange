@@ -11,7 +11,8 @@
 	<maxTimeToWaitForBtcInSeconds>86400</maxTimeToWaitForBtcInSeconds> <!-- one day -->
 
 	<cardPayment>
-	    <processingUrl>https://secureshop-test.firstdata.lv:8443/ecomm/MerchantHandler</processingUrl>
+	    <processingUrl>../cardpayment/cardpayment.html</processingUrl>
+<!-- 	    <processingUrl>https://secureshop-test.firstdata.lv:8443/ecomm/MerchantHandler</processingUrl> -->
 	</cardPayment>
 	
 	<unicredit>

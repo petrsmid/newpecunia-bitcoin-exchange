@@ -26,7 +26,7 @@
 		<![endif]-->
 	</head>
 
-	<body>
+	<body style="background-image: url(../fabric_plaid.png);">
 
 		<!-- header -->
 		<div class="navbar navbar-inverse navbar-fixed-top  hidden-xs" role="navigation">
@@ -54,7 +54,8 @@
 		</div>
 		<!-- end of header -->
 
-		<div class="container" style="padding-bottom: 30px; box-shadow: 6px 6px 50px -5px #999, -6px 6px 50px -5px #999;">
+		<div class="container" style="padding-bottom: 30px; box-shadow: 6px 6px 50px -5px #999, -6px 6px 50px -5px #999; 
+			background-color: white; background-image: url('../bgrndB.jpg'); background-position: bottom left; background-repeat: no-repeat;">
 			<!-- navigation -->
 			<div class="row">
 				<!-- navigation for bigger displays -->
@@ -100,6 +101,8 @@
 
 			<form id="buyForm">
 				<div class="row">
+					<div class="col-md-3"> 
+					</div>
 					<div class="col-md-6">
 						<div class="well">
 							<div class="row">
@@ -145,77 +148,14 @@
 						</div>
 					</div>
 
-					<div class="col-md-6">
-						<div class="well">
-							<div class="form-group">
-								<label for="inputNameOnCard">Name on card</label>
-								<input type="text" class="form-control" name="inputNameOnCard" required />
-							</div>
-							<div class="form-group">
-								<label for="inputCardNumber">Credit card number</label>
-								<input type="text" pattern="[0-9]*" class="form-control" name="inputCardNumber" placeholder="1234 5678 9012 3456" required>
-							</div>
-							<div class="form-group">
-								<div class="row">
-									<div class="col-xs-8">
-										<label for="inputExpireMonth">Expiration date</label>
-										<div class="row">
-											<div class="col-xs-5 form-group">
-												<select name="inputExpireMonth" class="form-control" required>
-													<option value="01">01</option>
-													<option value="02">02</option>
-													<option value="03">03</option>
-													<option value="04">04</option>
-													<option value="05">05</option>
-													<option value="06">06</option>
-													<option value="07">07</option>
-													<option value="08">08</option>
-													<option value="09">09</option>
-													<option value="10">10</option>
-													<option value="11">11</option>
-													<option value="12">12</option>
-												</select>
-											</div>
-											<div class="col-xs-6 form-group">
-												<select name="inputExpireYear" class="form-control" required>
-													<option value="2014" th:each="year : ${years}" th:text="${year}" th:attr="value=${year}">2014</option>
-												</select>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-4">
-										<label for="inputCVC">CVC</label>
-										<div class="row">
-											<div class="col-xs-12 form-group">
-												<input type="text" pattern="[0-9]*" class="form-control" name="inputCVC" placeholder="e.g. 311" required/>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-12">
-										<div align="center">
-											<img src="creditCardLogos.png" class="img-responsive" alt="credit card logos">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 
 				<div class="row">
 					<div class="col-sm-4"></div>
 
 					<div class="col-sm-4">
-						<div class="panel panel-default">
-							<div style="text-align: center">
-								<h4><span>Total: </span><strong><span id="totalPrice"> </span></strong></h4>
-							</div>
-						</div>
-
 						<button type="submit" class="btn btn-primary btn-lg btn-block">
-							Buy
+							Proceed to payment >>
 						</button>
 					</div>
 

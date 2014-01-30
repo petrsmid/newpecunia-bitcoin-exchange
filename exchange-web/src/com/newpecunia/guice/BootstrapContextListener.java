@@ -49,7 +49,7 @@ public class BootstrapContextListener extends GuiceServletContextListener {
 						
 						//Thymeleaf templating
 						serve("/buy/", "/sell/").with(ThymeleafServlet.class);
-						serve("*.html").with(DisableHtmlServlet.class);
+//						serve("*.html").with(DisableHtmlServlet.class); //TODO enable - temporary disablet to be able to show the payment page
 					}
         		}
         	);
