@@ -13,10 +13,10 @@ import com.newpecunia.common.CommonModule;
 import com.newpecunia.creditcard.CreditCardConnectorModule;
 import com.newpecunia.exchangeweb.serviceservlets.BuyServlet;
 import com.newpecunia.exchangeweb.serviceservlets.CustomerBuySellPriceServlet;
+import com.newpecunia.exchangeweb.serviceservlets.UnconfirmedBuyServlet;
 import com.newpecunia.ioc.InjectorHolder;
 import com.newpecunia.persistence.PersistenceModule;
 import com.newpecunia.scheduler.SchedulerModule;
-import com.newpecunia.thymeleaf.DisableHtmlServlet;
 import com.newpecunia.thymeleaf.ThymeleafServlet;
 import com.newpecunia.trader.TraderModule;
 import com.newpecunia.unicredit.UnicreditConnectorModule;
@@ -38,18 +38,20 @@ public class BootstrapContextListener extends GuiceServletContextListener {
         		new ServletModule() {
 					@Override
 					protected void configureServlets() {
+						
 					    filter("/*").through(PersistFilter.class);
 						serve("/bitcoindReceivedPaymentCallback_dgqac0akerd1c4e7asiy5d8zqjdg68652u").with(BitcoindReceivedPaymentCallbackServlet.class); //the address has non-guesable postfix to prevent calling it by some attacker
 //						serve("/test").with(TestServlet.class); //TODO remove before going into production!
 						
 						//Services
 						serve("/customerBuySellPrice").with(CustomerBuySellPriceServlet.class);
+						serve("/unconfirmedBuyService").with(UnconfirmedBuyServlet.class);
 						serve("/buyService").with(BuyServlet.class);
 						
 						
 						//Thymeleaf templating
-						serve("/buy/", "/sell/").with(ThymeleafServlet.class);
-//						serve("*.html").with(DisableHtmlServlet.class); //TODO enable - temporary disablet to be able to show the payment page
+						serve("/buy/"/*, "/sell/"*/).with(ThymeleafServlet.class);
+//						serve("*.html").with(DisableHtmlServlet.class); //TODO enable - temporary disabled to be able to show the payment page
 					}
         		}
         	);

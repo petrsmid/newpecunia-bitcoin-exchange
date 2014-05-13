@@ -1,36 +1,31 @@
 package com.newpecunia.persistence.entities;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "BUY_PREORDERS")
-public class BuyPreorder {
+@Table(name = "UNCONFIRMED_BUY_PREORDERS")
+public class UnconfirmedBuyPreOrder {
 
-	public enum BuyPreorderResolution { OPEN, PAYMENT_OK, PAYMENT_ERROR }
 	
 	@Id
-//	@GeneratedValue(generator="uuid")
-//	@GenericGenerator(name = "uuid", strategy = "uuid2")
-	@GenericGenerator(name="np_id_generator", strategy="com.newpecunia.persistence.HibernateIdGenerator")
-	@GeneratedValue(generator="np_id_generator")	
+	@GeneratedValue(generator="uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	@Column(name = "ID", unique=true)
 	private String id;
 	
 	@Column(name="BTC_AMOUNT")
 	private BigDecimal btcAmount;
-	
-	@Column(name="USD_AMOUNT")
-	private BigDecimal usdAmount;
 	
 	@Column(name="BTC_ADDRESS")
 	private String btcAddress;
@@ -50,15 +45,10 @@ public class BuyPreorder {
 	@Column(name="COUNTRY_CODE")
 	private String countryCode;
 	
-	@Column(name="CARD_TRANSACTION_ID")
-	private String cardTransactionId;
-	
-	@Column(name="STATUS")
-	@Enumerated(EnumType.STRING)
-	private BuyPreorderResolution status;
+	@Column(name="UPDATE_TIME")
+	@Temporal(TemporalType.TIMESTAMP)	
+	private Calendar createTimestamp;
 
-	
-	
 	public String getId() {
 		return id;
 	}
@@ -75,14 +65,6 @@ public class BuyPreorder {
 		this.btcAmount = btcAmount;
 	}
 
-	public BigDecimal getUsdAmount() {
-		return usdAmount;
-	}
-
-	public void setUsdAmount(BigDecimal usdAmount) {
-		this.usdAmount = usdAmount;
-	}
-
 	public String getBtcAddress() {
 		return btcAddress;
 	}
@@ -97,6 +79,14 @@ public class BuyPreorder {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Calendar getCreateTimestamp() {
+		return createTimestamp;
+	}
+
+	public void setCreateTimestamp(Calendar createTimestamp) {
+		this.createTimestamp = createTimestamp;
 	}
 
 	public String getName() {
@@ -130,24 +120,7 @@ public class BuyPreorder {
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
 	}
-
-	public String getCardTransactionId() {
-		return cardTransactionId;
-	}
-
-	public void setCardTransactionId(String cardTransactionId) {
-		this.cardTransactionId = cardTransactionId;
-	}
-
-	public BuyPreorderResolution getStatus() {
-		return status;
-	}
-
-	public void setStatus(BuyPreorderResolution status) {
-		this.status = status;
-	}
 	
 	
-	
-	
+
 }

@@ -21,7 +21,7 @@ import com.newpecunia.configuration.NPCredentials;
 @Singleton
 public class EmailSenderImpl implements EmailSender {
 
-	private static final Logger logger = LogManager.getLogger(EmailSender.class);	
+	private static final Logger logger = LogManager.getLogger(EmailSenderImpl.class);	
 	
 	
 	private NPConfiguration configuration;
@@ -32,19 +32,30 @@ public class EmailSenderImpl implements EmailSender {
 		this.configuration = configuration;
 		this.credentials = credentials;
 	}
+
+	@Override
+	public void sendHtmlEmail(String recipientAddressList, String subject, String messageBody) {
+		sendEmail(recipientAddressList, subject, messageBody, true);
+	}
 	
 	@Override
 	public void sendEmail(String recipientAddressList, String subject, String messageBody) {
-		final String username = configuration.getGmailAddress();
+		sendEmail(recipientAddressList, subject, messageBody, false);
+	}
+	
+	private void sendEmail(String recipientAddressList, String subject, String messageBody, boolean asHtml) {
+		logger.info("Sending e-mail "+recipientAddressList+" with subject "+subject);
+		//TODO send backup email in BCC to our inbox
+		final String username = configuration.getEmailAddress();
 		final String password = credentials.getEmailPassword();
  
 		Properties props = new Properties();
-		//we use GMail. If you need another SMTP provider you must reimplement this part
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.port", "587");
- 
+		props.put("mail.smtp.auth", "false");
+		props.put("mail.smtp.starttls.enable", "false");
+		props.put("mail.smtp.host", "localhost");
+		props.put("mail.smtp.port", "25");
+//        props.put("mail.debug", "true");
+
 		Session session = Session.getInstance(props,
 				new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
@@ -54,10 +65,13 @@ public class EmailSenderImpl implements EmailSender {
  
 		try {
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(configuration.getGmailAddress()));
+			message.setFrom(new InternetAddress(configuration.getEmailAddress()));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientAddressList));
 			message.setSubject(subject);
 			message.setText(messageBody);
+			if (asHtml) {
+				message.setContent(messageBody, "text/html");    
+			}
 			Transport.send(message);
 		} catch (MessagingException e) {
 			logger.error(String.format("Could not send e-mail to address %s.\nThe message: %s\n%s", recipientAddressList, subject, messageBody), e);

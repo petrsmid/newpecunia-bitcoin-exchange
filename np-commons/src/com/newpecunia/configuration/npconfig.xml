@@ -4,9 +4,9 @@
     
 	<credentialsPath>/home/petr/npcredentials.xml</credentialsPath>
 
-	<gmail>
-	    <address>petr.smid@pekat.cz</address>
-	</gmail>
+	<email>
+	    <address>info@newpecunia.com</address>
+	</email>
 	
 	<maxTimeToWaitForBtcInSeconds>86400</maxTimeToWaitForBtcInSeconds> <!-- one day -->
 

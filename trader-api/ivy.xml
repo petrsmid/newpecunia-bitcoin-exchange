@@ -14,5 +14,6 @@
     
     <dependencies>
         <!-- To add an external library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
+        <dependency name="np-commons" rev="latest.integration" conf="compile"/>
     </dependencies>
 </ivy-module>

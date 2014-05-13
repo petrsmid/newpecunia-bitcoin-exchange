@@ -43,6 +43,24 @@ var fixDecimalComma = function(input) {
 	} 
 };
 
+var submitUnconfirmedPreOrder = function() {
+	$('#dialogTitle').text("Please wait a second...");
+	$('#dialogBody').html("<div class=\"alert alert-info\"><p>Please wait while we are sending you an confirmation e-mail...</p></div>");
+	$('#dialog').modal('show');	
+	var buyFormData = $("#buyForm").serialize();	
+	$.post("../unconfirmedBuyService", buyFormData, function(response, status) {
+			if (response === "emailSent") {
+				$('#dialogTitle').text("Confirmation e-mail has been sent to you.");
+				$('#dialogBody').html("<div class=\"alert alert-success\"><p><strong>Confirmation e-mail has been sent to you.</strong></p><p>Please follow the link in the e-mail to continue.</p></div>");
+				$('#dialog').modal('show');		
+			} else {
+				$('#dialogTitle').text("Some error ocurred while sending you confirmation e-mail.");
+				$('#dialogBody').html("<div class=\"alert alert-danger\"><p><strong>Some error ocurred while sending you confirmation e-mail.</strong></p><p>Please try again later or contact our support at support@newpecunia.com.</p></div>");
+				$('#dialog').modal('show');		
+			}
+		});	
+};
+
 var submitBuy = function() {
 	var buyFormData = $("#buyForm").serialize();	
 	$.post("../buyService", buyFormData, function(response, status) {

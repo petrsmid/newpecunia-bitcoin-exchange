@@ -43,7 +43,7 @@
 						<li>
 							<a href="http://bitcoin.org/" target="_blank">What is <span style="color: white"><b>Bitcoin</b></span>?</a>
 						</li>
-					</ul>
+					</ul>EmailSender
 					<ul class="nav navbar-nav navbar-right">
 						<li>
 							<a href="#about">About</a>
@@ -63,31 +63,31 @@
 					<div class="col-sm-6">
 						<h1>Buy Bitcoin</h1>
 					</div>
-					<div class="col-sm-6" style="margin: 20px 0 20px 0">
-						<ul class="nav nav-pills pull-right">
-							<li class="active">
-								<a href="#">Buy Bitcoin</a>
-							</li>
-							<li>
-								<a href="../sell/">Sell Bitcoin</a>
-							</li>
-						</ul>
-					</div>
+<!-- 					<div class="col-sm-6" style="margin: 20px 0 20px 0"> -->
+<!-- 						<ul class="nav nav-pills pull-right"> -->
+<!-- 							<li class="active"> -->
+<!-- 								<a href="#">Buy Bitcoin</a> -->
+<!-- 							</li> -->
+<!-- 							<li> -->
+<!-- 								<a href="../sell/">Sell Bitcoin</a> -->
+<!-- 							</li> -->
+<!-- 						</ul> -->
+<!-- 					</div> -->
 				</div>
 				<!-- END of navigation for bigger displays -->
 
 				<!-- navigation for small displays -->
 				<div class="visible-xs">
-					<div class="col-sm-6" style="margin-top: 20px;">
-						<ul class="nav nav-pills">
-							<li class="active">
-								<a href="#">Buy Bitcoin</a>
-							</li>
-							<li>
-								<a href="../sell/">Sell Bitcoin</a>
-							</li>
-						</ul>
-					</div>
+<!-- 					<div class="col-sm-6" style="margin-top: 20px;"> -->
+<!-- 						<ul class="nav nav-pills"> -->
+<!-- 							<li class="active"> -->
+<!-- 								<a href="#">Buy Bitcoin</a> -->
+<!-- 							</li> -->
+<!-- 							<li> -->
+<!-- 								<a href="../sell/">Sell Bitcoin</a> -->
+<!-- 							</li> -->
+<!-- 						</ul> -->
+<!-- 					</div> -->
 					<div class="col-sm-12">
 						<h1>Buy Bitcoin</h1>
 						<p class="visible-xs  text-info">
@@ -111,7 +111,8 @@
 										<label for="inputBuyAmount">Amount of Bitcoins to buy</label>
 										<div class="input-group">
 											<span class="input-group-addon"><b>BTC</b></span>
-											<input id="inputBuyAmount" type="text" class="form-control" name="inputBuyAmount" value="0.5" autofocus="autofocus" required>
+											<input th:if="*{confirmationValid == null || !confirmationValid}" id="inputBuyAmount" type="text" class="form-control" name="inputBuyAmount" value="0.5" autofocus="autofocus" required>
+											<input th:if="*{confirmationValid != null && confirmationValid}" id="inputBuyAmount" type="text" class="form-control" name="inputBuyAmount" th:attr="value=${btcAmount}" autofocus="autofocus" required>
 										</div>
 									</div>
 								</div>
@@ -123,28 +124,45 @@
 											<p id="labelPrice" class="form-control">
 												<strong id="calculatedPrice"></strong>
 											</p>
-											<!-- <div class="input-group"> -->
-											<!-- <span class="input-group-addon">$</span>
-											<input type="text" id="labelPrice" class="form-control" value="123" readonly=""> -->
-											<!-- </div> -->
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="inputBtcAddress">Withdraw to address</label>
-								<input type="text" class="form-control" id="inputBtcAddress" name="inputBtcAddress" placeholder="e.g. 1PeNCTPCWDRq52a8uB33Mpi6idoX5ZoNjm" required>
-								<p class="text-info">
+								<input th:if="*{confirmationValid == null || !confirmationValid}" type="text" class="form-control" id="inputBtcAddress" name="inputBtcAddress" placeholder="e.g. 1PeNCTPCWDRq52a8uB33Mpi6idoX5ZoNjm" required>
+								<input th:if="*{confirmationValid != null && confirmationValid}" type="text" class="form-control" id="inputBtcAddress" name="inputBtcAddress" th:attr="value=${btcAddress}" disabled>
+								
+								<p th:if="*{confirmationValid == null || !confirmationValid}" class="text-info">
 									<a href="http://bitcoin.org/en/choose-your-wallet" target="_blank">Don't have any address? Download a Bitcoin wallet.</a>
 								</p>
 							</div>
 							<div class="form-group">
-								<div class="form-group">
-									<label for="inputEmail">E-mail <small>(optional)</small></label>
-									<input id="inputEmail" type="email" class="form-control" name="inputEmail" placeholder="we would only contact you in case of a problem with payment">
-								</div>
+									<label for="inputEmail">E-mail <small th:if="*{confirmationValid == null || !confirmationValid}">for confirmation</small></label>
+									<input th:if="*{confirmationValid == null || !confirmationValid}" id="inputEmail" type="email" class="form-control" name="inputEmail" placeholder="your@email" required>
+									<input th:if="*{confirmationValid != null && confirmationValid}" id="inputEmail" type="email" class="form-control" name="inputEmail" th:attr="value=${email}" disabled>
 							</div>
-
+							<div class="form-group">
+									<label for="inputName">Name</label>
+									<input th:if="*{confirmationValid == null || !confirmationValid}" id="inputName"  name="inputName" type="text" class="form-control" placeholder="Your Name" required>
+									<input th:if="*{confirmationValid != null && confirmationValid}" id="inputName"  name="inputName" type="text" class="form-control" th:attr="value=${name}" disabled>
+							</div>
+							<div class="form-group">
+									<label for="inputAddress">Address</label>
+									<input th:if="*{confirmationValid == null || !confirmationValid}" id="inputAddress" name="inputAddress"  type="text" class="form-control" placeholder="Street" required>
+									<input th:if="*{confirmationValid != null && confirmationValid}" id="inputAddress" name="inputAddress" type="text" class="form-control" th:attr="value=${address}" disabled>
+							</div>
+							<div class="form-group">
+									<label for="inputCity">City</label>
+									<input th:if="*{confirmationValid == null || !confirmationValid}" id="inputCity"  name="inputCity" type="text" class="form-control" placeholder="City" required>
+									<input th:if="*{confirmationValid != null && confirmationValid}" id="inputCity"  name="inputCity" type="text" class="form-control" th:attr="value=${city}" disabled>
+							</div>
+							<div class="form-group">
+									<label for="inputCountry">Country</label>
+									<select id="inputCountry" name="inputCountry" class="form-control" required th:attr="disabled=*{confirmationValid != null && confirmationValid}") required>
+										<option value="AF" th:each="country : ${countries}" th:text="${country.englishName}" th:value="${country.isoCode}">Afghanistan</option>
+									</select>									
+							</div>
 						</div>
 					</div>
 
@@ -154,9 +172,8 @@
 					<div class="col-sm-4"></div>
 
 					<div class="col-sm-4">
-						<button type="submit" class="btn btn-primary btn-lg btn-block">
-							Proceed to payment >>
-						</button>
+						<button th:if="*{confirmationValid == null || !confirmationValid}" type="submit" class="btn btn-primary btn-lg btn-block">Continue</button>
+						<button th:if="*{confirmationValid != null && confirmationValid}" type="submit" class="btn btn-success btn-lg btn-block">Proceed to payment >></button>
 					</div>
 
 					<div class="col-sm-4"></div>
@@ -164,6 +181,12 @@
 				</div>
 			</form>
 		</div><!-- /.container -->
+
+		<script>
+			var dialogTitle = ""
+			var dialogText = "";
+			var dialogError = false;
+		</script>
 
 		<!-- Dialog. The content of the dialog is filled by the server. -->
 		<div id="dialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -173,27 +196,26 @@
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;
 						</button>
-						<h4 class="modal-title">Thank you</h4>
-						<h4 class="modal-title">Error</h4>
+						<h4 id="dialogTitle" class="modal-title"> </h4>
 					</div>
-					<div class="modal-body">
-						<div class="alert alert-success">
-							<p>
-								<strong>Thank you for your payment.</strong>
-							</p>
-							<p>
-								You should receive your Bitcoins in a short while.
-							</p>
-						</div>
+					<div id="dialogBody" class="modal-body">
+<!-- 						<div class="alert alert-success"> -->
+<!-- 							<p> -->
+<!-- 								<strong>Thank you for your payment.</strong> -->
+<!-- 							</p> -->
+<!-- 							<p> -->
+<!-- 								You should receive your Bitcoins in a short while. -->
+<!-- 							</p> -->
+<!-- 						</div> -->
 						
-						<div class="alert alert-danger">
-							<p>
-								<strong>An error ocurred.</strong>
-							</p>
-							<p>
-								Please try again later.
-							</p>
-						</div>
+<!-- 						<div class="alert alert-danger"> -->
+<!-- 							<p> -->
+<!-- 								<strong>An error ocurred.</strong> -->
+<!-- 							</p> -->
+<!-- 							<p> -->
+<!-- 								Please try again later. -->
+<!-- 							</p> -->
+<!-- 						</div> -->
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary" data-dismiss="modal">
@@ -221,12 +243,15 @@
 		<script src="../js/np.js"></script>
 		<script src="buy.js"></script>
 
-		<!-- Rules for validation of the form -->
+		<script th:if="*{confirmationValid == null || !confirmationValid}">var unconfirmedPreOrder = true;</script>
+		<script th:if="*{confirmationValid != null && confirmationValid}">var unconfirmedPreOrder = false;</script>
+			
+		</script>
+		<!-- Rules for validation of the form -->		
 		<script>
 			$('#buyForm').validate({
 				rules : {
 					inputBuyAmount : {
-						required : true,
 						number : true,
 						min : 0.01,
 						max : 10000
@@ -234,15 +259,16 @@
 					inputBtcAddress : {
 						btcAddress : true
 					},
-					inputCardNumber : {
-						creditcard : true
-					},
-					inputCVC : {
-						digits : true
-					}
+					inputCountry: {
+			            required: true
+			        }
 				},
 				submitHandler : function(f) {
-					submitBuy();
+					if (unconfirmedPreOrder) {
+						submitUnconfirmedPreOrder();
+					} else {
+						submitBuy();
+					}
 				}				
 			});
 

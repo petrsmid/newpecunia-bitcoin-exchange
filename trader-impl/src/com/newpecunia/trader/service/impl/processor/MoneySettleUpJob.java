@@ -135,7 +135,7 @@ public class MoneySettleUpJob implements Job {
 		payment.setCity(configuration.getBitstampDepositCity());
 		payment.setPostalCode(configuration.getBitstampDepositPostalCode());
 		payment.setCountry(countryDb.getCountryForISO(configuration.getBitstampDepositCountry()));
-		payment.setRequestorEmail(configuration.getGmailAddress());
+		payment.setRequestorEmail(configuration.getEmailAddress());
 		payment.setAccountNumber(configuration.getBitstampDepositBankIban());
 		payment.setSwift(configuration.getBitstampDepositBankSwift());
 		payment.setBankName(configuration.getBitstampDepositBankName());
