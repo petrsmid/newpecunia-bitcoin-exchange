@@ -236,7 +236,7 @@ public class BitstampServiceLiveTest {
 	}
 	
 	/**
-	 * This test sends money to my Bitcoin address in Electum wallet
+	 * This test sends money to my Bitcoin address in Electrum wallet
 	 * @throws Exception
 	 */
 	@Test

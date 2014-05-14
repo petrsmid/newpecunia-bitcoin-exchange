@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.binary.Hex;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.newpecunia.NPException;
 import com.newpecunia.bitstamp.service.AccountBalance;
 import com.newpecunia.bitstamp.service.BitstampService;
 import com.newpecunia.bitstamp.service.BitstampServiceException;
@@ -91,12 +96,10 @@ public class BitstampServiceImpl implements BitstampService {
 
 	@Override
 	public Order buyLimitOrder(BigDecimal price, BigDecimal amount) throws BitstampServiceException {
-		logger.trace(String.format("Creating buy limit order: %s BTC for % USD.", amount.toPlainString(), price.toPlainString()));
+		logger.trace(String.format("Creating buy limit order: %s BTC for %s USD.", amount.toPlainString(), price.toPlainString()));
 		validateOrder(price, amount);
 		
-		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
+		List<NameValuePair> requestParams = generateSecurityParameters();		
 		requestParams.add(new BasicNameValuePair("amount", amount.toPlainString()));		
 		requestParams.add(new BasicNameValuePair("price", price.toPlainString()));		
 		
@@ -114,12 +117,10 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public Order sellLimitOrder(BigDecimal price, BigDecimal amount) throws BitstampServiceException {
-		logger.trace(String.format("Creating sell limit order: %s BTC for % USD.", amount.toPlainString(), price.toPlainString()));
+		logger.trace(String.format("Creating sell limit order: %s BTC for %s USD.", amount.toPlainString(), price.toPlainString()));
 		validateOrder(price, amount);
 		
-		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
+		List<NameValuePair> requestParams = generateSecurityParameters();
 		requestParams.add(new BasicNameValuePair("amount", amount.toPlainString()));		
 		requestParams.add(new BasicNameValuePair("price", price.toPlainString()));		
 
@@ -149,9 +150,7 @@ public class BitstampServiceImpl implements BitstampService {
 	@Override
 	public Boolean cancelOrder(String orderId) throws BitstampServiceException {
 		logger.trace("Canceling order "+orderId);
-		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
+		List<NameValuePair> requestParams = generateSecurityParameters();
 		requestParams.add(new BasicNameValuePair("id", orderId));
 		
 		String url = BitstampServiceConstants.CANCEL_ORDER;
@@ -168,9 +167,7 @@ public class BitstampServiceImpl implements BitstampService {
 	@Override
 	public List<Order> getOpenOrders() throws BitstampServiceException {
 		logger.trace("Getting opened orders.");
-		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
+		List<NameValuePair> requestParams = generateSecurityParameters();
 		
 		String url = BitstampServiceConstants.OPEN_ORDERS;
 		try {
@@ -204,9 +201,7 @@ public class BitstampServiceImpl implements BitstampService {
 	@Override
 	public AccountBalance getAccountBalance() throws BitstampServiceException {
 		logger.trace("Getting account balance.");
-		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
+		List<NameValuePair> requestParams = generateSecurityParameters();
 		
 		String url = BitstampServiceConstants.ACCOUNT_BALANCE;
 		try {
@@ -231,9 +226,7 @@ public class BitstampServiceImpl implements BitstampService {
 			throw new BitstampServiceException("BTC amount can have maximally "+MAX_BTC_SCALE+" decimal places.");
 		}
 		
-		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
+		List<NameValuePair> requestParams = generateSecurityParameters();		
 		requestParams.add(new BasicNameValuePair("amount", amount.toPlainString()));		
 		requestParams.add(new BasicNameValuePair("address", address));		
 		
@@ -251,9 +244,7 @@ public class BitstampServiceImpl implements BitstampService {
 	@Override
 	public String getBitcoinDepositAddress() throws BitstampServiceException {
 		logger.trace("Getting BTC deposit address");
-		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
+		List<NameValuePair> requestParams = generateSecurityParameters();
 		
 		String url = BitstampServiceConstants.BITCOIN_DEPOSIT_ADDRESS;
 		try {
@@ -273,11 +264,9 @@ public class BitstampServiceImpl implements BitstampService {
 
 	@Override
 	public List<UserTransaction> getUserTransactions(long offset, long limit) throws BitstampServiceException {
-		logger.trace(String.format("Getting user transactions. Offset: %s, Limit: %s"), offset, limit);
+		logger.trace(String.format("Getting user transactions. Offset: %s, Limit: %s", offset, limit));
 		
-		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
+		List<NameValuePair> requestParams = generateSecurityParameters();	
 		requestParams.add(new BasicNameValuePair("offset", Long.toString(offset)));
 		requestParams.add(new BasicNameValuePair("limit", Long.toString(limit)));
 		
@@ -303,7 +292,7 @@ public class BitstampServiceImpl implements BitstampService {
 	
 	@Override
 	public List<Transaction> getTransactions(long offset, long limit) throws BitstampServiceException {
-		logger.trace(String.format("Getting transactions. Offset: %s, Limit: %s"), offset, limit);
+		logger.trace(String.format("Getting transactions. Offset: %s, Limit: %s", offset, limit));
 		String url = BitstampServiceConstants.TRANSACTIONS;
 		try {
 			String output = httpReader.get(url+"?offset="+offset+"&limit="+limit);
@@ -322,9 +311,7 @@ public class BitstampServiceImpl implements BitstampService {
 	@Override
 	public List<UnconfirmedBitcoinDeposit> getUnconfirmedBitcoinDeposits() throws BitstampServiceException {
 		logger.trace("Getting unconfirmed Bitcion deposits.");
-		List<NameValuePair> requestParams = new ArrayList<>();
-		requestParams.add(new BasicNameValuePair("user", credentials.getBitstampUsername()));		
-		requestParams.add(new BasicNameValuePair("password", credentials.getBitstampPassword()));		
+		List<NameValuePair> requestParams = generateSecurityParameters();
 		
 		String url = BitstampServiceConstants.UNCONFIRMED_BTC;
 		try {
@@ -347,6 +334,33 @@ public class BitstampServiceImpl implements BitstampService {
 				throw new BitstampServiceException("Error returned from the Bitstamp service: " + output);
 			}			
 		}
+	}
+	
+	private String calculateSignature(String key, String data)  {
+		try {
+			Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+			SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(), "HmacSHA256");
+			sha256_HMAC.init(secret_key);
+	
+			return Hex.encodeHexString(sha256_HMAC.doFinal(data.getBytes())).toUpperCase();
+		} catch (Exception e) {
+			throw new NPException("Error ocurred while calculating signature for Bitstamp request.", e);
+		}
+	}
+	
+	private List<NameValuePair> generateSecurityParameters()  {
+		List<NameValuePair> params = new ArrayList<>();
+		
+		params.add(new BasicNameValuePair("key", credentials.getBitstampApiKey()));
+		
+		String nonce = ""+System.nanoTime();
+		params.add(new BasicNameValuePair("nonce", nonce));
+		
+		String dataToSign = nonce+credentials.getBitstampUsername()+credentials.getBitstampApiKey(); 
+		params.add(new BasicNameValuePair("signature", calculateSignature(credentials.getBitstampSecret(), dataToSign)));		
+
+		
+		return params;
 	}
 
 }

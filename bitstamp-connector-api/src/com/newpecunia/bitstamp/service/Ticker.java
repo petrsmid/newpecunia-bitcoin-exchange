@@ -10,6 +10,7 @@ public class Ticker {
 	private BigDecimal volume;
 	private BigDecimal low;
 	private BigDecimal ask;
+	private BigDecimal vwap;
 	
 	
 	public BigDecimal getHigh() {
@@ -53,6 +54,12 @@ public class Ticker {
 	}
 	public void setAsk(BigDecimal ask) {
 		this.ask = ask;
+	}
+	public BigDecimal getVwap() {
+		return vwap;
+	}
+	public void setVwap(BigDecimal vwap) {
+		this.vwap = vwap;
 	}
 	
 }

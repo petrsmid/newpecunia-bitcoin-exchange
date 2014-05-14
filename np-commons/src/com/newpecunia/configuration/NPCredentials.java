@@ -34,9 +34,16 @@ public class NPCredentials {
 		return credentials.getString("bitstamp.password");
 	}
 	
+	public String getBitstampApiKey() {
+		return credentials.getString("bitstamp.apiKey");
+	}
+	
+	public String getBitstampSecret() {
+		return credentials.getString("bitstamp.secret");
+	}
+	
 	public String getBitcoindRpcUser() {
 		return credentials.getString("bitcoind.rpcuser");
-
 	}
 
 	public String getBitcoindRpcPassword() {
