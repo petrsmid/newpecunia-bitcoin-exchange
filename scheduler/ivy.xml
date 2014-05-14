@@ -15,6 +15,7 @@
     <dependencies>
         <!-- To add a library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
         <dependency name="np-commons" rev="latest.integration" conf="compile"/>
+        <dependency name="bitstamp-connector-impl" rev="latest.integration" conf="compile"/>
         <dependency name="trader-impl" rev="latest.integration" conf="compile"/>
         <!-- TEST dependencies -->
         <dependency org="junit" name="junit" rev="4.11" conf="test->*"/>
