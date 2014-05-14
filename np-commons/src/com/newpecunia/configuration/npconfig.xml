@@ -8,92 +8,19 @@
 	    <address>info@newpecunia.com</address>
 	</email>
 	
-	<maxTimeToWaitForBtcInSeconds>86400</maxTimeToWaitForBtcInSeconds> <!-- one day -->
-
 	<cardPayment>
 	    <processingUrl>../cardpayment/cardpayment.html</processingUrl>
 <!-- 	    <processingUrl>https://secureshop-test.firstdata.lv:8443/ecomm/MerchantHandler</processingUrl> -->
 	</cardPayment>
 	
-	<unicredit>
-		<accountReserve>100</accountReserve>
-		<paymentFee>13.34</paymentFee>
-	
-		<payerName>PEKAT s.r.o</payerName>
-		<payerStreet>Svatopluka Cecha 57</payerStreet>
-		<payerCity>61200 Brno</payerCity>
-		<payerCountry>Czech Republic</payerCountry>
-		<payerAccountNumber>1222977006</payerAccountNumber>
-		<payerAccountCurrency>USD</payerAccountCurrency>
-		<payerBankSwift>UNCRSKBX</payerBankSwift>
-		<payerBankSwiftLong>UNCRSKBXAXXX</payerBankSwiftLong>
-						
-		<paymentStatisticalCode>335</paymentStatisticalCode> <!-- Finantial services -->
-		
-		<webdav>
-			<baseurl>https://sk.unicreditbanking.net/webdav/</baseurl>
-			<statements>
-			    <folder>statements/</folder>
-			    <filename>statements.txt</filename>
-			</statements>
-			<statusfolder>upload/status/</statusfolder>
-			<upload>
-				<foreignfolder>upload/foreign/MultiCash%20format/UTF-8/</foreignfolder> <!-- !! Always use folder for uploading files in UTF-8. -->
-			</upload>
-		</webdav>
-	</unicredit>
-	
 	<bitstamp>
 	    <minimalBtcOrder>0.05</minimalBtcOrder>
 	    
-	    <minimalUsdWithdraw>50</minimalUsdWithdraw>
 	    <withdrawUsdFeePercent>0.09</withdrawUsdFeePercent>
 	    <minWithdrawUsdFee>15</minWithdrawUsdFee>
 	    
 	    <btcAddress>1EwZnCciSpyGSKditT3MuCamvNMKmRoG2q</btcAddress>
-	    <deposit>
-	        <name>Petr</name>
-	        <surname>Smid</surname>
-	        <minimumAmount>50</minimumAmount>
-	        <accountInfo>
-	            <currency>USD</currency>
-	            <name>Bitstamp LIMITED</name>
-	            <address>5 J. House, Calleva Park, Aldermaston</address>
-	            <city>Reading, Berkshire RG7 8NN</city>
-	            <postalCode></postalCode>
-	            <country>UK</country>
-	            <bankIban>SI56290000170073837</bankIban>
-	            <bankSwift>BACXSI22</bankSwift>
-	            <bankName>Unicredit banka Slovenija d.d.</bankName>
-	            <bankAddress>Smartinska 140</bankAddress>
-	            <bankCity>Ljubljana</bankCity>
-	            <bankPostalCode>1000</bankPostalCode>
-	            <bankCountry>SI</bankCountry>
-	            <transactionText>40345114053</transactionText>
-	        </accountInfo>
-	    </deposit>	    
-	    <withdrawAccountInfo>
-	        <currency>USD</currency>
-	        <name>PEKAT</name>
-	        <address>Svatopluka Cecha 57</address>
-	        <city>Brno</city>
-	        <postalCode>612 00</postalCode>
-	        <country>CZ</country>
-	        
-	        <iban>SK9511110000001222977022</iban>
-	        <bic>UNCRSKBX</bic>
-	        <bankName>UniCredit Bank Slovakia a. s.</bankName>
-	        <bankAddress>Sancova 1/A </bankAddress>
-	        <bankCity>Bratislava</bankCity>
-	        <bankPostalCode>813 33</bankPostalCode>
-	        <bankCountry>SK</bankCountry>
-	        
-	        <comment></comment>
-	        
-	    </withdrawAccountInfo>
 	</bitstamp>
-	
-	<reportingEmail>petr.smid@pekat.cz</reportingEmail>
 	
 	<bitcoind>
 	    <transactionFee>0.0001</transactionFee>
@@ -105,7 +32,6 @@
 	    <btcPriceActualisationPeriodInSecs>15</btcPriceActualisationPeriodInSecs>
 	    <nbrOfBtcsForPriceCalculation>100</nbrOfBtcsForPriceCalculation>
 	    <optimalBtcWalletBalance>8</optimalBtcWalletBalance>
-	    <bitstampMinBtcReserve>0.5</bitstampMinBtcReserve>
 	    <ageOfBtcOrderToReportInSec>120</ageOfBtcOrderToReportInSec>
 	</trader>
 	

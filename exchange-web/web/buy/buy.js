@@ -1,5 +1,4 @@
 var buyPrice = undefined;
-var sellPrice = undefined;
 
 var roundToTwo = function(num) {    
     return +(Math.round(num + "e+2")  + "e-2");
@@ -21,14 +20,12 @@ var updateCalculatedPrice = function() {
 
 var showUpdatedPrices = function() {
 	$("#buyPrice").text("$"+buyPrice);
-	$("#sellPrice").text("$"+sellPrice);
 };	
 
 
 var updatePrices = function() {
-	$.getJSON("../customerBuySellPrice", function(prices) {
+	$.getJSON("../customerBuyPrice", function(prices) {
 		buyPrice = prices.buyPrice;
-		sellPrice = prices.sellPrice;
 
 		showUpdatedPrices();
 		updateCalculatedPrice();

@@ -20,9 +20,6 @@ public class BitstampWithdrawalRests {
 	@Column(name="BTCS_TO_WITHDRAW")
 	private BigDecimal btcsToWithdraw;
 
-	@Column(name="USDS_TO_WITHDRAW")
-	private BigDecimal usdsToWithdraw;
-
 	public int getId() {
 		return CONSTANT_ID; //the entity has only one instance - always return the same ID
 	}
@@ -38,15 +35,5 @@ public class BitstampWithdrawalRests {
 	public void setBtcsToWithdraw(BigDecimal btcsToWithdraw) {
 		this.btcsToWithdraw = btcsToWithdraw;
 	}
-
-	public BigDecimal getUsdsToWithdraw() {
-		return usdsToWithdraw;
-	}
-
-	public void setUsdsToWithdraw(BigDecimal usdsToWithdraw) {
-		this.usdsToWithdraw = usdsToWithdraw;
-	}	
-	
-	
 	
 }

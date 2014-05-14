@@ -16,14 +16,12 @@ import com.newpecunia.persistence.entities.BtcPaymentOrder;
 import com.newpecunia.persistence.entities.BtcPaymentOrder.BtcOrderStatus;
 import com.newpecunia.time.TimeProvider;
 import com.newpecunia.trader.service.TraderService;
-import com.newpecunia.unicredit.service.PaymentService;
 
 @Singleton
 public class TraderServiceImpl implements TraderService {
 
 	private static final Logger logger = LogManager.getLogger(TraderServiceImpl.class);	
-	
-	private PaymentService paymentService;
+
 	private CachedBuySellPriceCalculator cachedBuySellPriceCalc;
 	private TimeProvider timeProvider;
 	private Provider<EntityManager> emProvider;
@@ -31,12 +29,10 @@ public class TraderServiceImpl implements TraderService {
 	
 	@Inject
 	TraderServiceImpl(
-			PaymentService paymentService, 
 			CachedBuySellPriceCalculator cachedBuySellPriceCalc,
 			TimeProvider timeProvider,
 			Provider<EntityManager> emProvider) {
 		
-		this.paymentService = paymentService;
 		this.cachedBuySellPriceCalc = cachedBuySellPriceCalc;
 		this.timeProvider = timeProvider;
 		this.emProvider = emProvider;
@@ -44,31 +40,10 @@ public class TraderServiceImpl implements TraderService {
 
 	@Override
 	public BigDecimal getCustomerBtcBuyPriceInUSD() {
-		return getCustomerBtcBuyPriceInUSD(new BigDecimal(100));
-	}
-
-	@Override
-	public BigDecimal getCustomerBtcSellPriceInUSD() {
-		return getCustomerBtcSellPriceInUSD(new BigDecimal(100));
-	}
-	
-	@Override
-	public BigDecimal getCustomerBtcBuyPriceInUSD(BigDecimal amountBtc) {
+		//TODO add interest in some %
 		return cachedBuySellPriceCalc.getBtcBuyPriceInUSD();
 	}
 
-	@Override
-	public BigDecimal getCustomerBtcSellPriceInUSD(BigDecimal amountBtc) {
-		return cachedBuySellPriceCalc.getBtcSellPriceInUSD();
-	}
-
-	@Override
-	public void payForReceivedBTCs(String receivingBtcAddress, BigDecimal btcAmount) {
-		logger.trace(String.format("Paying for received BTCs - receiving address: %s, amount %s BTC", receivingBtcAddress, btcAmount));
-		BigDecimal amountUSD = getCustomerBtcSellPriceInUSD(btcAmount);
-		paymentService.createOrderFromPreOrder(receivingBtcAddress, amountUSD);
-	}
-	
 	@Override
 	@Transactional
 	public void sendBTCsForPayment(String receiverBtcAddress, BigDecimal amount, String email) {

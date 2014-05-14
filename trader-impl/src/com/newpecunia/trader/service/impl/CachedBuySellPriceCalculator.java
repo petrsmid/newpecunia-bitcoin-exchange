@@ -28,7 +28,6 @@ public class CachedBuySellPriceCalculator {
 	private Lock lock;  //!!! redistribute in clustered environment
 	private long lastActualisation = 0l; //!!! redistribute in clustered environment
 	private BigDecimal lastBuyPrice = null; //!!! redistribute in clustered environment
-	private BigDecimal lastSellPrice = null; //!!! redistribute in clustered environment
 
 	@Inject
 	CachedBuySellPriceCalculator(BitstampService bitstampService, NPConfiguration configuration, TimeProvider timeProvider, LockProvider locker) {
@@ -47,10 +46,8 @@ public class CachedBuySellPriceCalculator {
 			throw new NPException("Could not actualise order book of Bitstamp.", e);
 		}
 		BigDecimal avgAsk = AvgPriceCalculator.calculateAvgBtcPriceForBTCs(orderBook.getAsks(), configuration.getNbrOfBtcsForPriceCalculation() /*TODO instead of a hardcoded value consider volume of sales*/);
-		BigDecimal avgBid = AvgPriceCalculator.calculateAvgBtcPriceForBTCs(orderBook.getBids(), configuration.getNbrOfBtcsForPriceCalculation() /*TODO instead of a hardcoded value consider volume of sales*/);
 		
 		lastBuyPrice = avgAsk;
-		lastSellPrice = avgBid;
 	}
 	
 	private void actualiseOrderBookIfNeeded() {
@@ -71,17 +68,6 @@ public class CachedBuySellPriceCalculator {
 		actualiseOrderBookIfNeeded();
 		return lastBuyPrice;
 	}
-
-
-	public BigDecimal getBtcSellPriceInUSD() {
-		logger.trace("Getting sell price.");
-		actualiseOrderBookIfNeeded();
-		return lastSellPrice;
-	}
-	
-	
-	
-	
 
 }
 

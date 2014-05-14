@@ -34,22 +34,6 @@ public class NPCredentials {
 		return credentials.getString("bitstamp.password");
 	}
 	
-	public String getUnicreditWebdavUsername() {
-		return credentials.getString("unicreditWebdav.username");
-	}
-	
-	public String getUnicreditWebdavPassword() {
-		return credentials.getString("unicreditWebdav.password");
-	}
-	
-	public String getPrivateSignatureKeyFilePath() {
-		return credentials.getString("unicreditWebdav.privateKeyFilePath");
-	}
-	
-	public String getPrivateKeyPassword() {
-		return credentials.getString("unicreditWebdav.privateKeyPassword");
-	}
-
 	public String getBitcoindRpcUser() {
 		return credentials.getString("bitcoind.rpcuser");
 

@@ -11,7 +11,7 @@ import com.newpecunia.net.JsonCodec;
 import com.newpecunia.trader.service.TraderService;
 
 @Singleton
-public class CustomerBuySellPriceServlet extends AbstractServiceServlet {
+public class CustomerBuyPriceServlet extends AbstractServiceServlet {
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
@@ -19,26 +19,21 @@ public class CustomerBuySellPriceServlet extends AbstractServiceServlet {
 	
 	private class Response {
 		private BigDecimal buyPrice;
-		private BigDecimal sellPrice;
 
-		public Response(BigDecimal buyPrice, BigDecimal sellPrice) {
+		public Response(BigDecimal buyPrice) {
 			this.buyPrice = buyPrice;
-			this.sellPrice = sellPrice;
 		}
+		@SuppressWarnings("unused")
 		public BigDecimal getBuyPrice() {
 			return buyPrice;
-		}
-		public BigDecimal getSellPrice() {
-			return sellPrice;
 		}
 	}
 	
 	@Override
 	protected void serveGet(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		BigDecimal buyPrice = traderService.getCustomerBtcBuyPriceInUSD();
-		BigDecimal sellPrice = traderService.getCustomerBtcSellPriceInUSD();
 		
-		Response response = new Response(buyPrice, sellPrice);
+		Response response = new Response(buyPrice);
 		String strResponse = JsonCodec.INSTANCE.toJson(response);
 		resp.getOutputStream().println(strResponse);
 		

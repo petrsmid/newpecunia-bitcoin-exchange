@@ -7,10 +7,10 @@ import com.google.inject.Singleton;
 import com.newpecunia.creditcard.CreditCardAcquiringService;
 
 @Singleton
-public class CreditCardAcquiringUnicreditServiceImpl implements CreditCardAcquiringService {
+public class CreditCardAcquiringServiceImpl implements CreditCardAcquiringService {
 
 	@Inject
-	CreditCardAcquiringUnicreditServiceImpl() {
+	CreditCardAcquiringServiceImpl() {
 	}
 
 	@Override

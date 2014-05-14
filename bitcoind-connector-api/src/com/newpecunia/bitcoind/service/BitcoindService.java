@@ -10,7 +10,4 @@ public interface BitcoindService {
 
 	TransactionInfo getTransactionInfo(String txId);
 
-	String acquireAddressForReceivingBTC();
-	
-	void releaseAddressForReceivingBTC(String address);
 }

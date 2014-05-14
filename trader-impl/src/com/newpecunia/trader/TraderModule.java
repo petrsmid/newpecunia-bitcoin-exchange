@@ -16,7 +16,7 @@ public class TraderModule extends AbstractModule {
 	protected void configure() {
 		bind(BuyService.class).to(BuyServiceImpl.class);
 		bind(TraderService.class).to(TraderServiceImpl.class);
-		bind(BitstampAutoTrader.class).to(BitstampAutoTraderPrefferingUSD.class); //If you prefer holding BTCs change to BitstampAutoTraderPrefferingBTC.class
+		bind(BitstampAutoTrader.class).to(BitstampAutoTraderPrefferingUSD.class);
 		bind(BitstampWithdrawOrderManager.class).to(BitstampWithdrawOrderManagerImpl.class);
 	}
 

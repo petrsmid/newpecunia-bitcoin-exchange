@@ -20,7 +20,6 @@
         <dependency name="bitstamp-connector-impl" rev="latest.integration" conf="compile"/>
         <dependency name="creditcard-connector-impl" rev="latest.integration" conf="compile"/>
         <dependency name="trader-impl" rev="latest.integration" conf="compile"/>
-        <dependency name="unicredit-connector-impl" rev="latest.integration" conf="compile"/>
 
         <!-- To add a library search it on http://mvnrepository.com/ or http://search.maven.org/ -->
 		<dependency org="com.google.inject.extensions" name="guice-servlet" rev="3.0"/>

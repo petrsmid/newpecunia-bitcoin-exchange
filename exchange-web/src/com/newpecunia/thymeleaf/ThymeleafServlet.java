@@ -6,7 +6,6 @@ import java.util.Map;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.newpecunia.thymeleaf.controllers.BuyController;
-import com.newpecunia.thymeleaf.controllers.SellController;
 import com.newpecunia.thymeleaf.controllers.ThymeleafController;
 
 @Singleton
@@ -16,16 +15,12 @@ public class ThymeleafServlet extends AbstractThymeleafServlet {
 	@Inject
 	private BuyController buyController;
 
-	@Inject
-	private SellController sellController;
-	
 	
 	@Override
 	protected Map<String, ThymeleafController> getUrl2ControllerMapping() {
 		Map<String, ThymeleafController> url2ControllerMapping = new HashMap<>();
 		
 		url2ControllerMapping.put("/buy/", buyController);
-		url2ControllerMapping.put("/sell/", sellController);
 		
 		return url2ControllerMapping;
 	}

@@ -16,12 +16,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.newpecunia.trader.service.impl.processor.BitstampAutoTraderJob;
 import com.newpecunia.trader.service.impl.processor.BtcOrderProcessorAndSettleUpJob;
-import com.newpecunia.trader.service.impl.processor.MoneySettleUpJob;
-import com.newpecunia.unicredit.service.impl.processor.PaymentPackageStatusUpdaterJob;
-import com.newpecunia.unicredit.service.impl.processor.PaymentPackageUploaderJob;
-import com.newpecunia.unicredit.service.impl.processor.PaymentStatementStatusUpdaterJob;
-import com.newpecunia.unicredit.service.impl.processor.PaymentStatusReportingJob;
-import com.newpecunia.unicredit.service.impl.processor.PreorderCleanerJob;
 
 @Singleton
 public class JobsSetuper {
@@ -37,14 +31,7 @@ public class JobsSetuper {
 	
 	public void setupJobs() {
 		logger.info("Setting up jobs");
-		preparePreorderCleanerJob();
-		preparePaymentPackageUploaderJob();
-		preparePaymentPackageStatusUpdaterJob();
-		preparePaymentStatementStatusUpdaterJob();
-		preparePaymentStatusReportingJob();
-		
 		prepareBitstampAutoTraderJob();
-		prepareMoneySettleUpJob();
 		prepareBtcOrderProcessorAndSettleUpJob();
 	}
 
@@ -65,39 +52,6 @@ public class JobsSetuper {
 		setupJobAndTrigger(BtcOrderProcessorAndSettleUpJob.class, 
 				CronScheduleBuilder.cronSchedule("11/21 * * * * ?")); //every 21 seconds starting after 11 seconds
 	}
-
-	private void prepareMoneySettleUpJob() {
-		setupJobAndTrigger(MoneySettleUpJob.class, 
-				CronScheduleBuilder.cronSchedule("0 0 9 * * ?")); //every day at 9:00
-	}
-
-	private void preparePreorderCleanerJob() {
-		setupJobAndTrigger(PreorderCleanerJob.class, 
-				CronScheduleBuilder.cronSchedule("0 2/3 * * * ?")); //every 3 minutes starting after 2 minutes
-	}
-
-	private void preparePaymentPackageUploaderJob() {
-		setupJobAndTrigger(PaymentPackageUploaderJob.class, 
-				CronScheduleBuilder.cronSchedule("0 1/5 * * * ?")); //every 5 minutes starting after 1 minute
-	}
-
-	private void preparePaymentPackageStatusUpdaterJob() {
-		setupJobAndTrigger(PaymentPackageStatusUpdaterJob.class, 
-				CronScheduleBuilder.cronSchedule("0 3/11 * * * ?")); //every 11 minutes starting after 3 minutes
-	}
-
-	private void preparePaymentStatementStatusUpdaterJob() {
-		setupJobAndTrigger(PaymentStatementStatusUpdaterJob.class, 
-				CronScheduleBuilder.cronSchedule("0 4/14 * * * ?")); //every 14 minutes starting after 4 minutes
-	}
-
-	private void preparePaymentStatusReportingJob() {
-		setupJobAndTrigger(PaymentStatusReportingJob.class, 
-				CronScheduleBuilder.cronSchedule("0 0 16 * * ?")); //every day at 16:00
-	}
-
-
-	
 
 	private void setupJobAndTrigger(Class<? extends Job> jobClass, ScheduleBuilder<?> schedule) {
 		String jobName = jobClass.getSimpleName();

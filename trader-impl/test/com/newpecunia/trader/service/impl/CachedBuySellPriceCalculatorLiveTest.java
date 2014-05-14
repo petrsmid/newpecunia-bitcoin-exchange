@@ -12,9 +12,7 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import com.newpecunia.bitcoind.BitcoindConnectorModule;
 import com.newpecunia.bitstamp.BitstampConnectorModule;
 import com.newpecunia.common.CommonModule;
-import com.newpecunia.persistence.PersistenceModule;
 import com.newpecunia.trader.TraderModule;
-import com.newpecunia.unicredit.UnicreditConnectorModule;
 
 public class CachedBuySellPriceCalculatorLiveTest {
 
@@ -28,8 +26,6 @@ public class CachedBuySellPriceCalculatorLiveTest {
 				new CommonModule(), 
 				new BitstampConnectorModule(), 
 				new BitcoindConnectorModule(),
-				new UnicreditConnectorModule(),
-				new PersistenceModule(),
         		new JpaPersistModule("testingJpaUnit")        		
 				);
 		
@@ -40,11 +36,7 @@ public class CachedBuySellPriceCalculatorLiveTest {
 	@Test
 	public void test() {
 		BigDecimal buyPrice = calculator.getBtcBuyPriceInUSD();
-		BigDecimal sellPrice = calculator.getBtcSellPriceInUSD();
 		Assert.assertNotNull(buyPrice);
-		Assert.assertNotNull(sellPrice);
-		Assert.assertTrue(buyPrice.compareTo(sellPrice) > 0);
-		
 		
 	}
 }

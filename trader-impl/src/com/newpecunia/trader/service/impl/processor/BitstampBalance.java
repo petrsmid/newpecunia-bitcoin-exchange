@@ -37,24 +37,5 @@ public class BitstampBalance {
 		
 		return btcs.add(usdsInBtcs);
 	}
-	
-	public BigDecimal getBalanceInUSD() {
-		AccountBalance balance;
-		try {
-			balance = bitstampService.getAccountBalance();
-		} catch (BitstampServiceException e) {
-			throw new NPException("Could not determine balance on Bitstamp", e);
-		}
-		
-		BigDecimal btcs = balance.getBtcAvailable();
-		BigDecimal usds = balance.getUsdAvailable();
-		
-		BigDecimal sellPrice = cachedBuySellPriceCalculator.getBtcSellPriceInUSD();
-		BigDecimal btcsInUsds = btcs.multiply(sellPrice);
-		
-		return usds.add(btcsInUsds);
-	}
-	
-	
 
 }
