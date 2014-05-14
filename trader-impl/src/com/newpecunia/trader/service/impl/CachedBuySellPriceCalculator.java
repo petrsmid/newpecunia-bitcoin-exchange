@@ -16,6 +16,8 @@ import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.synchronization.LockProvider;
 import com.newpecunia.time.TimeProvider;
 
+//TODO reimplement this class so that it ALWAYS loads the price from background - and integrate with PriceService
+
 @Singleton
 public class CachedBuySellPriceCalculator {
 	

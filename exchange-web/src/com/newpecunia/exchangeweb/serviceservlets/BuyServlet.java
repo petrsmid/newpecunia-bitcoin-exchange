@@ -21,7 +21,7 @@ import com.newpecunia.NPException;
 import com.newpecunia.creditcard.CreditCardAcquiringService;
 import com.newpecunia.thymeleaf.controllers.BuyController;
 import com.newpecunia.trader.service.BuyService;
-import com.newpecunia.trader.service.TraderService;
+import com.newpecunia.trader.service.PriceService;
 import com.newpecunia.trader.service.UnconfirmedBuyPreOrder;
 
 @Singleton
@@ -29,11 +29,11 @@ public class BuyServlet extends AbstractServiceServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private BuyService buyService;
-	private TraderService traderService;
+	private PriceService traderService;
 	private CreditCardAcquiringService cardService;
 
 	@Inject
-	BuyServlet(BuyService buyService, TraderService traderService, CreditCardAcquiringService cardService) {
+	BuyServlet(BuyService buyService, PriceService traderService, CreditCardAcquiringService cardService) {
 		this.buyService = buyService;
 		this.traderService = traderService;
 		this.cardService = cardService;

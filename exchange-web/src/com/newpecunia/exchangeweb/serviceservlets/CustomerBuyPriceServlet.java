@@ -8,14 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.newpecunia.net.JsonCodec;
-import com.newpecunia.trader.service.TraderService;
+import com.newpecunia.trader.service.PriceService;
 
 @Singleton
 public class CustomerBuyPriceServlet extends AbstractServiceServlet {
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
-	private TraderService traderService;
+	private PriceService traderService;
 	
 	private class Response {
 		private BigDecimal buyPrice;
