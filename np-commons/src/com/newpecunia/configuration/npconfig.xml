@@ -4,6 +4,8 @@
     
 	<credentialsPath>/home/petr/npcredentials.xml</credentialsPath>
 
+	<interestInPercent>1</interestInPercent> <!-- How much i will earn -->
+	
 	<email>
 	    <address>info@newpecunia.com</address>
 	</email>
@@ -15,9 +17,10 @@
 	
 	<bitstamp>
 	    <minimalBtcOrder>0.05</minimalBtcOrder>
-	    
 	    <withdrawUsdFeePercent>0.09</withdrawUsdFeePercent>
 	    <minWithdrawUsdFee>15</minWithdrawUsdFee>
+	    
+	    <maxOrderbookAgeInMsToBeConsideredActual>60000</maxOrderbookAgeInMsToBeConsideredActual>
 	    
 	    <btcAddress>1EwZnCciSpyGSKditT3MuCamvNMKmRoG2q</btcAddress>
 	</bitstamp>

@@ -14,6 +14,7 @@ import org.quartz.TriggerBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.newpecunia.bitstamp.service.impl.OrderBookDownloaderJob;
 import com.newpecunia.trader.service.impl.processor.BitstampAutoTraderJob;
 import com.newpecunia.trader.service.impl.processor.BtcOrderProcessorAndSettleUpJob;
 
@@ -31,6 +32,7 @@ public class JobsSetuper {
 	
 	public void setupJobs() {
 		logger.info("Setting up jobs");
+		prepareOrderBookDownloaderJob();
 		prepareBitstampAutoTraderJob();
 		prepareBtcOrderProcessorAndSettleUpJob();
 	}
@@ -48,6 +50,11 @@ public class JobsSetuper {
 							//BitstampAutoTraderPrefferingUSD.WITHDRAW_USD_HOUR
 	}
 
+	private void prepareOrderBookDownloaderJob() {
+		setupJobAndTrigger(OrderBookDownloaderJob.class, 
+				CronScheduleBuilder.cronSchedule("0/15 * * * * ?")); //every 15 seconds
+	}
+	
 	private void prepareBtcOrderProcessorAndSettleUpJob() {
 		setupJobAndTrigger(BtcOrderProcessorAndSettleUpJob.class, 
 				CronScheduleBuilder.cronSchedule("11/21 * * * * ?")); //every 21 seconds starting after 11 seconds

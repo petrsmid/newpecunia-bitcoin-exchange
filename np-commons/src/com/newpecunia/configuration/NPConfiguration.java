@@ -30,6 +30,10 @@ public class NPConfiguration {
 		return config.getString("credentialsPath");
 	}
 	
+	public BigDecimal getInterestInPercent() {
+		return config.getBigDecimal("interestInPercent");
+	}
+	
 	public String getBitcoindServerWalletAddress() {
 		return config.getString("bitcoind.address");
 	}
@@ -58,14 +62,14 @@ public class NPConfiguration {
 		return config.getBigDecimal("trader.optimalBtcWalletBalance");
 	}
 
-	public BigDecimal getBitstampMinimalBtcOrder() {
-		return config.getBigDecimal("bitstamp.minimalBtcOrder");
-	}
-	
 	public long getAgeOfBtcOrderToReportInSec() {
 		return config.getLong("trader.ageOfBtcOrderToReportInSec");
 	}
 
+	public BigDecimal getBitstampMinimalBtcOrder() {
+		return config.getBigDecimal("bitstamp.minimalBtcOrder");
+	}
+	
 	public String getBitstampBtcAddress() {
 		return config.getString("bitstamp.btcAddress");
 	}
@@ -77,6 +81,12 @@ public class NPConfiguration {
 	public BigDecimal getBitstampMinWithdrawUsdFee() {
 		return config.getBigDecimal("bitstamp.minWithdrawUsdFee");
 	}
+
+	public long getMaxOrderbookAgeInMsToBeConsideredActual() {
+		return config.getLong("bitstamp.maxOrderbookAgeInMsToBeConsideredActual");
+	}
+	
+	
 	
 	public String getCardProcessingUrl() {
 		return config.getString("cardPayment.processingUrl");

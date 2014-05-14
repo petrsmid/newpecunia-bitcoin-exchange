@@ -78,7 +78,7 @@ public class BuyController implements ThymeleafController {
 		return true; //we allow the preorder to be infinitely valid
 		//uncomment the following code if you need time restricted validity 
 
-//		int UNCONF_PREORDER_VALIDITY_IN_MS = 60*60*24*1000; //24 hours - TODO make configurable
+//		int UNCONF_PREORDER_VALIDITY_IN_MS = 60*60*24*1000; //24 hours
 //		if (unconfirmedPreorder == null) {return false;}
 //		return (timeProvider.nowCalendar().getTimeInMillis() - unconfirmedPreorder.getCreateTimestamp().getTimeInMillis() 
 //				< UNCONF_PREORDER_VALIDITY_IN_MS);

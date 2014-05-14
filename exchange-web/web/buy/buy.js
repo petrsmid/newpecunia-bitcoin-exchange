@@ -19,7 +19,12 @@ var updateCalculatedPrice = function() {
 };
 
 var showUpdatedPrices = function() {
-	$("#buyPrice").text("$"+buyPrice);
+	var roundedPrice = roundToTwo(buyPrice);
+	if (!isNaN(roundedPrice)) {
+		$("#buyPrice").text("$"+roundedPrice);
+	} else {
+		$("#buyPrice").text("NA");
+	}
 };	
 
 
