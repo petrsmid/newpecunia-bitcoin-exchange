@@ -65,6 +65,10 @@ public class NPConfiguration {
 	public long getAgeOfBtcOrderToReportInSec() {
 		return config.getLong("trader.ageOfBtcOrderToReportInSec");
 	}
+	
+	public BigDecimal getBtcReserve() {
+		return config.getBigDecimal("trader.btcReserve");
+	}
 
 	public BigDecimal getBitstampMinimalBtcOrder() {
 		return config.getBigDecimal("bitstamp.minimalBtcOrder");

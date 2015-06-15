@@ -35,6 +35,7 @@
 	    <btcPriceActualisationPeriodInSecs>15</btcPriceActualisationPeriodInSecs>
 	    <nbrOfBtcsForPriceCalculation>100</nbrOfBtcsForPriceCalculation>
 	    <optimalBtcWalletBalance>8</optimalBtcWalletBalance>
+	    <btcReserve>10</btcReserve> <!-- how many BTCs we block to not be sold (we try to prevent concurrent selling of BTCs what we do not have...) -->
 	    <ageOfBtcOrderToReportInSec>120</ageOfBtcOrderToReportInSec>
 	</trader>
 	

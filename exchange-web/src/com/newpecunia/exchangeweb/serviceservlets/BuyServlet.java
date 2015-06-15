@@ -18,25 +18,34 @@ import com.google.common.base.Charsets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.newpecunia.NPException;
+import com.newpecunia.bitstamp.service.AccountBalance;
+import com.newpecunia.bitstamp.service.BitstampService;
+import com.newpecunia.configuration.NPConfiguration;
 import com.newpecunia.creditcard.CreditCardAcquiringService;
 import com.newpecunia.thymeleaf.controllers.BuyController;
 import com.newpecunia.trader.service.BuyService;
 import com.newpecunia.trader.service.PriceService;
 import com.newpecunia.trader.service.UnconfirmedBuyPreOrder;
+import com.newpecunia.trader.service.impl.processor.BitstampWithdrawOrderManager;
 
 @Singleton
 public class BuyServlet extends AbstractServiceServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private BuyService buyService;
-	private PriceService traderService;
+	private PriceService priceService;
 	private CreditCardAcquiringService cardService;
+	private BitstampWithdrawOrderManager bitstampManager;
+	private BitstampService bitstampService;
+	private NPConfiguration config;
 
 	@Inject
-	BuyServlet(BuyService buyService, PriceService traderService, CreditCardAcquiringService cardService) {
+	BuyServlet(BuyService buyService, PriceService priceService, CreditCardAcquiringService cardService, BitstampService bitstampService, BitstampWithdrawOrderManager bitstampManager, NPConfiguration config) {
 		this.buyService = buyService;
-		this.traderService = traderService;
+		this.priceService = priceService;
 		this.cardService = cardService;
+		this.bitstampManager = bitstampManager;
+		this.config = config;
 	}
 
 	
@@ -45,12 +54,12 @@ public class BuyServlet extends AbstractServiceServlet {
 		ServletOutputStream out = resp.getOutputStream();
 
 		//get the actual buyPrice as soon as possible - because it changes in time
-		BigDecimal buyPrice = traderService.getCustomerBtcBuyPriceInUSD();
+		BigDecimal buyPrice = priceService.getCustomerBtcBuyPriceInUSD();
 
 		//read unconfirmed preorder ID from the session
 		String unconfirmedPreorderId = (String) req.getSession().getAttribute(BuyController.SESSION_ATTR_UNCONFIRMED_PREORDER_ID);
 		if (unconfirmedPreorderId == null) {
-			out.println("sessionExpired"); //TODO show warning in the buy.html
+			out.println("sessionExpired"); //TODO show warning in the buy.html and INCREASE session duration in Tomcat settings
 			return;
 		}		
 		
@@ -60,6 +69,17 @@ public class BuyServlet extends AbstractServiceServlet {
 
 		//calculate price
 		BigDecimal usdAmount = buyRequest.getBtcAmount().multiply(buyPrice);
+		
+		//check that we have enough BTCs
+		AccountBalance balance = bitstampService.getAccountBalance();
+		BigDecimal blockedBtcs = bitstampManager.getBtcAmountToWithdraw();
+		BigDecimal btcPrice = priceService.getMarketBtcBuyPriceInUSD();
+		BigDecimal availableBtcs = balance.getUsdAvailable().multiply(btcPrice).subtract(blockedBtcs).subtract(config.getBtcReserve());
+		if (buyRequest.getBtcAmount().compareTo(availableBtcs) > 0) {
+			out.println("notEnoughBTCsAvailable"); //TODO show warning in the buy.html
+			return;
+		}
+		//TODO finish
 		
 		//call card service and retrieve transaction ID
 		String txId = cardService.startCardPaymentTransaction(usdAmount);
